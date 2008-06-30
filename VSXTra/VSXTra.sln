@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtime", "Runtime", "{7DE710CE-48D1-4EBD-8022-432D8B3F5792}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{0E640953-2F56-45BE-8F1E-C0D319CEA771}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{20E76D0F-5B35-4A91-91DB-5ACD1783E98D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra", "Runtime\VSXTra\VSXtra.csproj", "{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OutputWindowSamples", "OutputWindowSamples", "{1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutputWindowWithAutoLoad", "Samples\OutputWindowSamples\OutputWindowWithAutoLoad\OutputWindowWithAutoLoad.csproj", "{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MenusAndCommands", "MenusAndCommands", "{F990B9E3-95D8-4DFE-B104-83652F77652B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicCommands", "Samples\MenusAndCommands\DynamicCommands\DynamicCommands.csproj", "{79C4E3F7-2E93-4E39-ADD6-013A5D529899}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs02.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Runtime\\VSXTra\\VSXtra.csproj
+		SccProjectTopLevelParentUniqueName1 = VSXTra.sln
+		SccProjectName1 = Runtime/VSXTra
+		SccLocalPath1 = Runtime\\VSXTra
+		SccProjectUniqueName2 = Samples\\MenusAndCommands\\DynamicCommands\\DynamicCommands.csproj
+		SccProjectTopLevelParentUniqueName2 = VSXTra.sln
+		SccProjectName2 = Samples/MenusAndCommands/DynamicCommands
+		SccLocalPath2 = Samples\\MenusAndCommands\\DynamicCommands
+		SccProjectUniqueName3 = Samples\\OutputWindowSamples\\OutputWindowWithAutoLoad\\OutputWindowWithAutoLoad.csproj
+		SccProjectTopLevelParentUniqueName3 = VSXTra.sln
+		SccProjectName3 = Samples/OutputWindowSamples/OutputWindowWithAutoLoad
+		SccLocalPath3 = Samples\\OutputWindowSamples\\OutputWindowWithAutoLoad
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8} = {7DE710CE-48D1-4EBD-8022-432D8B3F5792}
+		{1D548488-9D1D-4E72-8FA8-A7C86F98FBBA} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{F990B9E3-95D8-4DFE-B104-83652F77652B} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899} = {F990B9E3-95D8-4DFE-B104-83652F77652B}
+	EndGlobalSection
+EndGlobal
