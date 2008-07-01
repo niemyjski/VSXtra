@@ -3,7 +3,6 @@
 //
 // Created: 2008.06.30, by Istvan Novak (DeepDiver)
 // ================================================================================================
-using System;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using VSXtra;
@@ -28,19 +27,8 @@ namespace DeepDiver.DynamicCommands
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidMyCommand)]
-    public sealed class MyCommand : MenuCommandHandler
-    {
-      // --------------------------------------------------------------------------------------------
-      /// <summary>
-      /// Executes the command: outputs a simple message to the output window.
-      /// </summary>
-      /// <param name="command">Command to be executed.</param>
-      // --------------------------------------------------------------------------------------------
-      protected override void OnExecute(OleMenuCommand command)
-      {
-        Console.WriteLine("Sample Command executed.");
-      }
-    }
+    [WriteMessageAction("Sample Command executed.")]
+    public sealed class MyCommand : MenuCommandHandler { }
 
     // ================================================================================================
     /// <summary>
@@ -48,19 +36,8 @@ namespace DeepDiver.DynamicCommands
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidMyGraph)]
-    public sealed class MyGraph : MenuCommandHandler
-    {
-      // --------------------------------------------------------------------------------------------
-      /// <summary>
-      /// Executes the command: outputs a simple message to the output window.
-      /// </summary>
-      /// <param name="command">Command to be executed.</param>
-      // --------------------------------------------------------------------------------------------
-      protected override void OnExecute(OleMenuCommand command)
-      {
-        Console.WriteLine("Graph Command executed.");
-      }
-    }
+    [ShowMessageAction("Graph Command executed.")]
+    public sealed class MyGraph : MenuCommandHandler { }
 
     // ================================================================================================
     /// <summary>
@@ -68,19 +45,8 @@ namespace DeepDiver.DynamicCommands
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidMyZoom)]
-    public sealed class MyZoom : MenuCommandHandler
-    {
-      // --------------------------------------------------------------------------------------------
-      /// <summary>
-      /// Executes the command: outputs a simple message to the output window.
-      /// </summary>
-      /// <param name="command">Command to be executed.</param>
-      // --------------------------------------------------------------------------------------------
-      protected override void OnExecute(OleMenuCommand command)
-      {
-        Console.WriteLine("Zoom Command executed.");
-      }
-    }
+    [WriteMessageAction("Zoom Command executed.")]
+    public sealed class MyZoom : MenuCommandHandler { }
 
     // ================================================================================================
     /// <summary>
@@ -111,6 +77,7 @@ namespace DeepDiver.DynamicCommands
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidDynVisibility1)]
+    [CommandVisible(true)]
     public sealed class DynamicVisibility1 : DynamicVisibility { }
 
     // ================================================================================================
@@ -119,17 +86,12 @@ namespace DeepDiver.DynamicCommands
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidDynVisibility2)]
-    public sealed class DynamicVisibility2 : DynamicVisibility
-    {
-      protected override void BeforeBind(OleMenuCommand command)
-      {
-        command.Visible = false;
-      }
-    }
+    [CommandVisible(false)]
+    public sealed class DynamicVisibility2 : DynamicVisibility { }
 
     // ================================================================================================
     /// <summary>
-    /// This class implements the "VSXtra Graph Command".
+    /// This class implements the "VSXtra Dynamic Text Command".
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidDynamicTxt)]

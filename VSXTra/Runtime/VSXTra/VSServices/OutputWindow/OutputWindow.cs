@@ -9,13 +9,13 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace VSXtra
 {
-  // ==================================================================================
+  // ================================================================================================
   /// <summary>
   /// This static class is responsible for obtaining built-in output window panen and
   /// managing (creating, obtaining and deleting) window panes through output pane 
   /// definition types.
   /// </summary>
-  // ==================================================================================
+  // ================================================================================================
   public static class OutputWindow
   {
     #region Private fields
@@ -27,58 +27,58 @@ namespace VSXtra
 
     #region Public properties
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// This property defines how output pane management exceptions should be handled.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static MissingOutputPaneHandling MissingOutputPaneHandling
     {
       get { return _MissingOutputPaneHandling; }
       set { _MissingOutputPaneHandling = value; }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the General window pane instance.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static OutputWindowPane General
     {
       get { return GetPane(typeof(GeneralPane)); }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the Build window pane instance.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static OutputWindowPane Build
     {
       get { return GetPane(typeof(BuildPane)); }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the Debug window pane instance.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static OutputWindowPane Debug
     {
       get { return GetPane(typeof(DebugPane)); }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets a virtual output window pane that does not show any output.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static OutputWindowPane Silent
     {
       get { return GetPane(typeof(SilentPane)); }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Creates an output window pane according to the specified definition type.
     /// </summary>
@@ -89,7 +89,7 @@ namespace VSXtra
     /// <remarks>
     /// The pane definition type should be a type deriving from WindowPaneDefinition.
     /// </remarks>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static OutputWindowPane CreatePane(Type type)
     {
       OutputPaneDefinition paneDef = CreatePaneDefinition(type);
@@ -107,7 +107,7 @@ namespace VSXtra
       return GetPane(type);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the output window pane according to the specified definition type.
     /// </summary>
@@ -118,7 +118,7 @@ namespace VSXtra
     /// <remarks>
     /// The pane definition type should be a type deriving from WindowPaneDefinition.
     /// </remarks>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static OutputWindowPane GetPane(Type type)
     {
       // --- Obtain the window pane
@@ -151,7 +151,7 @@ namespace VSXtra
       return new OutputWindowPane(paneDef, pane);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Deletes an output window pane according to the specified definition type.
     /// </summary>
@@ -162,7 +162,7 @@ namespace VSXtra
     /// <remarks>
     /// The pane definition type should be a type deriving from WindowPaneDefinition.
     /// </remarks>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static bool DeletePane(Type type)
     {
       OutputPaneDefinition paneDef = CreatePaneDefinition(type);
@@ -174,11 +174,11 @@ namespace VSXtra
 
     #region Output pane definitions
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// This class is a definition for the General output window pane.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private sealed class GeneralPane : OutputPaneDefinition
     {
       public override Guid GUID
@@ -187,11 +187,12 @@ namespace VSXtra
       }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// This class is a definition for the Debug output window pane.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    [AutoActivate(true)]
     private sealed class DebugPane : OutputPaneDefinition
     {
       public override Guid GUID
@@ -200,11 +201,12 @@ namespace VSXtra
       }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// This class is a definition for the Build output window pane.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    [AutoActivate(true)]
     private sealed class BuildPane : OutputPaneDefinition
     {
       public override Guid GUID
@@ -213,11 +215,11 @@ namespace VSXtra
       }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// This class is a definition for the Silent virtual output window pane.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private sealed class SilentPane : OutputPaneDefinition
     {
       public SilentPane()
@@ -230,17 +232,17 @@ namespace VSXtra
 
     #region Private methods
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the SVsOutputWindow service instance.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private static IVsOutputWindow OutputWindowInstance
     {
       get { return PackageBase.GetGlobalService<SVsOutputWindow, IVsOutputWindow>(); }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Creates a pane definition type instance.
     /// </summary>
@@ -248,7 +250,7 @@ namespace VSXtra
     /// <returns>
     /// Pane definition instance.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private static OutputPaneDefinition CreatePaneDefinition(Type type)
     {
       OutputPaneDefinition paneDef = null;
@@ -263,13 +265,13 @@ namespace VSXtra
       return paneDef;
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Creates an output window pane by using the SVsOutputWindow service.
     /// </summary>
     /// <param name="paneDef">Pane definition instance.</param>
     /// <returns>HRESULT indicating the success or failure.</returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private static int CreateWindowPane(OutputPaneDefinition paneDef)
     {
       Guid paneGuid = paneDef.GUID;
@@ -280,14 +282,14 @@ namespace VSXtra
         paneDef.ClearWithSolution ? -1 : 0);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets an output window pane by using the SVsOutputWindow service.
     /// </summary>
     /// <param name="paneDef">Pane definition instance.</param>
     /// <param name="pane">Pane instance</param>
     /// <returns>HRESULT indicating the success or failure.</returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private static int GetWindowPane(OutputPaneDefinition paneDef, 
       out IVsOutputWindowPane pane)
     {
@@ -295,20 +297,20 @@ namespace VSXtra
       return OutputWindowInstance.GetPane(ref paneGuid, out pane);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Deletes an output window pane by using the SVsOutputWindow service.
     /// </summary>
     /// <param name="paneDef">Pane definition instance.</param>
     /// <returns>HRESULT indicating the success or failure.</returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private static int DeleteWindowPane(OutputPaneDefinition paneDef)
     {
       Guid paneGuid = paneDef.GUID;
       return OutputWindowInstance.DeletePane(ref paneGuid);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Handles the error related to the specified window pane definition type.
     /// </summary>
@@ -316,7 +318,7 @@ namespace VSXtra
     /// <returns>
     /// Output window pane to redirect the output to.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private static OutputWindowPane HandleError(Type type)
     {
       OutputWindowPane newPane;

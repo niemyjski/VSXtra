@@ -10,16 +10,16 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace VSXtra
 {
-  // ==================================================================================
+  // ================================================================================================
   /// <summary>
   /// This static class is a wrapper class around the SvSUIShell operations.
   /// </summary>
-  // ==================================================================================
+  // ================================================================================================
   public static class VsMessageBox
   {
     #region MessageBox methods
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Displays a Visual Studio message box.
     /// </summary>
@@ -27,14 +27,14 @@ namespace VSXtra
     /// <returns>
     /// Result of the MessageBox.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text)
     {
       return ShowInternal(null, text, string.Empty, 0, MessageBoxButtons.OK,
         MessageBoxDefaultButton.Button1, MessageBoxIcon.Information, false);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Displays a Visual Studio message box.
     /// </summary>
@@ -43,14 +43,14 @@ namespace VSXtra
     /// <returns>
     /// Result of the MessageBox.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title)
     {
       return ShowInternal(title, text, string.Empty, 0, MessageBoxButtons.OK,
         MessageBoxDefaultButton.Button1, MessageBoxIcon.Information, false);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Displays a Visual Studio message box.
     /// </summary>
@@ -60,7 +60,7 @@ namespace VSXtra
     /// <returns>
     /// Result of the MessageBox.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
       MessageBoxButtons buttons)
     {
@@ -68,7 +68,7 @@ namespace VSXtra
         MessageBoxDefaultButton.Button1, MessageBoxIcon.Information, false);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Displays a Visual Studio message box.
     /// </summary>
@@ -79,7 +79,7 @@ namespace VSXtra
     /// <returns>
     /// Result of the MessageBox.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
       MessageBoxButtons buttons, MessageBoxIcon icon)
     {
@@ -87,7 +87,7 @@ namespace VSXtra
         MessageBoxDefaultButton.Button1, icon, false);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Displays a Visual Studio message box.
     /// </summary>
@@ -99,7 +99,7 @@ namespace VSXtra
     /// <returns>
     /// Result of the MessageBox.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
       MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
     {
@@ -107,7 +107,7 @@ namespace VSXtra
         defaultButton, icon, false);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Displays a Visual Studio message box.
     /// </summary>
@@ -120,7 +120,7 @@ namespace VSXtra
     /// <returns>
     /// Result of the MessageBox.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
       MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, 
       string helpFilePath)
@@ -129,7 +129,7 @@ namespace VSXtra
         defaultButton, icon, false);
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Displays a Visual Studio message box.
     /// </summary>
@@ -143,7 +143,7 @@ namespace VSXtra
     /// <returns>
     /// Result of the MessageBox.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
       MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, 
       string helpFilePath, uint helpTopic)
@@ -156,17 +156,17 @@ namespace VSXtra
 
     #region Private methods
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the IVsUIShell service instance.
     /// </summary>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private static IVsUIShell UIShell
     {
       get { return PackageBase.GetGlobalService<SVsUIShell, IVsUIShell>(); }
     }
 
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Displays a Visual Studio message box.
     /// </summary>
@@ -181,7 +181,7 @@ namespace VSXtra
     /// <returns>
     /// MessageBox result converted to DialogResult.
     /// </returns>
-    // --------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private static DialogResult ShowInternal(string title, string message, string helpFile, 
       uint helpTopic, MessageBoxButtons buttons, MessageBoxDefaultButton defButton,
       MessageBoxIcon icon, bool sysAlert)
