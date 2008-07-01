@@ -4,7 +4,6 @@
 // Created: 2008.06.29, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
-using Microsoft.VisualStudio.Shell;
 
 namespace VSXtra
 {
@@ -65,7 +64,7 @@ namespace VSXtra
   [AttributeUsage(AttributeTargets.Class)]
   public abstract class ActionAttribute : Attribute
   {
-    public abstract void ExecuteAction(OleMenuCommand command);
+    public abstract void ExecuteAction(MenuCommandHandler handler);
   }
 
   // ================================================================================================

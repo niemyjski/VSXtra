@@ -135,5 +135,42 @@ namespace VSXtra
       foreach (var item in collection)
         action(item);
     }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the specified custom attributes of a given type.
+    /// </summary>
+    /// <typeparam name="TAttr">Type of attributes to enumerate.</typeparam>
+    /// <param name="type">Type tosearch for attributes.</param>
+    /// <param name="inherit">True if the base class chain should be searched for attributes.</param>
+    /// <returns>Enumerated attributes.</returns>
+    // --------------------------------------------------------------------------------------------
+    public static IEnumerable<TAttr> AttributesOfType<TAttr>(this Type type, bool inherit)
+      where TAttr: Attribute
+    {
+      foreach (Attribute attr in type.GetCustomAttributes(typeof(TAttr), inherit))
+      {
+        var attrTypeOf = attr as TAttr;
+        if (attrTypeOf != null) yield return attrTypeOf;
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the specified custom attributes of a given type.
+    /// </summary>
+    /// <typeparam name="TAttr">Type of attributes to enumerate.</typeparam>
+    /// <param name="type">Type tosearch for attributes.</param>
+    /// <returns>Enumerated attributes.</returns>
+    // --------------------------------------------------------------------------------------------
+    public static IEnumerable<TAttr> AttributesOfType<TAttr>(this Type type)
+      where TAttr : Attribute
+    {
+      foreach (Attribute attr in type.GetCustomAttributes(typeof(TAttr), false))
+      {
+        var attrTypeOf = attr as TAttr;
+        if (attrTypeOf != null) yield return attrTypeOf;
+      }
+    }
   }
 }

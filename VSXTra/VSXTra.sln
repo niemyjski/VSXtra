@@ -19,9 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MenusAndCommands", "MenusAn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicCommands", "Samples\MenusAndCommands\DynamicCommands\DynamicCommands.csproj", "{79C4E3F7-2E93-4E39-ADD6-013A5D529899}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ToolWindows", "ToolWindows", "{6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicToolWindow", "Samples\ToolWindows\DynamicToolWindow\DynamicToolWindow.csproj", "{7277A590-9A1E-4A87-8105-88EDA21BAF8B}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs02.codeplex.com/
 		SccLocalPath0 = .
@@ -37,6 +41,10 @@ Global
 		SccProjectTopLevelParentUniqueName3 = VSXTra.sln
 		SccProjectName3 = Samples/OutputWindowSamples/OutputWindowWithAutoLoad
 		SccLocalPath3 = Samples\\OutputWindowSamples\\OutputWindowWithAutoLoad
+		SccProjectUniqueName4 = Samples\\ToolWindows\\DynamicToolWindow\\DynamicToolWindow.csproj
+		SccProjectTopLevelParentUniqueName4 = VSXTra.sln
+		SccProjectName4 = Samples/ToolWindows/DynamicToolWindow
+		SccLocalPath4 = Samples\\ToolWindows\\DynamicToolWindow
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +63,10 @@ Global
 		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,7 +75,9 @@ Global
 		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8} = {7DE710CE-48D1-4EBD-8022-432D8B3F5792}
 		{1D548488-9D1D-4E72-8FA8-A7C86F98FBBA} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
 		{F990B9E3-95D8-4DFE-B104-83652F77652B} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
 		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
 		{79C4E3F7-2E93-4E39-ADD6-013A5D529899} = {F990B9E3-95D8-4DFE-B104-83652F77652B}
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
 	EndGlobalSection
 EndGlobal

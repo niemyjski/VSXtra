@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidDynamicToolWindowPkg">
+    <Buttons>
+      <Button guid="guidDynamicToolWindowCmdSet" id="cmdidMyTool" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
+        <Icon guid="guidImages" id="bmpPicArrows" />
+        <Strings>
+          <CommandName>cmdidMyTool</CommandName>
+          <ButtonText>Dynamic Tool Window</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
+    </Bitmaps>
+ 
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidDynamicToolWindowPkg" value="{0c1e7d5a-6f1c-49b1-8bc8-0bee7c6f4b79}" />
+    <GuidSymbol name="guidDynamicToolWindowCmdSet" value="{75a300a4-0ec1-4eaf-8e6d-6cc72cbcbe3a}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidMyTool" value="0x0101" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImages" value="{a8d506c6-39f8-4480-989e-a97658987ef6}" >
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

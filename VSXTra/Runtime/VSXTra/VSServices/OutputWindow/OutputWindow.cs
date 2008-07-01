@@ -111,6 +111,21 @@ namespace VSXtra
     /// <summary>
     /// Gets the output window pane according to the specified definition type.
     /// </summary>
+    /// <typeparam name="TPane">Pane definition type.</typeparam>
+    /// <returns>
+    /// The newly created window pane.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    public static OutputWindowPane GetPane<TPane>()
+      where TPane: OutputPaneDefinition
+    {
+      return GetPane(typeof (TPane));
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the output window pane according to the specified definition type.
+    /// </summary>
     /// <param name="type">Pane definition type.</param>
     /// <returns>
     /// The newly created window pane.

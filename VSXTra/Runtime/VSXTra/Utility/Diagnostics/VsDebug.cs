@@ -67,6 +67,7 @@ namespace VSXtra
       if (!condition)
       {
         DisplayIndent();
+        OutputPane.Write("Assertion failed: ");
         OutputPane.WriteLine(message);
       }
     }
@@ -86,7 +87,11 @@ namespace VSXtra
     {
       if (!condition)
       {
-        Fail(message, details);
+        DisplayIndent();
+        OutputPane.Write("Assertion failed: ");
+        OutputPane.WriteLine(message);
+        DisplayIndent();
+        OutputPane.WriteLine(details);
       }
     }
 
