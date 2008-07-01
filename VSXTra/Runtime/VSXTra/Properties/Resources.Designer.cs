@@ -61,6 +61,24 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown docking style: {0}..
+        /// </summary>
+        internal static string Attributes_UnknownDockingStyle {
+            get {
+                return ResourceManager.GetString("Attributes_UnknownDockingStyle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown relative position: {0}..
+        /// </summary>
+        internal static string Attributes_UnknownPosition {
+            get {
+                return ResourceManager.GetString("Attributes_UnknownPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MenuCommandHandler type should be defined as a nested type in a type implementing the ICommandGroupProvider markup interface..
         /// </summary>
         internal static string CommandHandler_NoGroupType {
@@ -142,6 +160,15 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tool window cannot be created..
+        /// </summary>
+        internal static string Package_CannotCreateToolWindow {
+            get {
+                return ResourceManager.GetString("Package_CannotCreateToolWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The service {0} already exists in the service container..
         /// </summary>
         internal static string Package_DuplicateService {
@@ -192,6 +219,15 @@ namespace VSXtra.Properties {
         internal static string Reg_NotifyAutoLoad {
             get {
                 return ResourceManager.GetString("Reg_NotifyAutoLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ToolWindow:       {0}, {1}.
+        /// </summary>
+        internal static string Reg_NotifyToolResource {
+            get {
+                return ResourceManager.GetString("Reg_NotifyToolResource", resourceCulture);
             }
         }
         

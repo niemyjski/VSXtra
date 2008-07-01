@@ -20,21 +20,13 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace VSXtra
 {
-
   // ================================================================================================
   /// <summary>
-  /// This is a quick way to implement a window pane. This class implements IVsWindowPane; you
-  /// must provide an implementation of an object that returns an IWin32Window, however. In addition
-  /// to IVsWindowPane this object implements IOleCommandTarget, mapping it to IMenuCommandService
-  /// and IObjectWithSite, mapping the site to services that can be querried through its protected
-  /// GetService method.
+  /// This interface represents the behavior of a window pane.
   /// </summary>
-  /// <typeparam name="TPackage">The type of the package owning this window pane.</typeparam>
-  /// <typeparam name="TUIControl">The type of the user control represnting the UI.</typeparam>
   // ================================================================================================
-  [ComVisible(true)]
-  public abstract class WindowPane<TPackage, TUIControl>:
-  // Provides methods that fill the content of a window pane into a window frame and handle 
+  public interface IWindowPaneBehavior:
+    // Provides methods that fill the content of a window pane into a window frame and handle 
     // commands for the pane.
     IVsWindowPane,
 
@@ -50,10 +42,28 @@ namespace VSXtra
     // Defines a mechanism for retrieving a service object; that is, an object that provides custom 
     // support to other objects. Since window pane provides services for external objects, this
     // interface must be implemented.
-    IServiceProvider,
+    IServiceProvider
+  {
+    IWin32Window Window { get; }
+  }
 
-    // Defines a method to release allocated resources. Since we allocate unmanaged resources we
-    // must implement this interface.
+  // ================================================================================================
+  /// <summary>
+  /// This is a quick way to implement a window pane. This class implements IVsWindowPane; you
+  /// must provide an implementation of an object that returns an IWin32Window, however. In addition
+  /// to IVsWindowPane this object implements IOleCommandTarget, mapping it to IMenuCommandService
+  /// and IObjectWithSite, mapping the site to services that can be querried through its protected
+  /// GetService method.
+  /// </summary>
+  /// <typeparam name="TPackage">The type of the package owning this window pane.</typeparam>
+  /// <typeparam name="TUIControl">The type of the user control represnting the UI.</typeparam>
+  // ================================================================================================
+  [ComVisible(true)]
+  public abstract class WindowPane<TPackage, TUIControl>:
+    IWindowPaneBehavior,
+
+    // --- Defines a method to release allocated resources. Since we allocate unmanaged resources we
+    // --- must implement this interface.
     IDisposable
     where TPackage: PackageBase
     where TUIControl: UserControl, new()
@@ -95,21 +105,11 @@ namespace VSXtra
     /// <summary>
     /// Initializes a new instance of the <see cref="WindowPane&lt;TPackage, TUIControl&gt;"/> class.
     /// </summary>
-    /// <param name="ownerPackage">Package owning this window pane.</param>
-    /// <devdoc>
-    /// Creates a new window pane.  The window pane can accept a service ownerPackage
-    /// to use when resolving services.  This ownerPackage can be null.
-    /// </devdoc>
-    /// <remarks>
-    /// The window pane can accept ownerPackage to use when resolving services. This ownerPackage 
-    /// can be null. In this case the site of the window pane (and not the package) will provide
-    /// requested service objects.
-    /// </remarks>
     // --------------------------------------------------------------------------------------------
-    protected WindowPane(TPackage ownerPackage)
+    protected WindowPane()
     {
-      _Package = ownerPackage;
-      _ParentServiceProvider = ownerPackage;
+      _Package = PackageBase.GetPackageInstance<TPackage>();
+      _ParentServiceProvider = _Package;
       _UIControl = new TUIControl();
     }
 

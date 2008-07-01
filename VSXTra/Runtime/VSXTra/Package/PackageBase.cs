@@ -91,7 +91,10 @@ namespace VSXtra
     /// <summary>Dictionary for service instances.</summary>
     private Dictionary<Type, object> _Services;
 
-    private Hashtable _ToolWindows;          // this is the list of all toolwindows
+    /// <summary>Dictionary for tool window instances.</summary>
+    private readonly Dictionary<ToolWindowID, IToolWindowPaneBehavior> _ToolWindows =
+      new Dictionary<ToolWindowID, IToolWindowPaneBehavior>();
+
     private Container _componentToolWindows; // this is the toolwindows that implement IComponent
 
     #endregion
@@ -342,37 +345,108 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Shows the tool window of the specified type having the given instance ID.
+    /// </summary>
+    /// <typeparam name="TWindow">Type of tool window to show up.</typeparam>
+    /// <param name="instanceID">ID of the tool window toshow up.</param>
+    /// <remarks>
+    /// If the tool window instance does not exists, this method first creates the instance.
+    /// Use this method when you want to manage multiple instances of the same tool window type.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    public void ShowToolWindow<TWindow>(int instanceID)
+      where TWindow: class, IToolWindowPaneBehavior
+    {
+      var window = FindToolWindow(typeof(TWindow), instanceID, true);
+      if ((null == window) || (null == window.Frame))
+      {
+        throw new NotSupportedException(Resources.Package_CannotCreateToolWindow);
+      }
+      var windowFrame = (IVsWindowFrame)window.Frame;
+      if (windowFrame != null)
+      {
+        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+      }
+      else
+      {
+        VsDebug.Fail("Windowframe cannot be obtained.");
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Shows the tool window of the specified type.
+    /// </summary>
+    /// <typeparam name="TWindow">Type of tool window to show up.</typeparam>
+    /// <remarks>
+    /// If the tool window instance does not exists, this method first creates the instance. Use 
+    /// this method when you want to manage a single instance of the specified tool window type.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    public void ShowToolWindow<TWindow>()
+      where TWindow : class, IToolWindowPaneBehavior
+    {
+      ShowToolWindow<TWindow>(0);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Shows the tool window of the specified type having the given instance ID.
+    /// </summary>
+    /// <param name="type">Type of tool window to create.</param>
+    /// <param name="instanceId">ID of the tool window to show up.</param>
+    /// <remarks>
+    /// If the tool window instance does not exists, this method first creates the instance.
+    /// Use this method when you want to manage multiple instances of the same tool window type.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    public void ShowToolWindow(Type type, int instanceId)
+    {
+      var window = FindToolWindow(type, instanceId, true);
+      if ((null == window) || (null == window.Frame))
+      {
+        throw new NotSupportedException(Resources.Package_CannotCreateToolWindow);
+      }
+      var windowFrame = (IVsWindowFrame)window.Frame;
+      if (windowFrame != null)
+      {
+        Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+      }
+      else
+      {
+        VsDebug.Fail("Windowframe cannot be obtained.");
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Creates a tool window of the specified type with the specified ID.
     /// </summary>
+    /// <param name="toolWindowType">Type of tool window to create.</param>
     /// <param name="id">Instance ID</param>
     /// <returns>An instance of a class derived from ToolWindowPane</returns>
     // --------------------------------------------------------------------------------------------
-    protected ToolWindowPane CreateToolWindow(Type toolWindowType, int id)
+    protected IToolWindowPaneBehavior CreateToolWindow(Type toolWindowType, int id)
     {
-      if (toolWindowType == null)
-        throw new ArgumentNullException("toolWindowType");
       if (id < 0)
-        throw new ArgumentOutOfRangeException(string.Format(Resources.Culture, Resources.Package_InvalidInstanceID, id));
-      if (!toolWindowType.IsSubclassOf(typeof(ToolWindowPane)))
-        throw new ArgumentException(Resources.Package_InvalidToolWindowClass);
+        throw new ArgumentOutOfRangeException(
+          string.Format(Resources.Culture, Resources.Package_InvalidInstanceID, id));
+      
+      // TODO: Check if TWindow is ToolWindowPane<,>
+      // if (!typeof(TWindow).IsSubclassOf(typeof(ToolWindowPane)))
+      //   throw new ArgumentException(Resources.Package_InvalidToolWindowClass);
 
-      // Look in the Attributes of this package and see if this package
-      // support this type of ToolWindow
-      Attribute[] attributes = Attribute.GetCustomAttributes(this.GetType());
-      foreach (Attribute attribute in attributes)
+      // ---Look in the Attributes of this package and see if this package
+      // --- support this type of ToolWindow
+      foreach (var tool in GetType().AttributesOfType<ProvideToolWindowAttribute>())
       {
-        if (attribute is ProvideToolWindowAttribute)
+        if (tool.ToolType == toolWindowType)
         {
-          ProvideToolWindowAttribute tool = (ProvideToolWindowAttribute)attribute;
-          if (tool.ToolType == toolWindowType)
-          {
-            // We found the corresponding attribute on the package,
-            // so create the toolwindow
-            return CreateToolWindow(toolWindowType, id, tool);
-          }
+          // --- We found the corresponding attribute on the package,
+          // --- so create the toolwindow
+          return CreateToolWindow(toolWindowType, id, tool);
         }
       }
-
       return null;
     }
 
@@ -380,24 +454,27 @@ namespace VSXtra
     /// <summary>
     /// This is the only method that should be calling IVsUiShell.CreateToolWindow()
     /// </summary>
-    /// <param name="toolWindowType">Type representing the tool window</param>
+    /// <param name="toolWindowType">Tool window type to create</param>
     /// <param name="id">Instance ID</param>
     /// <param name="tool">Attribute used to create the tool window</param>
     /// <returns>An instance of a class derived from ToolWindowPane</returns>
     // --------------------------------------------------------------------------------------------
-    private ToolWindowPane CreateToolWindow(Type toolWindowType, int id, ProvideToolWindowAttribute tool)
+    private IToolWindowPaneBehavior CreateToolWindow(Type toolWindowType, int id, 
+      ProvideToolWindowAttribute tool)
     {
-      if (toolWindowType == null)
-        throw new ArgumentNullException("toolWindowType");
       if (id < 0)
-        throw new ArgumentOutOfRangeException(string.Format(Resources.Culture, Resources.Package_InvalidInstanceID, id));
-      if (!toolWindowType.IsSubclassOf(typeof(ToolWindowPane)))
-        throw new ArgumentException(Resources.Package_InvalidToolWindowClass);
+        throw new ArgumentOutOfRangeException(
+          string.Format(Resources.Culture, Resources.Package_InvalidInstanceID, id));
+
       if (tool == null)
         throw new ArgumentNullException("tool");
 
+      // TODO: Check if TWindow is ToolWindowPane<,>
+      // if (!typeof(TWindow).IsSubclassOf(typeof(ToolWindowPane)))
+      //   throw new ArgumentException(Resources.Package_InvalidToolWindowClass);
+
       // --- First create an instance of the ToolWindowPane
-      var window = (ToolWindowPane)Activator.CreateInstance(toolWindowType);
+      var window = (IToolWindowPaneBehavior)Activator.CreateInstance(toolWindowType);
 
       // --- Check if this window has a ToolBar
       bool hasToolBar = (window.ToolBar != null);
@@ -415,7 +492,7 @@ namespace VSXtra
       if (toolClsid.CompareTo(Guid.Empty) == 0)
       {
         // --- If a tool CLSID is not specified, then host the IVsWindowPane
-        windowPane = window.GetIVsWindowPane() as IVsWindowPane;
+        windowPane = window;
       }
       Guid persistenceGuid = toolWindowType.GUID;
       IVsWindowFrame windowFrame;
@@ -436,7 +513,8 @@ namespace VSXtra
           out windowFrame);
       NativeMethods.ThrowOnFailure(hr);
 
-      window.Package = this;
+      // --- We must set it at construction time...
+      //window.Package = this;
 
       // If the toolwindow is a component, site it.
       IComponent component = null;
@@ -473,52 +551,74 @@ namespace VSXtra
       // If the ToolWindow was created successfully, keep track of it
       if (window != null)
       {
-        if (_ToolWindows == null)
-          _ToolWindows = new Hashtable();
-        _ToolWindows.Add(GetHash(toolWindowType.GUID, id), window);
+        var toolWIndowID = new ToolWindowID(toolWindowType, id);
+        VsDebug.Assert(!_ToolWindows.ContainsKey(toolWIndowID), "An existing tool window instance has been recreated.");
+        _ToolWindows.Add(toolWIndowID, window);
       }
       return window;
     }
 
 
-    /// <include file='doc\Package.uex' path='docs/doc[@for="Package.0lWindow"]/*' />
-    /// <devdoc>
-    /// Return the tool window corresponding to the specified type and ID.
-    /// If it does not exist, it returns creates one if create is true,
-    /// or null if create is false.
-    /// </devdoc>
-    /// <param name="toolWindowType">Type of the window to be created</param>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Return the tool window corresponding to the specified type and ID. If it does not exist, 
+    /// it creates one if create is true, or returns null if create is false.
+    /// </summary>
+    /// <typeparam name="TWindow">Type of tool window to find.</typeparam>
     /// <param name="id">Instance ID</param>
     /// <param name="create">Create if none exist?</param>
-    /// <returns>An instance of a class derived from ToolWindowPane</returns>
-    public ToolWindowPane FindToolWindow(Type toolWindowType, int id, bool create)
+    /// <returns>An instance of the tool window</returns>
+    // --------------------------------------------------------------------------------------------
+    public TWindow FindToolWindow<TWindow>(int id, bool create)
+      where TWindow: class, IToolWindowPaneBehavior
+    {
+      var window = FindToolWindow(typeof(TWindow), id, create, null);
+      var toolWindow = window as TWindow;
+      VsDebug.Assert(toolWindow != null, "Tool window is not the expected type.");
+      return toolWindow;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Return the tool window corresponding to the specified type and ID. If it does not exist, 
+    /// it creates one if create is true, or returns null if create is false.
+    /// </summary>
+    /// <param name="toolWindowType">Type of tool window to create.</param>
+    /// <param name="id">Instance ID</param>
+    /// <param name="create">Create if none exist?</param>
+    /// <returns>An instance of the tool window</returns>
+    // --------------------------------------------------------------------------------------------
+    public IToolWindowPaneBehavior FindToolWindow(Type toolWindowType, int id, bool create)
     {
       return FindToolWindow(toolWindowType, id, create, null);
     }
 
-    private ToolWindowPane FindToolWindow(Type toolWindowType, int id, bool create, ProvideToolWindowAttribute tool)
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Return the tool window corresponding to the specified type and ID. If it does not exist, 
+    /// it creates one if create is true, or returns null if create is false.
+    /// </summary>
+    /// <param name="toolWindowType">Type of tool window to create.</param>
+    /// <param name="id">Instance ID</param>
+    /// <param name="create">Create if none exist?</param>
+    /// <param name="tool">Optional attribute used for initialization.</param>
+    /// <returns>An instance of the tool window</returns>
+    // --------------------------------------------------------------------------------------------
+    private IToolWindowPaneBehavior FindToolWindow(Type toolWindowType, int id, bool create, ProvideToolWindowAttribute tool)
     {
-      if (toolWindowType == null)
-        throw new ArgumentNullException("toolWindowType");
-
-      ToolWindowPane window = null;
-
-      int hash = GetHash(toolWindowType.GUID, id);
-      if (_ToolWindows != null && _ToolWindows.ContainsKey(hash))
-        window = (ToolWindowPane)_ToolWindows[hash];
-      else if (create)
+      // --- Check, if we have already created the specified tool window instance
+      IToolWindowPaneBehavior window;
+      var toolWindowID = new ToolWindowID(toolWindowType, id);
+      if (!_ToolWindows.TryGetValue(toolWindowID, out window))
       {
-        window = tool != null 
-          ? CreateToolWindow(toolWindowType, id, tool) 
-          : CreateToolWindow(toolWindowType, id);
+        if (create)
+        {
+          window = tool != null
+                     ? CreateToolWindow(toolWindowType, id, tool)
+                     : CreateToolWindow(toolWindowType, id);
+        }
       }
-
       return window;
-    }
-
-    static private int GetHash(Guid guid, int id)
-    {
-      return guid.ToString("N").GetHashCode() ^ id;
     }
 
     #endregion
@@ -1287,19 +1387,14 @@ namespace VSXtra
       int instanceID = (int)id;
 
       // --- Find the Type for this GUID
-      Attribute[] attributes = Attribute.GetCustomAttributes(GetType());
-      foreach (Attribute attribute in attributes)
+      foreach (var tool in GetType().AttributesOfType<ProvideToolWindowAttribute>())
       {
-        if (attribute is ProvideToolWindowAttribute)
+        if (tool.ToolType.GUID == toolWindowType)
         {
-          ProvideToolWindowAttribute tool = (ProvideToolWindowAttribute) attribute;
-          if (tool.ToolType.GUID == toolWindowType)
-          {
-            // --- We found the corresponding type. If a window gets created this way, 
-            // --- FindToolWindow should be used to get a reference to it.
-            FindToolWindow(tool.ToolType, instanceID, true, tool);
-            break;
-          }
+          // --- We found the corresponding type. If a window gets created this way, 
+          // --- FindToolWindow should be used to get a reference to it.
+          FindToolWindow(tool.ToolType, instanceID, true, tool);
+          break;
         }
       }
       return NativeMethods.S_OK;
@@ -1394,6 +1489,30 @@ namespace VSXtra
 
       /// <summary>Cookie returned by IProfferService.ProfferService method</summary>
       public uint Cookie;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This helper class holds information about a tool window instance.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private sealed class ToolWindowID
+    {
+      /// <summary>Type of the tool window</summary>
+      public Type Type { get; private set; }
+      /// <summary>Id of the tool window instance</summary>
+      public int Id { get; private set; }
+
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Creates a new instance of the tool window id with the specified parameters
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      public ToolWindowID(Type type, int id)
+      {
+        Type = type;
+        Id = id;
+      }
     }
 
     /// <devdoc>

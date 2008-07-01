@@ -139,7 +139,7 @@ namespace VSXtra
     /// Gets the package owning this menu command.
     /// </summary>
     // ------------------------------------------------------------------------------
-    protected PackageBase Package
+    public PackageBase Package
     {
       get { return _Package; }
     }
@@ -149,7 +149,7 @@ namespace VSXtra
     /// Gets the service provider belonging to the owner package.
     /// </summary>
     // ------------------------------------------------------------------------------
-    protected IServiceProvider ServiceProvider
+    public IServiceProvider ServiceProvider
     {
       get { return _Package; }
     }
@@ -159,7 +159,7 @@ namespace VSXtra
     /// Gets the OleMenuCommand instance belonging to this instance.
     /// </summary>
     // ------------------------------------------------------------------------------
-    protected OleMenuCommand MenuCommand
+    public OleMenuCommand MenuCommand
     {
       get { return _MenuCommand; }
     }
@@ -205,7 +205,7 @@ namespace VSXtra
     // ------------------------------------------------------------------------------
     protected virtual void OnExecute(OleMenuCommand command)
     {
-      if (_CommandAction != null) _CommandAction.ExecuteAction(command);
+      if (_CommandAction != null) _CommandAction.ExecuteAction(this);
     }
 
     // ------------------------------------------------------------------------------

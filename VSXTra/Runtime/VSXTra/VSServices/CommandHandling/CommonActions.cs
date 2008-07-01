@@ -5,7 +5,6 @@
 // ================================================================================================
 using System;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.Shell;
 
 namespace VSXtra
 {
@@ -29,9 +28,9 @@ namespace VSXtra
     /// <summary>
     /// Puts the message to the current pane of the output window.
     /// </summary>
-    /// <param name="command">Menu command instance.</param>
+    /// <param name="command">Menu command handler instance.</param>
     // --------------------------------------------------------------------------------------------
-    public override void ExecuteAction(OleMenuCommand command)
+    public override void ExecuteAction(MenuCommandHandler command)
     {
       Console.WriteLine(_Message);
     }
@@ -136,9 +135,60 @@ namespace VSXtra
     /// </summary>
     /// <param name="command">Menu command instance.</param>
     // --------------------------------------------------------------------------------------------
-    public override void ExecuteAction(OleMenuCommand command)
+    public override void ExecuteAction(MenuCommandHandler command)
     {
       VsMessageBox.Show(_Text, _Title, _Buttons, _Icon, _DefaultButton);
+    }
+  }
+
+  #endregion
+
+  #region ShowToolWindowAction
+
+  // ================================================================================================
+  /// <summary>
+  /// This class implements a menu action that puts a message to the output window.
+  /// </summary>
+  // ================================================================================================
+  public sealed class ShowToolWindowActionAttribute : ActionAttribute
+  {
+    private readonly Type _Type;
+    private readonly int _InstanceId;
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Cretaes an action to show up a singleton instance of a tool window with the specified type.
+    /// </summary>
+    /// <param name="type">Typeof the tool window.</param>
+    // --------------------------------------------------------------------------------------------
+    public ShowToolWindowActionAttribute(Type type)
+    {
+      _Type = type;
+      _InstanceId = 0;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Cretaes an action to show up the specified instance of a window with the specified type.
+    /// </summary>
+    /// <param name="type">Typeof the tool window.</param>
+    /// <param name="instanceId">Tool window instance ID.</param>
+    // --------------------------------------------------------------------------------------------
+    public ShowToolWindowActionAttribute(Type type, int instanceId)
+    {
+      _Type = type;
+      _InstanceId = instanceId;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Puts the message to the current pane of the output window.
+    /// </summary>
+    /// <param name="command">Menu command handler instance.</param>
+    // --------------------------------------------------------------------------------------------
+    public override void ExecuteAction(MenuCommandHandler command)
+    {
+      command.Package.ShowToolWindow(_Type, _InstanceId);
     }
   }
 

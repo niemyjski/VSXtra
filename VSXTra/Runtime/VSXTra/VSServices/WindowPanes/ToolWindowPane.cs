@@ -20,13 +20,30 @@ namespace VSXtra
 {
   // ================================================================================================
   /// <summary>
+  /// This interface represents the behavior of a tool window pane.
+  /// </summary>
+  // ================================================================================================
+  public interface IToolWindowPaneBehavior : IWindowPaneBehavior
+  {
+    CommandID ToolBar { get; set; }
+    Guid ToolClsid { get; set; }
+    string Caption { get; set; }
+    object Frame { get; set; }
+    int ToolBarLocation { get; set; }
+    void OnToolBarAdded();
+  }
+
+  // ================================================================================================
+  /// <summary>
   /// This class implements a tool window pane by specializing a simple window pane.
   /// </summary>
   /// <typeparam name="TPackage">The type of the package owning this window pane.</typeparam>
   /// <typeparam name="TUIControl">The type of the user control represnting the UI.</typeparam>
   // ================================================================================================
   [ComVisible(true)]
-  public abstract class ToolWindowPane<TPackage, TUIControl> : WindowPane<TPackage, TUIControl>
+  public abstract class ToolWindowPane<TPackage, TUIControl> : 
+    WindowPane<TPackage, TUIControl>,
+    IToolWindowPaneBehavior
     where TPackage : PackageBase
     where TUIControl : UserControl, new()
   {
@@ -60,24 +77,8 @@ namespace VSXtra
     /// <summary>
     /// Initializes a new instance of this class.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The constructor checks the following attributes to set up the initial state of the tool 
-    /// window:
-    /// </para>
-    /// 	<list type="bullet">
-    /// 		<item></item>
-    /// 		<item>
-    /// 			<see cref="InitialCaptionAttribute"/>
-    /// 		</item>
-    /// 		<item>
-    /// 			<see cref="BitmapResourceIdAttribute"/>
-    /// 		</item>
-    /// 	</list>
-    /// </remarks>
-    /// <param name="package">The package owning this tool window.</param>
     // --------------------------------------------------------------------------------------------
-    protected ToolWindowPane(TPackage package) : base(package)
+    protected ToolWindowPane()
     {
       _ToolClsid = Guid.Empty;
       _BitmapIndex = -1;
@@ -87,10 +88,10 @@ namespace VSXtra
       // --- Obtain attributes of the class
       foreach (object attr in GetType().GetCustomAttributes(false))
       {
-        var captionAttr = attr as DisplayNameAttribute;
+        var captionAttr = attr as InitialCaptionAttribute;
         if (captionAttr != null)
         {
-          Caption = StringResolver<TPackage>.Resolve(captionAttr.DisplayName);
+          Caption = StringResolver<TPackage>.Resolve(captionAttr.Value);
           continue;
         }
         var resIdAttr = attr as BitmapResourceIdAttribute;
@@ -267,22 +268,6 @@ namespace VSXtra
           VsDebug.Assert(hr >= 0, "Failed to set bitmap index on toolwindow");
         }
       }
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// This method make it possible to provide an IVsWindowPane not derived from ToolWindowPane
-    /// To support that scenario one would override this method and create their IVsWindowPane and
-    /// return it.
-    /// </summary>
-    /// <returns>
-    /// IVsWindowPane to be hosted in the toolwindow frame
-    /// </returns>
-    // --------------------------------------------------------------------------------------------
-    // TODO: Think it over if we need this method at all
-    public virtual object GetIVsWindowPane()
-    {
-      return this;
     }
 
     // --------------------------------------------------------------------------------------------
