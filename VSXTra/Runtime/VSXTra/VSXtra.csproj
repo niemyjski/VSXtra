@@ -42,6 +42,8 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.VSHelp, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.VSHelp80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -69,15 +71,20 @@
     </Compile>
     <Compile Include="RegistrationAttributes\XtraProvideAutoLoadAttribute.cs" />
     <Compile Include="Utility\Attributes\BoolAttribute.cs" />
+    <Compile Include="Utility\Attributes\StringAttribute.cs" />
     <Compile Include="Utility\ComHelper.cs" />
+    <Compile Include="Utility\Diagnostics\VsDebug.cs" />
     <Compile Include="Utility\GuidTypes\UIContext.cs" />
     <Compile Include="Utility\GuidTypes\WindowKind.cs" />
     <Compile Include="Utility\CommonExtensions.cs" />
+    <Compile Include="Utility\HelpService.cs" />
     <Compile Include="Utility\NativeMethods.cs" />
+    <Compile Include="Utility\StringResolver.cs" />
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
     <Compile Include="VSServices\ActivityLog.cs" />
     <Compile Include="VSServices\CommandHandling\CommandGroup.cs" />
+    <Compile Include="VSServices\CommandHandling\CommonActions.cs" />
     <Compile Include="VSServices\CommandHandling\MenuCommandAttributes.cs" />
     <Compile Include="VSServices\CommandHandling\MenuCommandHandler.cs" />
     <Compile Include="VSServices\OutputWindow\MissingOutputPaneHandling.cs" />
@@ -86,6 +93,9 @@
     <Compile Include="VSServices\OutputWindow\OutputWindow.cs" />
     <Compile Include="VSServices\OutputWindow\OutputWindowPane.cs" />
     <Compile Include="VSServices\VsMessageBox.cs" />
+    <Compile Include="VSServices\WindowPanes\ToolWindowAttributes.cs" />
+    <Compile Include="VSServices\WindowPanes\ToolWindowPane.cs" />
+    <Compile Include="VSServices\WindowPanes\WindowPane.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -48,6 +48,13 @@ namespace VSXtra
     private readonly PackageBase _Package;
     private readonly CommandID _CommandId;
     private OleMenuCommand _MenuCommand;
+    private readonly ActionAttribute _CommandAction;
+    private readonly CommandCheckedAttribute _CheckedAttribute;
+    private readonly CommandEnabledAttribute _EnabledAttribute;
+    private readonly CommandParametersDescriptionAttribute _DescriptionsAttribute;
+    private readonly CommandSupportedAttribute _SupportedAttribute;
+    private readonly CommandVisibleAttribute _VisibleAttribute;
+    private readonly CommandTextAttribute _TextAttribute;
 
     private static readonly Dictionary<Type, MenuCommandHandler> _Handlers = 
       new Dictionary<Type, MenuCommandHandler>();
@@ -87,7 +94,7 @@ namespace VSXtra
         throw new InvalidOperationException(Resources.CommandHandler_NoPackage);
       }
 
-      // --- Obtain the command ID
+      // --- Obtain attribute values
       var commandGuid = thisType.DeclaringType.GUID;
       foreach (object attr in GetType().GetCustomAttributes(false))
       {
@@ -96,6 +103,20 @@ namespace VSXtra
         {
           _CommandId = new CommandID(commandGuid, (int)idAttr.Value);
         }
+        var actionAttr = attr as ActionAttribute;
+        if (actionAttr != null) _CommandAction = actionAttr;
+        var checkedAttr = attr as CommandCheckedAttribute;
+        if (checkedAttr != null) _CheckedAttribute = checkedAttr;
+        var enabledAttr = attr as CommandEnabledAttribute;
+        if (enabledAttr != null) _EnabledAttribute = enabledAttr;
+        var suppAttr = attr as CommandSupportedAttribute;
+        if (suppAttr != null) _SupportedAttribute = suppAttr;
+        var visibleAttr = attr as CommandVisibleAttribute;
+        if (visibleAttr != null) _VisibleAttribute = visibleAttr;
+        var textAttr = attr as CommandTextAttribute;
+        if (textAttr != null) _TextAttribute = textAttr;
+        var descrAttr = attr as CommandParametersDescriptionAttribute;
+        if (descrAttr != null) _DescriptionsAttribute = descrAttr;
       }
     }
 
@@ -184,6 +205,7 @@ namespace VSXtra
     // ------------------------------------------------------------------------------
     protected virtual void OnExecute(OleMenuCommand command)
     {
+      if (_CommandAction != null) _CommandAction.ExecuteAction(command);
     }
 
     // ------------------------------------------------------------------------------
@@ -215,6 +237,13 @@ namespace VSXtra
     // ------------------------------------------------------------------------------
     protected virtual void BeforeBind(OleMenuCommand command)
     {
+      if (_CheckedAttribute != null) command.Checked = _CheckedAttribute.Value;
+      if (_EnabledAttribute != null) command.Enabled = _EnabledAttribute.Value;
+      if (_SupportedAttribute != null) command.Supported = _SupportedAttribute.Value;
+      if (_VisibleAttribute != null) command.Visible = _VisibleAttribute.Value;
+      if (_TextAttribute != null) command.Text = _TextAttribute.Value;
+      if (_DescriptionsAttribute != null)
+        command.ParametersDescription = _DescriptionsAttribute.Value;
     }
 
     #endregion

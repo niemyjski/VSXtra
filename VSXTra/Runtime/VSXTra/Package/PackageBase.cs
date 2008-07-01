@@ -13,7 +13,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -153,10 +152,8 @@ namespace VSXtra
                   int hr = ps.RevokeService(proffer.Cookie);
                   if (NativeMethods.Failed(hr))
                   {
-                    Debug.Fail(String.Format(CultureInfo.CurrentUICulture, 
+                    VsDebug.Fail(String.Format(CultureInfo.CurrentUICulture, 
                                              "Failed to unregister service {0}", service.GetType().FullName));
-                    Trace.WriteLine(String.Format(CultureInfo.CurrentUICulture, 
-                                                  "Failed to unregister service {0}", service.GetType().FullName));
                   }
                 }
               }
@@ -169,7 +166,7 @@ namespace VSXtra
         }
         catch (Exception e)
         {
-          Debug.Fail(String.Format("Failed to dispose proffered service for package {0}\n{1}", 
+          VsDebug.Fail(String.Format("Failed to dispose proffered service for package {0}\n{1}", 
                                    GetType().FullName, e.Message));
         }
       }
@@ -188,7 +185,7 @@ namespace VSXtra
           }
           catch (Exception e)
           {
-            Debug.Fail(String.Format("Failed to dispose the global service provider for package {0}\n{1}", 
+            VsDebug.Fail(String.Format("Failed to dispose the global service provider for package {0}\n{1}", 
                                      GetType().FullName, e.Message));
           }
         }
@@ -245,7 +242,7 @@ namespace VSXtra
             {
               // --- Callback passed us a bad service. NULL it, rather than throwing an exception.
               // --- Callers here do not need to be prepared to handle bad callback implemetations.
-              Debug.Fail("Object " + value.GetType().Name + " was returned from a service creator callback but it does not implement the registered type of " + serviceType.Name);
+              VsDebug.Fail("Object " + value.GetType().Name + " was returned from a service creator callback but it does not implement the registered type of " + serviceType.Name);
               value = null;
             }
             _Services[serviceType] = value;
@@ -256,7 +253,7 @@ namespace VSXtra
       // --- Delegate to the parent provider, but only if we have verified that _Services doesn't 
       // --- actually contain our key if it does, that means that we're in the middle of trying to 
       // --- resolve this service, and the service resolution has recursed.
-      Debug.Assert(value != null || _Services == null || !_Services.ContainsKey(serviceType),
+      VsDebug.Assert(value != null || _Services == null || !_Services.ContainsKey(serviceType),
         "GetService is recursing on itself while trying to resolve the service " + serviceType.Name + ". This means that someone is asking for this service while the service is trying to create itself.  Breaking the recursion now and aborting this GetService call.");
       if (value == null && _ServiceProvider != null && (_Services == null || 
         !_Services.ContainsKey(serviceType)))
@@ -279,7 +276,7 @@ namespace VSXtra
     static public object GetGlobalService(Type serviceType)
     {
       object service = null;
-      Debug.Assert(_GlobalServiceProvider != null, 
+      VsDebug.Assert(_GlobalServiceProvider != null, 
         "You are calling GetGlobalService before any package derived from the managed package framework has been sited. This is not supported");
 
       if (_GlobalServiceProvider != null)
@@ -383,7 +380,7 @@ namespace VSXtra
     /// <summary>
     /// This is the only method that should be calling IVsUiShell.CreateToolWindow()
     /// </summary>
-    /// <typeparam name="TWindowType">Type of the window to be created</typeparam>
+    /// <param name="toolWindowType">Type representing the tool window</param>
     /// <param name="id">Instance ID</param>
     /// <param name="tool">Attribute used to create the tool window</param>
     /// <returns>An instance of a class derived from ToolWindowPane</returns>
@@ -399,10 +396,10 @@ namespace VSXtra
       if (tool == null)
         throw new ArgumentNullException("tool");
 
-      // First create an instance of the ToolWindowPane
-      ToolWindowPane window = (ToolWindowPane)Activator.CreateInstance(toolWindowType);
+      // --- First create an instance of the ToolWindowPane
+      var window = (ToolWindowPane)Activator.CreateInstance(toolWindowType);
 
-      // Check if this window has a ToolBar
+      // --- Check if this window has a ToolBar
       bool hasToolBar = (window.ToolBar != null);
 
       uint flags = (uint)__VSCREATETOOLWIN.CTW_fInitNew;
@@ -417,13 +414,13 @@ namespace VSXtra
       IVsWindowPane windowPane = null;
       if (toolClsid.CompareTo(Guid.Empty) == 0)
       {
-        // If a tool CLSID is not specified, then host the IVsWindowPane
+        // --- If a tool CLSID is not specified, then host the IVsWindowPane
         windowPane = window.GetIVsWindowPane() as IVsWindowPane;
       }
       Guid persistenceGuid = toolWindowType.GUID;
       IVsWindowFrame windowFrame;
       // Use IVsUIShell to create frame.
-      IVsUIShell vsUiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
+      var vsUiShell = this.GetService<SVsUIShell, IVsUIShell>();
       if (vsUiShell == null)
         throw new Exception(string.Format(Resources.Culture, Resources.General_MissingService, typeof(SVsUIShell).FullName));
 
@@ -451,10 +448,10 @@ namespace VSXtra
       {
         if (_componentToolWindows == null)
           _componentToolWindows = new PackageContainer(this);
-        _componentToolWindows.Add((IComponent)component);
+        _componentToolWindows.Add(component);
       }
 
-      // This generates the OnToolWindowCreated event on the ToolWindowPane
+      // --- This generates the OnToolWindowCreated event on the ToolWindowPane
       window.Frame = windowFrame;
 
       if (hasToolBar && windowFrame != null)
@@ -528,6 +525,17 @@ namespace VSXtra
 
     #region Protected methods
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method binds command handlers in the specified assembly to the corresponding commands.
+    /// </summary>
+    /// <param name="asm">Assembly to scan for command handlers.</param>
+    /// <remarks>
+    /// This method is automatically called for the package assembly. If you have command handlers 
+    /// in other assemblies, you must manually call this method in the overridden Initialize method
+    /// of your package class.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     protected virtual void BindCommandHandlers(Assembly asm)
     {
       var handlerTypes =
@@ -600,7 +608,7 @@ namespace VSXtra
         // --- _GlobalServiceProvider once all packages have been unsited.
         if (--_SitedPackageCount <= 0 && _GlobalServiceProvider != null)
         {
-          Debug.Assert(_SitedPackageCount == 0, 
+          VsDebug.Assert(_SitedPackageCount == 0, 
             "We should not have unsited more package then we sited");
           _GlobalServiceProvider.Dispose();
           _GlobalServiceProvider = null;
@@ -1478,13 +1486,13 @@ namespace VSXtra
         {
           return commandService;
         }
-        Debug.Fail("IMenuCommandService is either unavailable or does not implement IOleCommandTarget");
+        VsDebug.Fail("IMenuCommandService is either unavailable or does not implement IOleCommandTarget");
       }
       else if (serviceType == typeof(IMenuCommandService))
       {
         return new OleMenuCommandService(this);
       }
-      Debug.Fail("OnCreateService invoked for a service we didn't add");
+      VsDebug.Fail("OnCreateService invoked for a service we didn't add");
       return null;
     }
 
