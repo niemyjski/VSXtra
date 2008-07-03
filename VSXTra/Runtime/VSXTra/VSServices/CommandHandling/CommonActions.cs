@@ -8,6 +8,7 @@ using System.Windows.Forms;
 
 namespace VSXtra
 {
+
   #region WriteMessageAction
 
   // ================================================================================================
@@ -47,11 +48,11 @@ namespace VSXtra
   // ================================================================================================
   public sealed class ShowMessageActionAttribute : ActionAttribute
   {
-    private string _Text;
-    private string _Title = String.Empty;
-    private MessageBoxButtons _Buttons = MessageBoxButtons.OK;
-    private MessageBoxIcon _Icon = MessageBoxIcon.Information;
-    private MessageBoxDefaultButton _DefaultButton = MessageBoxDefaultButton.Button1;
+    private readonly MessageBoxButtons _Buttons = MessageBoxButtons.OK;
+    private readonly MessageBoxDefaultButton _DefaultButton = MessageBoxDefaultButton.Button1;
+    private readonly MessageBoxIcon _Icon = MessageBoxIcon.Information;
+    private readonly string _Text;
+    private readonly string _Title = String.Empty;
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -119,8 +120,8 @@ namespace VSXtra
     /// <param name="icon">Icon to display in the message box.</param>
     /// <param name="defaultButton">Default message box button.</param>
     // --------------------------------------------------------------------------------------------
-    public ShowMessageActionAttribute(string text, string title, MessageBoxButtons buttons, 
-      MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
+    public ShowMessageActionAttribute(string text, string title, MessageBoxButtons buttons,
+                                      MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
     {
       _Text = text;
       _Title = title;
@@ -152,8 +153,8 @@ namespace VSXtra
   // ================================================================================================
   public sealed class ShowToolWindowActionAttribute : ActionAttribute
   {
-    private readonly Type _Type;
     private readonly int _InstanceId;
+    private readonly Type _Type;
 
     // --------------------------------------------------------------------------------------------
     /// <summary>

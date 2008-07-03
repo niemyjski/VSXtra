@@ -9,7 +9,6 @@
 // Created by: Istvan Novak (DiveDeeper), 05/05/2008
 // ================================================================================================
 using System;
-using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -28,7 +27,7 @@ namespace VSXtra
     CommandID ToolBar { get; set; }
     Guid ToolClsid { get; set; }
     string Caption { get; set; }
-    object Frame { get; set; }
+    WindowFrame Frame { get; set; }
     int ToolBarLocation { get; set; }
     void OnToolBarAdded();
   }
@@ -53,7 +52,7 @@ namespace VSXtra
     private string _Caption;
 
     /// <summary>Window frame hosting this tool window</summary>
-    private IVsWindowFrame _Frame;
+    private WindowFrame _Frame;
 
     /// <summary>Command ID of the toolbar belonging to this tool window</summary>
     private CommandID _ToolBarCommandID;
@@ -120,17 +119,7 @@ namespace VSXtra
         _Caption = value;
         if (_Frame != null && _Caption != null)
         {
-          // --- Since at this time the window is already created, set the coresponding property
-          int hr;
-          try
-          {
-            hr = _Frame.SetProperty((int) __VSFPROPID.VSFPROPID_Caption, _Caption);
-          }
-          catch (COMException e)
-          {
-            hr = e.ErrorCode;
-          }
-          VsDebug.Assert(hr >= 0, "Failed to set caption on toolwindow");
+          _Frame.Caption = _Caption;
         }
       }
     }
@@ -144,12 +133,12 @@ namespace VSXtra
     /// Fires the OnToolWindowCreated event when the frame is changed.
     /// </remarks>
     // --------------------------------------------------------------------------------------------
-    public object Frame
+    public WindowFrame Frame
     {
       get { return _Frame; }
       set
       {
-        _Frame = (IVsWindowFrame) value;
+        _Frame = value;
         OnToolWindowCreated();
       }
     }
@@ -226,17 +215,7 @@ namespace VSXtra
         _BitmapResourceID = value;
         if (_Frame != null && _BitmapResourceID != -1)
         {
-          int hr;
-          // --- Since the window is already created, set the coresponding property
-          try
-          {
-            hr = _Frame.SetProperty((int) __VSFPROPID.VSFPROPID_BitmapResource, _BitmapResourceID);
-          }
-          catch (COMException e)
-          {
-            hr = e.ErrorCode;
-          }
-          VsDebug.Assert(hr >= 0, "Failed to set bitmap resource on toolwindow");
+          _Frame.BitmapResourceID = _BitmapResourceID;
         }
       }
     }
@@ -255,17 +234,7 @@ namespace VSXtra
         _BitmapIndex = value;
         if (_Frame != null && _BitmapIndex != -1)
         {
-          int hr;
-          // --- Since the window is already created, set the coresponding property
-          try
-          {
-            hr = _Frame.SetProperty((int) __VSFPROPID.VSFPROPID_BitmapIndex, _BitmapIndex);
-          }
-          catch (COMException e)
-          {
-            hr = e.ErrorCode;
-          }
-          VsDebug.Assert(hr >= 0, "Failed to set bitmap index on toolwindow");
+          _Frame.BitmapIndex = _BitmapIndex;
         }
       }
     }

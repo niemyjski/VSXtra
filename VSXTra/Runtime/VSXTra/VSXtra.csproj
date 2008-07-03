@@ -95,6 +95,7 @@
     <Compile Include="VSServices\VsMessageBox.cs" />
     <Compile Include="VSServices\WindowPanes\ToolWindowAttributes.cs" />
     <Compile Include="VSServices\WindowPanes\ToolWindowPane.cs" />
+    <Compile Include="VSServices\WindowPanes\WindowFrame.cs" />
     <Compile Include="VSServices\WindowPanes\WindowPane.cs" />
   </ItemGroup>
   <ItemGroup>

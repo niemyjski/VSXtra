@@ -1,4 +1,9 @@
-﻿using System.Runtime.InteropServices;
+﻿// ================================================================================================
+// CommandGroup.cs
+//
+// Created: 2008.07.01, by Istvan Novak (DeepDiver)
+// ================================================================================================
+using System.Runtime.InteropServices;
 using VSXtra;
 
 namespace DeepDiver.DynamicToolWindow
