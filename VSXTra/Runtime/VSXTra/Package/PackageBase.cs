@@ -9,7 +9,6 @@
 // Created: 2008.06.29, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -85,7 +84,7 @@ namespace VSXtra
     private ServiceProvider _ServiceProvider;
 
     /// <summary>Dictionary for all sited packages.</summary>
-    private static Dictionary<Type, PackageBase> _PackageInstances = 
+    private static readonly Dictionary<Type, PackageBase> _PackageInstances = 
       new Dictionary<Type, PackageBase>();
 
     /// <summary>Dictionary for service instances.</summary>
@@ -530,7 +529,7 @@ namespace VSXtra
       }
 
       // --- This generates the OnToolWindowCreated event on the ToolWindowPane
-      window.Frame = windowFrame;
+      window.Frame = new WindowFrame(windowFrame);
 
       if (hasToolBar && windowFrame != null)
       {
