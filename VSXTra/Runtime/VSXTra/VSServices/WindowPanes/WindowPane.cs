@@ -45,6 +45,7 @@ namespace VSXtra
     IServiceProvider
   {
     IWin32Window Window { get; }
+    PackageBase GetPackageInstance();
   }
 
   // ================================================================================================
@@ -119,9 +120,9 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Gets the package owning this tool window.
+    /// Gets the package owning this window pane.
     /// </summary>
-    /// <value>The package owning this tool window.</value>
+    /// <value>The package owning this window pane.</value>
     // --------------------------------------------------------------------------------------------
     public TPackage Package
     {
@@ -146,6 +147,21 @@ namespace VSXtra
     public IWin32Window Window
     {
       get { return _UIControl; }
+    }
+
+    #endregion
+
+    #region IWindowPaneBehavior implementetion
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the package owning this window pane.
+    /// </summary>
+    /// <value>The package owning this window pane.</value>
+    // --------------------------------------------------------------------------------------------
+    PackageBase IWindowPaneBehavior.GetPackageInstance()
+    {
+      return _Package;
     }
 
     #endregion
@@ -596,9 +612,8 @@ namespace VSXtra
     int IOleCommandTarget.Exec(ref Guid guidGroup, uint nCmdId, uint nCmdExcept, IntPtr pIn, IntPtr vOut)
     {
       var cmdTarget = GetService<IOleCommandTarget>();
-      return cmdTarget != null 
-        ? cmdTarget.Exec(ref guidGroup, nCmdId, nCmdExcept, pIn, vOut) 
-        : NativeMethods.OLECMDERR_E_NOTSUPPORTED;
+      if (cmdTarget == null) return NativeMethods.OLECMDERR_E_NOTSUPPORTED;
+      return cmdTarget.Exec(ref guidGroup, nCmdId, nCmdExcept, pIn, vOut);
     }
 
     // --------------------------------------------------------------------------------------------

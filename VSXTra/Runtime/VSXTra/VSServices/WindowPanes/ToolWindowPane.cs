@@ -28,7 +28,7 @@ namespace VSXtra
     Guid ToolClsid { get; set; }
     string Caption { get; set; }
     WindowFrame Frame { get; set; }
-    int ToolBarLocation { get; set; }
+    ToolbarLocation ToolBarLocation { get; set; }
     void OnToolBarAdded();
   }
 
@@ -58,7 +58,7 @@ namespace VSXtra
     private CommandID _ToolBarCommandID;
 
     /// <summary>Location of the toolbar belonging to this tool window</summary>
-    private VSTWT_LOCATION _ToolBarLocation;
+    private ToolbarLocation _ToolBarLocation;
 
     /// <summary>ID of the bitmap resource belonging to this tool window</summary>
     private int _BitmapResourceID;
@@ -82,7 +82,7 @@ namespace VSXtra
       _ToolClsid = Guid.Empty;
       _BitmapIndex = -1;
       _BitmapResourceID = -1;
-      _ToolBarLocation = VSTWT_LOCATION.VSTWT_TOP;
+      _ToolBarLocation = ToolbarLocation.Top;
 
       // --- Obtain attributes of the class
       foreach (object attr in GetType().GetCustomAttributes(false))
@@ -98,6 +98,20 @@ namespace VSXtra
         {
           BitmapResourceID = resIdAttr.ResourceId;
           BitmapIndex = resIdAttr.BitmapIndex;
+          continue;
+        }
+        var toolbarAttr = attr as ToolbarAttribute;
+        if (toolbarAttr != null)
+        {
+          var toolbarProvider = 
+            Activator.CreateInstance(toolbarAttr.Value) as IToolbarProvider;
+          if (toolbarProvider != null) ToolBar = toolbarProvider.CommandId;
+          continue;
+        }
+        var toolLocAttr = attr as ToolbarLocationAttribute;
+        if (toolLocAttr != null)
+        {
+          _ToolBarLocation = toolLocAttr.Location;
           continue;
         }
       }
@@ -172,14 +186,14 @@ namespace VSXtra
     /// </summary>
     /// <value>The tool bar location.</value>
     // --------------------------------------------------------------------------------------------
-    public int ToolBarLocation
+    public ToolbarLocation ToolBarLocation
     {
-      get { return (int) _ToolBarLocation; }
+      get { return _ToolBarLocation; }
       set
       {
         if (_Frame != null)
           throw new Exception(Resources.ToolWindow_TooLateToAddToolbar);
-        _ToolBarLocation = (VSTWT_LOCATION) value;
+        _ToolBarLocation = value;
       }
     }
 
@@ -267,4 +281,25 @@ namespace VSXtra
     {
     }
   }
+
+  #region ToolbarLocation enum
+
+  // ================================================================================================
+  /// <summary>
+  /// This enumeration represents the location of the tool bar.
+  /// </summary>
+  // ================================================================================================
+  public enum ToolbarLocation
+  {
+    /// <summary>Location is the left border of the tool window.</summary>
+    Left = VSTWT_LOCATION.VSTWT_LEFT,
+    /// <summary>Location is the top border of the tool window.</summary>
+    Top = VSTWT_LOCATION.VSTWT_TOP,
+    /// <summary>Location is the right border of the tool window.</summary>
+    Right = VSTWT_LOCATION.VSTWT_RIGHT,
+    /// <summary>Location is the bottom border of the tool window.</summary>
+    Bottom = VSTWT_LOCATION.VSTWT_BOTTOM
+  }
+
+  #endregion
 }

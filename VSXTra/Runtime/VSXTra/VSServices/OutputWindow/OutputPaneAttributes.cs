@@ -7,35 +7,35 @@ using System;
 
 namespace VSXtra
 {
-  // ==================================================================================
+  // ================================================================================================
   /// <summary>
   /// This attribute declares the initial visibility of the output window pane.
   /// </summary>
-  // ==================================================================================
+  // ================================================================================================
   [AttributeUsage(AttributeTargets.Class)]
   public sealed class InitiallyVisibleAttribute: BoolAttribute
   {
     public InitiallyVisibleAttribute(bool value): base(value) {}
   }
 
-  // ==================================================================================
+  // ================================================================================================
   /// <summary>
-  /// This attribute declares if the output window pane should be cleared when the
-  /// current solutiopn is closed.
+  /// This attribute declares if the output window pane should be cleared when the current solution 
+  /// is closed.
   /// </summary>
-  // ==================================================================================
+  // ================================================================================================
   [AttributeUsage(AttributeTargets.Class)]
   public sealed class ClearWithSolutionAttribute: BoolAttribute
   {
     public ClearWithSolutionAttribute(bool value): base(value) {}
   }
 
-  // ==================================================================================
+  // ================================================================================================
   /// <summary>
-  /// This attribute declares if output window pane should be activated automatically
-  /// after the first write operation.
+  /// This attribute declares if output window pane should be activated automatically after the 
+  /// first write operation.
   /// </summary>
-  // ==================================================================================
+  // ================================================================================================
   [AttributeUsage(AttributeTargets.Class)]
   public sealed class AutoActivateAttribute : BoolAttribute
   {

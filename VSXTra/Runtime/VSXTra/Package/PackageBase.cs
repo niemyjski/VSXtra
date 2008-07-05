@@ -91,10 +91,10 @@ namespace VSXtra
     private Dictionary<Type, object> _Services;
 
     /// <summary>Dictionary for tool window instances.</summary>
-    private readonly Dictionary<ToolWindowID, IToolWindowPaneBehavior> _ToolWindows =
-      new Dictionary<ToolWindowID, IToolWindowPaneBehavior>();
+    private readonly Dictionary<Type, Dictionary<int, IToolWindowPaneBehavior>> _ToolWindows =
+      new Dictionary<Type, Dictionary<int, IToolWindowPaneBehavior>>();
 
-    private Container _componentToolWindows; // this is the toolwindows that implement IComponent
+    private Container _ComponentToolWindows; // this is the toolwindows that implement IComponent
 
     #endregion
 
@@ -131,7 +131,41 @@ namespace VSXtra
     {
       if (!disposing) return;
 
-      // --- Enumerate the service list and destroy all services. This should always be done last.
+      DestroyComponentToolWindows();
+      DestroyServices();
+      DestroyServiceProvider();
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Destroys all the IComponent derived tool windows.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void DestroyComponentToolWindows()
+    {
+      if (_ComponentToolWindows != null)
+      {
+        Container componentToolWindows = _ComponentToolWindows;
+        _ComponentToolWindows = null;
+        try
+        {
+          componentToolWindows.Dispose();
+        }
+        catch (Exception e)
+        {
+          VsDebug.Fail(String.Format("Failed to dispose component toolwindows for package {0}\n{1}", 
+                                     GetType().FullName, e.Message));
+        }
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Enumerate the service list and destroy all services. This should always be done last.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void DestroyServices()
+    {
       if (_Services != null)
       {
         try
@@ -155,7 +189,7 @@ namespace VSXtra
                   if (NativeMethods.Failed(hr))
                   {
                     VsDebug.Fail(String.Format(CultureInfo.CurrentUICulture, 
-                                             "Failed to unregister service {0}", service.GetType().FullName));
+                                               "Failed to unregister service {0}", service.GetType().FullName));
                   }
                 }
               }
@@ -169,11 +203,19 @@ namespace VSXtra
         catch (Exception e)
         {
           VsDebug.Fail(String.Format("Failed to dispose proffered service for package {0}\n{1}", 
-                                   GetType().FullName, e.Message));
+                                     GetType().FullName, e.Message));
         }
       }
+    }
 
-      // --- Disallow any service requests after this.
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Disallow any service requests after calling this method by disposing the service 
+    /// provider object.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void DestroyServiceProvider()
+    {
       if (_ServiceProvider != null)
       {
         // --- If the service provider for the current package is the service provider that we 
@@ -187,8 +229,8 @@ namespace VSXtra
           }
           catch (Exception e)
           {
-            VsDebug.Fail(String.Format("Failed to dispose the global service provider for package {0}\n{1}", 
-                                     GetType().FullName, e.Message));
+            VsDebug.Fail(String.Format("Failed to dispose the global service provider for package {0}\n{1}",
+                                       GetType().FullName, e.Message));
           }
         }
         _ServiceProvider = null;
@@ -478,7 +520,7 @@ namespace VSXtra
       // --- Check if this window has a ToolBar
       bool hasToolBar = (window.ToolBar != null);
 
-      uint flags = (uint)__VSCREATETOOLWIN.CTW_fInitNew;
+      var flags = (uint)__VSCREATETOOLWIN.CTW_fInitNew;
       if (!tool.Transient)
         flags |= (uint)__VSCREATETOOLWIN.CTW_fForceCreate;
       if (hasToolBar)
@@ -523,9 +565,9 @@ namespace VSXtra
         component = (IComponent)windowPane;
       if (component != null)
       {
-        if (_componentToolWindows == null)
-          _componentToolWindows = new PackageContainer(this);
-        _componentToolWindows.Add(component);
+        if (_ComponentToolWindows == null)
+          _ComponentToolWindows = new PackageContainer(this);
+        _ComponentToolWindows.Add(component);
       }
 
       // --- This generates the OnToolWindowCreated event on the ToolWindowPane
@@ -547,12 +589,17 @@ namespace VSXtra
 
       window.OnToolBarAdded();
 
-      // If the ToolWindow was created successfully, keep track of it
+      // --- If the ToolWindow was created successfully, keep track of it
       if (window != null)
       {
-        var toolWIndowID = new ToolWindowID(toolWindowType, id);
-        VsDebug.Assert(!_ToolWindows.ContainsKey(toolWIndowID), "An existing tool window instance has been recreated.");
-        _ToolWindows.Add(toolWIndowID, window);
+        Dictionary<int, IToolWindowPaneBehavior> toolInstances;
+        if (!_ToolWindows.TryGetValue(toolWindowType, out toolInstances))
+        {
+          toolInstances = new Dictionary<int, IToolWindowPaneBehavior>();
+          _ToolWindows.Add(toolWindowType, toolInstances);
+        }
+        VsDebug.Assert(!toolInstances.ContainsKey(id), "An existing tool window instance has been recreated.");
+        toolInstances.Add(id, window);
       }
       return window;
     }
@@ -606,9 +653,10 @@ namespace VSXtra
     private IToolWindowPaneBehavior FindToolWindow(Type toolWindowType, int id, bool create, ProvideToolWindowAttribute tool)
     {
       // --- Check, if we have already created the specified tool window instance
-      IToolWindowPaneBehavior window;
-      var toolWindowID = new ToolWindowID(toolWindowType, id);
-      if (!_ToolWindows.TryGetValue(toolWindowID, out window))
+      Dictionary<int, IToolWindowPaneBehavior> toolInstances;
+      IToolWindowPaneBehavior window = null;
+      if (!_ToolWindows.TryGetValue(toolWindowType, out toolInstances) ||
+        !toolInstances.TryGetValue(id, out window))
       {
         if (create)
         {
@@ -639,9 +687,12 @@ namespace VSXtra
     {
       var handlerTypes =
         from commandGroup in asm.GetTypes()
-        where typeof (ICommandGroupProvider).IsAssignableFrom(commandGroup)
+        where typeof (ICommandGroupProvider).IsAssignableFrom(commandGroup) &&
+          !Attribute.IsDefined(commandGroup, typeof(ManualBindAttribute))
         from handler in commandGroup.GetNestedTypes()
-        where typeof (MenuCommandHandler).IsAssignableFrom(handler.BaseType) && !handler.IsAbstract
+        where typeof (MenuCommandHandler).IsAssignableFrom(handler.BaseType) && 
+          !handler.IsAbstract &&
+          !Attribute.IsDefined(handler, typeof(ManualBindAttribute))
         select handler;                         
       handlerTypes.ForEach(t =>
                              {
@@ -1490,84 +1541,77 @@ namespace VSXtra
       public uint Cookie;
     }
 
-    // --------------------------------------------------------------------------------------------
+    //// --------------------------------------------------------------------------------------------
+    ///// <summary>
+    ///// This helper class holds information about a tool window instance.
+    ///// </summary>
+    //// --------------------------------------------------------------------------------------------
+    //private sealed class ToolWindowID
+    //{
+    //  /// <summary>Type of the tool window</summary>
+    //  public Type Type { get; private set; }
+    //  /// <summary>Id of the tool window instance</summary>
+    //  public int Id { get; private set; }
+
+    //  // --------------------------------------------------------------------------------------------
+    //  /// <summary>
+    //  /// Creates a new instance of the tool window id with the specified parameters
+    //  /// </summary>
+    //  // --------------------------------------------------------------------------------------------
+    //  public ToolWindowID(Type type, int id)
+    //  {
+    //    Type = type;
+    //    Id = id;
+    //  }
+    //}
+
+    // ================================================================================================
     /// <summary>
-    /// This helper class holds information about a tool window instance.
+    /// This class derives from container to provide a service provider connection to the package.
     /// </summary>
-    // --------------------------------------------------------------------------------------------
-    private sealed class ToolWindowID
+    // ================================================================================================
+    private sealed class PackageContainer : Container
     {
-      /// <summary>Type of the tool window</summary>
-      public Type Type { get; private set; }
-      /// <summary>Id of the tool window instance</summary>
-      public int Id { get; private set; }
+      private IUIService _UIService;
+      private AmbientProperties _AmbientProperties;
+      private readonly IServiceProvider _Provider;
 
       // --------------------------------------------------------------------------------------------
       /// <summary>
-      /// Creates a new instance of the tool window id with the specified parameters
+      /// Creates a new container using the given service provider.
       /// </summary>
       // --------------------------------------------------------------------------------------------
-      public ToolWindowID(Type type, int id)
-      {
-        Type = type;
-        Id = id;
-      }
-    }
-
-    /// <devdoc>
-    ///     This class derives from container to provide a service provider
-    ///     connection to the package.
-    /// </devdoc>
-    private sealed class PackageContainer : Container
-    {
-      private IUIService _uis;
-      private AmbientProperties _ambientProperties;
-      private readonly IServiceProvider _provider;
-
-      /// <devdoc>
-      ///     Creates a new container using the given service provider.
-      /// </devdoc>
       internal PackageContainer(IServiceProvider provider)
       {
-        _provider = provider;
+        _Provider = provider;
       }
 
-      /// <devdoc>
-      ///     Override to GetService so we can route requests
-      ///     to the package's service provider.
-      /// </devdoc>
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Override to GetService so we can route requests to the package's service provider.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       protected override object GetService(Type serviceType)
       {
-        if (serviceType == null)
-        {
-          throw new ArgumentNullException("serviceType");
-        }
-        if (_provider != null)
+        if (serviceType == null) throw new ArgumentNullException("serviceType");
+        if (_Provider != null)
         {
           if (serviceType == typeof(AmbientProperties))
           {
-            if (_uis == null)
+            if (_UIService == null)
+              _UIService = (IUIService)_Provider.GetService(typeof(IUIService));
+            if (_AmbientProperties == null)
+              _AmbientProperties = new AmbientProperties();
+            if (_UIService != null)
             {
-              _uis = (IUIService)_provider.GetService(typeof(IUIService));
+              // --- Update the _AmbientProperties in case the styles have changed
+              // --- since last time.
+              _AmbientProperties.Font = (Font)_UIService.Styles["DialogFont"];
             }
-            if (_ambientProperties == null)
-            {
-              _ambientProperties = new AmbientProperties();
-            }
-            if (_uis != null)
-            {
-              // update the _ambientProperties in case the styles have changed
-              // since last time.
-              _ambientProperties.Font = (Font)_uis.Styles["DialogFont"];
-            }
-            return _ambientProperties;
+            return _AmbientProperties;
           }
-          object service = _provider.GetService(serviceType);
-
-          if (service != null)
-          {
-            return service;
-          }
+          object service = _Provider.GetService(serviceType);
+          if (service != null) return service;
         }
         return base.GetService(serviceType);
       }
