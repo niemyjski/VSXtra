@@ -37,7 +37,7 @@ namespace VSXtra
     /// Gtes the package instance that owns the command group.
     /// </summary>
     /// <returns>
-    /// Package instance, if package has benn sited; otherwise, null.
+    /// Package instance, if package has been sited; otherwise, null.
     /// </returns>
     // ------------------------------------------------------------------------------
     PackageBase ICommandGroupProvider.GetPackageInstance()

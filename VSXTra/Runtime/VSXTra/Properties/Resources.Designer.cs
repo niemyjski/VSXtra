@@ -151,6 +151,15 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only types implementing IToolbarProvider are accepted in ToolbarAttribute..
+        /// </summary>
+        internal static string IToolbarProvider_Expected {
+            get {
+                return ResourceManager.GetString("IToolbarProvider_Expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Only types implementing IUIContextGuidType are accepted in XtraProvideAutoLoad..
         /// </summary>
         internal static string IUIContextGuidType_Expected {

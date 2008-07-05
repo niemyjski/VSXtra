@@ -7,6 +7,8 @@ using System;
 
 namespace VSXtra
 {
+  #region CommandIdAttribute
+
   // ================================================================================================
   /// <summary>
   /// This attribute class defines the Command Id of a menu command.
@@ -15,8 +17,6 @@ namespace VSXtra
   [AttributeUsage(AttributeTargets.Class)]
   public sealed class CommandIdAttribute : Attribute
   {
-    #region Lifecycle methods
-
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Creates a new instance of the attribute with the specified initial value.
@@ -28,19 +28,17 @@ namespace VSXtra
       Value = command;
     }
 
-    #endregion
-
-    #region Public properties
-
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the uint part ofthe command ID.
     /// </summary>
     // --------------------------------------------------------------------------------------------
     public uint Value { get; private set; }
-
-    #endregion
   }
+
+  #endregion
+
+  #region ManualBindAttribute
 
   // ================================================================================================
   /// <summary>
@@ -52,6 +50,10 @@ namespace VSXtra
   public sealed class ManualBindAttribute : Attribute
   {
   }
+
+  #endregion
+
+  #region ActionAttribute
 
   // ================================================================================================
   /// <summary>
@@ -67,6 +69,10 @@ namespace VSXtra
     public abstract void ExecuteAction(MenuCommandHandler handler);
   }
 
+  #endregion
+
+  #region CommandCheckedAttribute
+
   // ================================================================================================
   /// <summary>
   /// This attribute class defines the initial value of the Checked property.
@@ -80,6 +86,10 @@ namespace VSXtra
     {
     }
   }
+
+  #endregion
+
+  #region CommandEnabledAttribute
 
   // ================================================================================================
   /// <summary>
@@ -95,6 +105,10 @@ namespace VSXtra
     }
   }
 
+  #endregion
+
+  #region CommandVisibleAttribute
+
   // ================================================================================================
   /// <summary>
   /// This attribute class defines the initial value of the Visible property.
@@ -108,6 +122,10 @@ namespace VSXtra
     {
     }
   }
+
+  #endregion
+
+  #region CommandSupportedAttribute
 
   // ================================================================================================
   /// <summary>
@@ -123,6 +141,10 @@ namespace VSXtra
     }
   }
 
+  #endregion
+
+  #region CommandTextAttribute
+
   // ================================================================================================
   /// <summary>
   /// This attribute class defines the initial value of the Text property.
@@ -136,6 +158,10 @@ namespace VSXtra
     {
     }
   }
+
+  #endregion
+
+  #region CommandParametersDescriptionAttribute
 
   // ================================================================================================
   /// <summary>
@@ -151,4 +177,5 @@ namespace VSXtra
     }
   }
 
+  #endregion
 }

@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using VSXtra.Properties;
 
@@ -20,14 +21,14 @@ namespace VSXtra
   // ====================================================================================
   public interface ICommandGroupProvider
   {
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gtes the package instance that owns the command group.
     /// </summary>
     /// <returns>
-    /// Package instance, if package has benn sited; otherwise, null.
+    /// Package instance, if package has been sited; otherwise, null.
     /// </returns>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     PackageBase GetPackageInstance();
   }
 
@@ -63,7 +64,7 @@ namespace VSXtra
 
     #region Lifecycle methods
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Creates an instance of this menu command handler class.
     /// </summary>
@@ -71,7 +72,7 @@ namespace VSXtra
     /// This constructor reads the <see cref="CommandIdAttribute"/> used to decorate
     /// this class in order to obtain command ID information.
     /// </remarks>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     protected internal MenuCommandHandler()
     {
       // --- Check for command group containment
@@ -94,8 +95,12 @@ namespace VSXtra
         throw new InvalidOperationException(Resources.CommandHandler_NoPackage);
       }
 
+      // --- Obtain command GUID
+      var commandGuid = Attribute.IsDefined(GetType(), typeof(GuidAttribute))
+        ? thisType.GUID
+        : thisType.DeclaringType.GUID;
+
       // --- Obtain attribute values
-      var commandGuid = thisType.DeclaringType.GUID;
       foreach (object attr in GetType().GetCustomAttributes(false))
       {
         var idAttr = attr as CommandIdAttribute;
@@ -124,51 +129,51 @@ namespace VSXtra
 
     #region Public properties
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the CommandID belonging to the menu command.
     /// </summary>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public CommandID CommandId
     {
       get { return _CommandId; }
     }
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the package owning this menu command.
     /// </summary>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public PackageBase Package
     {
       get { return _Package; }
     }
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the service provider belonging to the owner package.
     /// </summary>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public IServiceProvider ServiceProvider
     {
       get { return _Package; }
     }
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the OleMenuCommand instance belonging to this instance.
     /// </summary>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public OleMenuCommand MenuCommand
     {
       get { return _MenuCommand; }
     }
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the flag indicating if the menu command has already bound to a menu item.
     /// </summary>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public bool IsBound
     {
       get { return _MenuCommand != null; }
@@ -178,13 +183,13 @@ namespace VSXtra
 
     #region Static methods and properties
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the menu command handler of the specified type.
     /// </summary>
     /// <typeparam name="THandler">Type of menu command handler to obtain</typeparam>
     /// <returns>Menu command handler instance</returns>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public static THandler GetHandler<THandler>()
       where THandler: MenuCommandHandler
     {
@@ -197,44 +202,44 @@ namespace VSXtra
 
     #region Methods to override
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Override this method to define how the command should be executed.
     /// </summary>
     /// <param name="command">OleMenuCommand instance</param>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     protected virtual void OnExecute(OleMenuCommand command)
     {
       if (_CommandAction != null) _CommandAction.ExecuteAction(this);
     }
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Override this method to define how the command status should be queried.
     /// </summary>
     /// <param name="command">OleMenuCommand instance</param>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     protected virtual void OnQueryStatus(OleMenuCommand command)
     {
     }
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Override this method to define how to respond command property changes.
     /// </summary>
     /// <param name="command">OleMenuCommand instance</param>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     protected virtual void OnChange(OleMenuCommand command)
     {
     }
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Override this method to set up the command instance before it gets registered
     /// with the OleMenuCommandService.
     /// </summary>
     /// <param name="command">OleMenuCommand instance</param>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     protected virtual void BeforeBind(OleMenuCommand command)
     {
       if (_CheckedAttribute != null) command.Checked = _CheckedAttribute.Value;
@@ -250,11 +255,11 @@ namespace VSXtra
 
     #region Internal methods
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Binds the command to the related menu and toolbar items.
     /// </summary>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     public void Bind()
     {
       if (_Package == null) return;
@@ -274,33 +279,33 @@ namespace VSXtra
 
     #region Private event handler methods
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Callback method called when the command is to be executed.
     /// </summary>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private void ExecuteMenuCommandCallback(object sender, EventArgs e)
     {
       var command = sender as OleMenuCommand;
       if (command != null) OnExecute(command);
     }
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Callback method called when the command is about to be changed.
     /// </summary>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private void ChangeCallback(object sender, EventArgs e)
     {
       var command = sender as OleMenuCommand;
       if (command != null) OnChange(command);
     }
 
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Callback method called when the command status is queried.
     /// </summary>
-    // ------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     private void BeforeStatusQueryCallback(object sender, EventArgs e)
     {
       var command = sender as OleMenuCommand;
