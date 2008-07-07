@@ -20,6 +20,8 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace VSXtra
 {
+  #region IWindowPaneBehavior
+
   // ================================================================================================
   /// <summary>
   /// This interface represents the behavior of a window pane.
@@ -44,9 +46,22 @@ namespace VSXtra
     // interface must be implemented.
     IServiceProvider
   {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the window handle for the UI of this window pane.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     IWin32Window Window { get; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the package owning this window pane.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     PackageBase GetPackageInstance();
   }
+
+  #endregion
 
   // ================================================================================================
   /// <summary>
@@ -612,8 +627,9 @@ namespace VSXtra
     int IOleCommandTarget.Exec(ref Guid guidGroup, uint nCmdId, uint nCmdExcept, IntPtr pIn, IntPtr vOut)
     {
       var cmdTarget = GetService<IOleCommandTarget>();
-      if (cmdTarget == null) return NativeMethods.OLECMDERR_E_NOTSUPPORTED;
-      return cmdTarget.Exec(ref guidGroup, nCmdId, nCmdExcept, pIn, vOut);
+      return cmdTarget == null 
+        ? NativeMethods.OLECMDERR_E_NOTSUPPORTED 
+        : cmdTarget.Exec(ref guidGroup, nCmdId, nCmdExcept, pIn, vOut);
     }
 
     // --------------------------------------------------------------------------------------------

@@ -86,6 +86,8 @@
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
     <Compile Include="VSServices\ActivityLog.cs" />
+    <Compile Include="VSServices\CommandHandling\CommandDispatcher.cs" />
+    <Compile Include="VSServices\CommandHandling\CommandDispatcherAttributes.cs" />
     <Compile Include="VSServices\CommandHandling\CommandGroup.cs" />
     <Compile Include="VSServices\CommandHandling\CommonActions.cs" />
     <Compile Include="VSServices\CommandHandling\MenuCommandAttributes.cs" />

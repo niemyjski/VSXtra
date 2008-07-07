@@ -1,194 +1,173 @@
-/***************************************************************************
-
-Copyright (c) Microsoft Corporation. All rights reserved.
-This code is licensed under the Visual Studio SDK license terms.
-THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-
-***************************************************************************/
-
+// ================================================================================================
+// PersistedWindowControl.cs
+//
+// Created: 2008.07.07, by Istvan Novak (DeepDiver)
+// ================================================================================================
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-
-using MsVsShell = Microsoft.VisualStudio.Shell;
-using VsConstants = Microsoft.VisualStudio.VSConstants;
-using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
+using VSXtra;
 
 namespace DeepDiver.PersistedToolWindow
 {
-	/// <summary>
-	/// PersistedWindowControl is the control that will be hosted in the
-	/// PersistedWindowPane. It consists of a list view that will display
-	/// the tool windows that have already been created.
-	/// 
+  // ================================================================================================
+  /// <summary>
+	/// PersistedWindowControl is the control that will be hosted in the PersistedWindowPane. It 
+	/// consists of a list view that will display the tool windows that have already been 
+	/// created.
 	/// </summary>
-	public partial class PersistedWindowControl : UserControl
+  // ================================================================================================
+  public partial class PersistedWindowControl : UserControl
 	{
-		// List of tool windows
-		private WindowList toolWindowsList = null;
-		// Cached Selection Tracking service used to expose properties
-		private ITrackSelection trackSelection = null;
-		// Object holding the current selection properties
-		private MsVsShell.SelectionContainer selectionContainer = new MsVsShell.SelectionContainer();
-		// This allows us to prevent infinite recursion when we are changing the selection items ourselves
-		private bool ignoreSelectedObjectsChanges = false;
+    private List<WindowFrame> _ToolWindowList;
+		private ITrackSelection _TrackSelection;
+		private readonly SelectionContainer _SelectionContainer = new SelectionContainer();
+		private bool _IgnoreSelectedObjectsChanges;
 
-		/// <summary>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
 		/// This constructor is the default for a user control
 		/// </summary>
-		public PersistedWindowControl()
+    // --------------------------------------------------------------------------------------------
+    public PersistedWindowControl()
 		{
-			// normal control initialization
 			InitializeComponent();
-
-			// Create an instance of our window list object
-			toolWindowsList = new WindowList();
 		}
 
-		/// <summary>
-		/// Track selection service for the tool window.
-		/// This should be set by the tool window pane as soon as the tool
-		/// window is created.
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+		/// Track selection service for the tool window. This should be set by the tool window pane 
+		/// as soon as the tool window is created.
 		/// </summary>
-		internal ITrackSelection TrackSelection
+    // --------------------------------------------------------------------------------------------
+    internal ITrackSelection TrackSelection
 		{
-			get { return (ITrackSelection)trackSelection; }
+			get { return _TrackSelection; }
 			set
 			{
 				if (value == null)
-					throw new ArgumentNullException("TrackSelection");
-				trackSelection = value;
-				// Inititalize with an empty selection
-				// Failure to do this would result in our later calls to 
-				// OnSelectChange to be ignored (unless focus is lost
-				// and regained).
-				selectionContainer.SelectableObjects = null;
-				selectionContainer.SelectedObjects = null;
-				trackSelection.OnSelectChange(selectionContainer);
-				selectionContainer.SelectedObjectsChanged += new EventHandler(selectionContainer_SelectedObjectsChanged);
+					throw new ArgumentNullException("value");
+				_TrackSelection = value;
+				// --- Inititalize with an empty selection. Failure to do this would result in our 
+        // --- later calls to OnSelectChange to be ignored (unless focus is lost and regained).
+				_SelectionContainer.SelectableObjects = null;
+				_SelectionContainer.SelectedObjects = null;
+				_TrackSelection.OnSelectChange(_SelectionContainer);
+				_SelectionContainer.SelectedObjectsChanged += SelectedObjectsChanged;
 			}
 		}
 
-		/// <summary>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
 		/// Repopulate the listview with the latest data.
 		/// </summary>
-		internal void RefreshData()
+    // --------------------------------------------------------------------------------------------
+    internal void RefreshData()
 		{
-			// Update the list
-			toolWindowsList.RefreshList();
-			// Update the listview
+			_ToolWindowList = new List<WindowFrame>(WindowFrame.ToolWindowFrames);
 			PopulateListView();
 		}
 
-		/// <summary>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
 		/// Repopulate the listview with the data provided.
 		/// </summary>
-		private void PopulateListView()
+    // --------------------------------------------------------------------------------------------
+    private void PopulateListView()
 		{
-			// Empty the list
 			listView1.Items.Clear();
-			// Fill in the data
-			foreach (string windowName in toolWindowsList.WindowNames)
+			foreach (var windowFrame in _ToolWindowList)
 			{
-				listView1.Items.Add(windowName);
+				listView1.Items.Add(windowFrame.Caption);
 			}
-
-			// Unselect every thing
 			listView1.SelectedItems.Clear();
-			// Keep the property grid in sync
 			listView1_SelectedIndexChanged(this, null);
-
-			// Adjust the column width
 			listView1.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-			// Redraw
 			listView1.Invalidate();
 		}
 
-		/// <summary>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
 		/// Push properties for the selected item to the properties window.
-		/// Note that throwing from a Windows Forms event handler would cause
-		/// Visual Studio to crash. So if you expect your code to throw
-		/// you should make sure to catch the exceptions you expect
+		/// 
 		/// </summary>
 		/// <param name="sender">Event sender</param>
 		/// <param name="e">Arguments</param>
-		private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+    /// <remarks>
+    /// Throwing an exception from a Windows Forms event handler would cause Visual Studio to 
+    /// crash. So if you expect your code to throw you should make sure to catch the exceptions 
+    /// you expect.
+		/// </remarks>
+    // --------------------------------------------------------------------------------------------
+    private void listView1_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			// If the change originates from us setting the selection, ignore the event
-			if (ignoreSelectedObjectsChanges)
-				return;
-			// Create the array that will hold the properties (one set of properties per item selected)
-			ArrayList selectedObjects = new ArrayList();
-
+			if (_IgnoreSelectedObjectsChanges) return;
+			var selectedObjects = new ArrayList();
 			if (listView1.SelectedItems.Count > 0)
 			{
-				// Get the index of the selected item
 				int index = listView1.SelectedItems[0].Index;
-				// Get the IVsWindowFrame for that item
-				IVsWindowFrame frame = toolWindowsList[index];
-				// Add the properties for the selected item
-				SelectionProperties properties = toolWindowsList.GetFrameProperties(frame);
-				// Keeping track of the index helps us know which tool window was selected
-				// when the change is done through the property window drop-down.
-				properties.Index = index;
-				// This sample only supports single selection, but if multiple
-				// selection is supported, multiple items could be added. The
-				// properties that they had in common would then be shown.
-				selectedObjects.Add(properties);
+				var frame = _ToolWindowList[index];
+				var properties = new SelectionProperties(frame.Caption, frame.Guid) {Index = index};
+			  selectedObjects.Add(properties);
 			}
-
-			// Update our selection container
-			selectionContainer.SelectedObjects = selectedObjects;
-			// In order to enable the drop-down of the properties window to display
-			// all our possible items, we need to provide the list
-			selectionContainer.SelectableObjects = toolWindowsList.WindowsProperties;
-			// Inform Visual Studio that we changed the selection and push the new list of properties
-			TrackSelection.OnSelectChange(selectionContainer);
+			_SelectionContainer.SelectedObjects = selectedObjects;
+			_SelectionContainer.SelectableObjects = WindowsProperties;
+			TrackSelection.OnSelectChange(_SelectionContainer);
 		}
 
-		/// <summary>
-		/// Handle change to the current selection is done throught the properties window
-		/// drop down list.
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+		/// Handle change to the current selection is done throught the properties window drop 
+		/// down list.
 		/// </summary>
 		/// <param name="sender">Sender</param>
 		/// <param name="e">Arguments</param>
-		private void selectionContainer_SelectedObjectsChanged(object sender, EventArgs e)
+    // --------------------------------------------------------------------------------------------
+    private void SelectedObjectsChanged(object sender, EventArgs e)
 		{
-			// Set the flag letting us know we are changing the selection ourself
-			ignoreSelectedObjectsChanges = true;
+			_IgnoreSelectedObjectsChanges = true;
 			try
 			{
-				// First clear the current selection
-				this.listView1.SelectedItems.Clear();
-				// See if we have something selected
-				if (selectionContainer.SelectedObjects.Count > 0)
+				listView1.SelectedItems.Clear();
+				if (_SelectionContainer.SelectedObjects.Count > 0)
 				{
-					// We only support single selection, so pick the first one
-					IEnumerator enumerator = selectionContainer.SelectedObjects.GetEnumerator();
+					IEnumerator enumerator = _SelectionContainer.SelectedObjects.GetEnumerator();
 					if (enumerator.MoveNext())
 					{
-						SelectionProperties newSelection = (SelectionProperties)enumerator.Current;
+						var newSelection = (SelectionProperties)enumerator.Current;
 						int index = newSelection.Index;
-						// Select the corresponding item
-						this.listView1.Items[index].Selected = true;
+						listView1.Items[index].Selected = true;
 					}
 				}
 			}
 			finally
 			{
-				// make sure we react to future events
-				ignoreSelectedObjectsChanges = false;
+				_IgnoreSelectedObjectsChanges = false;
 			}
 		}
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the list of available tool windows' properties.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private ArrayList WindowsProperties
+    {
+      get
+      {
+        int index = 0;
+        var properties = new ArrayList();
+        foreach (WindowFrame frame in _ToolWindowList)
+        {
+          var property = new SelectionProperties(frame.Caption, frame.Guid) {Index = index};
+          properties.Add(property);
+          ++index;
+        }
+        return properties;
+      }
+    }
 	}
 }

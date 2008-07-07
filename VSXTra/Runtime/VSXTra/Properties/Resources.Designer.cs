@@ -79,6 +79,42 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to More than one change method declared for a command..
+        /// </summary>
+        internal static string CommandDispatcher_DuplicateChange {
+            get {
+                return ResourceManager.GetString("CommandDispatcher_DuplicateChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More than one exec method declared for a command..
+        /// </summary>
+        internal static string CommandDispatcher_DuplicateExec {
+            get {
+                return ResourceManager.GetString("CommandDispatcher_DuplicateExec", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More than one status method declared for a command..
+        /// </summary>
+        internal static string CommandDispatcher_DuplicateStatus {
+            get {
+                return ResourceManager.GetString("CommandDispatcher_DuplicateStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No command target information found for type {0}.
+        /// </summary>
+        internal static string CommandDispatcher_NoType {
+            get {
+                return ResourceManager.GetString("CommandDispatcher_NoType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MenuCommandHandler type should be defined as a nested type in a type implementing the ICommandGroupProvider markup interface..
         /// </summary>
         internal static string CommandHandler_NoGroupType {
@@ -147,6 +183,15 @@ namespace VSXtra.Properties {
         internal static string General_MissingService {
             get {
                 return ResourceManager.GetString("General_MissingService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only types implementing ICommandGroupProvider are accepted in the attribute..
+        /// </summary>
+        internal static string ICommandGroupProvider_Expected {
+            get {
+                return ResourceManager.GetString("ICommandGroupProvider_Expected", resourceCulture);
             }
         }
         

@@ -106,7 +106,8 @@ namespace VSXtra
         var idAttr = attr as CommandIdAttribute;
         if (idAttr != null)
         {
-          _CommandId = new CommandID(commandGuid, (int)idAttr.Value);
+          if (idAttr.Guid != Guid.Empty) commandGuid = idAttr.Guid;
+          _CommandId = new CommandID(commandGuid, (int)idAttr.Id);
         }
         var actionAttr = attr as ActionAttribute;
         if (actionAttr != null) _CommandAction = actionAttr;
