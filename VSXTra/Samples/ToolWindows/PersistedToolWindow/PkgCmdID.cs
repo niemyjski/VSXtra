@@ -10,5 +10,5 @@ namespace DeepDiver.PersistedToolWindow
     public const int cmdidPersistedWindow = 0x2001;
     public const int cmdidRefreshWindowsList = 0x2002;
     public const int IDM_PersistedWindowToolbar = 0x0101;
-  };
+  }
 }

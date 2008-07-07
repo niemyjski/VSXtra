@@ -37,7 +37,6 @@ namespace DeepDiver.PersistedToolWindow
 		{
 			Caption = caption;
 			_PersistanceGuid = persistence;
-		  Caption = String.Empty;
 		}
 
     // --------------------------------------------------------------------------------------------

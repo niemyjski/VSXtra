@@ -4,6 +4,7 @@
 // Created: 2008.07.02, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -123,9 +124,24 @@ namespace VSXtra
       }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the GUID of this window frame.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public Guid Guid
+    {
+      get
+      {
+        Guid guid;
+        _Frame.GetGuidProperty((int)__VSFPROPID.VSFPROPID_GuidPersistenceSlot, out guid);
+        return guid;
+      }
+    }
+
     #endregion
 
-    #region public Events
+    #region Public Events
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -308,6 +324,34 @@ namespace VSXtra
       int onScreen;
       ErrorHandler.ThrowOnFailure(((IVsWindowFrame) this).IsOnScreen(out onScreen));
       return onScreen != 0;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Obtains all tool window frames.
+    /// </summary>
+    /// <value>All available tool window frames.</value>
+    // --------------------------------------------------------------------------------------------
+    public static IEnumerable<WindowFrame> ToolWindowFrames
+    {
+      get
+      {
+        var uiShell = PackageBase.GetGlobalService<SVsUIShell, IVsUIShell>();
+        IEnumWindowFrames windowEnumerator;
+        ErrorHandler.ThrowOnFailure(uiShell.GetToolWindowEnum(out windowEnumerator));
+        var frame = new IVsWindowFrame[1];
+        uint fetched;
+        int hr = VSConstants.S_OK;
+        while (hr == VSConstants.S_OK)
+        {
+          hr = windowEnumerator.Next(1, frame, out fetched);
+          ErrorHandler.ThrowOnFailure(hr);
+          if (fetched == 1)
+          {
+            yield return new WindowFrame(frame[0]);
+          }
+        }
+      }
     }
 
     #endregion

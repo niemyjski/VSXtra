@@ -53,7 +53,7 @@ namespace VSXtra
         var idAttr = attr as CommandIdAttribute;
         if (idAttr != null)
         {
-          _CommandId = new CommandID(commandGuid, (int)idAttr.Value);
+          _CommandId = new CommandID(commandGuid, (int)idAttr.Id);
         }
       }
     }

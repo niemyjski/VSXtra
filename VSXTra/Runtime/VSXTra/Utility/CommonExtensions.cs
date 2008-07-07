@@ -172,5 +172,40 @@ namespace VSXtra
         if (attrTypeOf != null) yield return attrTypeOf;
       }
     }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Obtains an attribute with the specified type.
+    /// </summary>
+    /// <typeparam name="TAttr">Attribute type</typeparam>
+    /// <param name="type">Type to search for attributes</param>
+    /// <param name="inherit">Should be base classes searched?</param>
+    /// <returns>Attribute if found; otherwise, null</returns>
+    // --------------------------------------------------------------------------------------------
+    public static TAttr GetAttribute<TAttr>(this Type type, bool inherit)
+      where TAttr: Attribute
+    {
+      var attrs = type.GetCustomAttributes(typeof (TAttr), inherit);
+      return attrs.Length > 0
+               ? attrs[0] as TAttr
+               : null;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Obtains an attribute with the specified type.
+    /// </summary>
+    /// <typeparam name="TAttr">Attribute type</typeparam>
+    /// <param name="type">Type to search for attributes</param>
+    /// <returns>Attribute if found; otherwise, null</returns>
+    // --------------------------------------------------------------------------------------------
+    public static TAttr GetAttribute<TAttr>(this Type type)
+      where TAttr : Attribute
+    {
+      var attrs = type.GetCustomAttributes(typeof(TAttr), true);
+      return attrs.Length > 0
+               ? attrs[0] as TAttr
+               : null;
+    }
   }
 }

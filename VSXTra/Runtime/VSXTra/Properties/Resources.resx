@@ -123,6 +123,18 @@
   <data name="Attributes_UnknownPosition" xml:space="preserve">
     <value>Unknown relative position: {0}.</value>
   </data>
+  <data name="CommandDispatcher_DuplicateChange" xml:space="preserve">
+    <value>More than one change method declared for a command.</value>
+  </data>
+  <data name="CommandDispatcher_DuplicateExec" xml:space="preserve">
+    <value>More than one exec method declared for a command.</value>
+  </data>
+  <data name="CommandDispatcher_DuplicateStatus" xml:space="preserve">
+    <value>More than one status method declared for a command.</value>
+  </data>
+  <data name="CommandDispatcher_NoType" xml:space="preserve">
+    <value>No command target information found for type {0}</value>
+  </data>
   <data name="CommandHandler_NoGroupType" xml:space="preserve">
     <value>MenuCommandHandler type should be defined as a nested type in a type implementing the ICommandGroupProvider markup interface.</value>
   </data>
@@ -146,6 +158,9 @@
   </data>
   <data name="General_MissingService" xml:space="preserve">
     <value>The service '{0}' must be installed for this feature to work.  Ensure that this service is available.</value>
+  </data>
+  <data name="ICommandGroupProvider_Expected" xml:space="preserve">
+    <value>Only types implementing ICommandGroupProvider are accepted in the attribute.</value>
   </data>
   <data name="IToolbarProvider_Expected" xml:space="preserve">
     <value>Only types implementing IToolbarProvider are accepted in ToolbarAttribute.</value>

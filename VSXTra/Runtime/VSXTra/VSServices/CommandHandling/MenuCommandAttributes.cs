@@ -14,26 +14,47 @@ namespace VSXtra
   /// This attribute class defines the Command Id of a menu command.
   /// </summary>
   // ================================================================================================
-  [AttributeUsage(AttributeTargets.Class)]
+  [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method)]
   public sealed class CommandIdAttribute : Attribute
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Creates a new instance of the attribute with the specified initial value.
     /// </summary>
-    /// <param name="command">Command identifier.</param>
+    /// <param name="id">Command identifier.</param>
     // --------------------------------------------------------------------------------------------
-    public CommandIdAttribute(uint command)
+    public CommandIdAttribute(uint id)
     {
-      Value = command;
+      Id = id;
+      Guid = Guid.Empty;
     }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Gets the uint part ofthe command ID.
+    /// Creates a new instance of the attribute with the specified initial value.
+    /// </summary>
+    /// <param name="guid">Command Guid</param>
+    /// <param name="id">Command identifier.</param>
+    // --------------------------------------------------------------------------------------------
+    public CommandIdAttribute(Guid guid, uint id)
+    {
+      Id = id;
+      Guid = guid;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the uint part of the command ID.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public uint Value { get; private set; }
+    public uint Id { get; private set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the Guid part of the command ID.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public Guid Guid { get; private set; }
   }
 
   #endregion

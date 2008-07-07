@@ -12,11 +12,14 @@ using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra.Properties;
 
 namespace VSXtra
 {
+  #region IToolWindowPaneBehavior
+
   // ================================================================================================
   /// <summary>
   /// This interface represents the behavior of a tool window pane.
@@ -24,13 +27,53 @@ namespace VSXtra
   // ================================================================================================
   public interface IToolWindowPaneBehavior : IWindowPaneBehavior
   {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets or sets the tool bar belonging to this tool window.
+    /// </summary>
+    /// <value>The command ID of tool bar belonging to this tool window.</value>
+    // --------------------------------------------------------------------------------------------
     CommandID ToolBar { get; set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This is used to specify the CLSID of a tool that should be used for this toolwindow
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     Guid ToolClsid { get; set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets or sets the caption of the tool window.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     string Caption { get; set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets or sets the window frame hosting this tool window.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     WindowFrame Frame { get; set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets or sets where the toolbar should be in the tool window (Up, down, left, right).
+    /// This parameter is based on VSTWT_LOCATION
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     ToolbarLocation ToolBarLocation { get; set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This should be overriden if you want to run code before the window is shown
+    /// but after its toolbar is added.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     void OnToolBarAdded();
   }
+
+  #endregion
 
   // ================================================================================================
   /// <summary>
@@ -42,7 +85,11 @@ namespace VSXtra
   [ComVisible(true)]
   public abstract class ToolWindowPane<TPackage, TUIControl> : 
     WindowPane<TPackage, TUIControl>,
-    IToolWindowPaneBehavior
+    // --- Classes derived from this class behave like tool windows do
+    IToolWindowPaneBehavior,
+
+    // --- Defines how command GUIDs should be provided for command event dispatchers
+    ICommandGuidProvider
     where TPackage : PackageBase
     where TUIControl : UserControl, new()
   {
@@ -65,7 +112,12 @@ namespace VSXtra
 
     /// <summary>Index of the bitmap</summary>
     private int _BitmapIndex;
-    
+
+    /// <summary>
+    /// Object responsible to translate command methods to OleMenuCommand instances
+    /// </summary>
+    private CommandDispatcher _CommandDispatcher;
+
     private Guid _ToolClsid;
 
     #endregion
@@ -119,6 +171,28 @@ namespace VSXtra
 
     #endregion
 
+    #region ICommandGuidProvider implementation
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method handles how to obtain command GUIDs for those command handler methods
+    /// which do not explicitly declare a GUID.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    Guid ICommandGuidProvider.CommandGuid
+    {
+      get
+      {
+        return _ToolBarCommandID == null
+                 ? GetType().GUID
+                 : _ToolBarCommandID.Guid;
+      }
+    }
+
+    #endregion
+
+    #region Public properties
+
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets or sets the caption of the tool window.
@@ -153,6 +227,7 @@ namespace VSXtra
       set
       {
         _Frame = value;
+        OnToolWindowCreatedInternal();
         OnToolWindowCreated();
       }
     }
@@ -166,7 +241,6 @@ namespace VSXtra
     /// If the toolwindow has a ToolBar, it is described by this parameter.
     /// Otherwise this is null
     /// </remarks>
-    /// <include file="doc\ToolWindowPane.uex" path="docs/doc[@for=&quot;ToolWindowPane.ToolBar&quot;]/*"/>
     // --------------------------------------------------------------------------------------------
     public CommandID ToolBar
     {
@@ -253,6 +327,10 @@ namespace VSXtra
       }
     }
 
+    #endregion
+
+    #region Public methods
+
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// This method can be overriden by the derived class to execute any code that needs to run 
@@ -263,12 +341,6 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     public virtual void OnToolWindowCreated()
     {
-      VsDebug.Assert(_Frame != null, "Frame should be set before this method is called");
-
-      // --- If any property were set, set them on the frame.
-      Caption = _Caption;
-      BitmapResourceID = _BitmapResourceID;
-      BitmapIndex = _BitmapIndex;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -280,6 +352,35 @@ namespace VSXtra
     public virtual void OnToolBarAdded()
     {
     }
+
+    #endregion
+
+    #region Private methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method is called directly before OnToolWindowCreated.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void OnToolWindowCreatedInternal()
+    {
+      VsDebug.Assert(_Frame != null, "Frame should be set before this method is called");
+
+      // --- If any property were set, set them on the frame.
+      Caption = _Caption;
+      BitmapResourceID = _BitmapResourceID;
+      BitmapIndex = _BitmapIndex;
+
+      // --- Set up command dispatching
+      _CommandDispatcher = new CommandDispatcher(this);
+
+      // --- Register command handlers
+      var parentService = Package.GetService<IMenuCommandService, OleMenuCommandService>();
+      var localService = GetService<IMenuCommandService, OleMenuCommandService>();
+      _CommandDispatcher.RegisterCommandHandlers(localService, parentService);
+    }
+
+    #endregion
   }
 
   #region ToolbarLocation enum

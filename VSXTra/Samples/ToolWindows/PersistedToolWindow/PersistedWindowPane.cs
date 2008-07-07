@@ -3,34 +3,51 @@
 //
 // Created: 2008.07.05, by Istvan Novak (DeepDiver)
 // ================================================================================================
-using System;
 using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra;
 
 namespace DeepDiver.PersistedToolWindow
 {
+  // ================================================================================================
+  /// <summary>
+  /// This class defines a persisted window pane.
+  /// </summary>
+  // ================================================================================================
   [Guid("0A6F8EDC-5DDB-4aaa-A6B3-2AC1E319693E")]
   [InitialCaption("Persisted Tool Window")]
   [BitmapResourceId(301)]
   [Toolbar(typeof(DynamicToolWindowCommandGroup.PersistedWindowToolbar))]
   class PersistedWindowPane : ToolWindowPane<PersistedToolWindowPackage, PersistedWindowControl>
   {
+    // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// This is called after our control has been created and sited.
-    /// This is a good place to initialize the control with data gathered
-    /// from Visual Studio services.
+    /// Our tool window has been sited, refresh the list of tool windows.
     /// </summary>
+    // --------------------------------------------------------------------------------------------
     public override void OnToolWindowCreated()
     {
       base.OnToolWindowCreated();
-      UIControl.TrackSelection = (ITrackSelection)this.GetService(typeof(STrackSelection));
-      RefreshList(this, null);
+      UIControl.TrackSelection = GetService<STrackSelection, ITrackSelection>();
+      RefreshList(null);
     }
 
-    private void RefreshList(object sender, EventArgs arguments)
+    #region Command handler methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Handles the "Refresh List" toolbar command.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    [CommandExecMethod]
+    [PromoteCommand]
+    [CommandId(CmdIDs.cmdidRefreshWindowsList)]
+    private void RefreshList(OleMenuCommand command)
     {
       UIControl.RefreshData();
     }
+
+    #endregion
   }
 }
