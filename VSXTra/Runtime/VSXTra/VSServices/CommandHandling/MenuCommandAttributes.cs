@@ -15,7 +15,7 @@ namespace VSXtra
   /// </summary>
   // ================================================================================================
   [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method)]
-  public sealed class CommandIdAttribute : Attribute
+  public class CommandIdAttribute : Attribute
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -55,6 +55,43 @@ namespace VSXtra
     /// </summary>
     // --------------------------------------------------------------------------------------------
     public Guid Guid { get; private set; }
+  }
+
+  #endregion
+
+  #region ListCommandIdAttribute
+
+  // ================================================================================================
+  /// <summary>
+  /// This attribute class defines the Command Id for combo controls. This command is responsible for
+  /// getting the combo box list values.
+  /// </summary>
+  // ================================================================================================
+  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+  public sealed class ListCommandIdAttribute : CommandIdAttribute
+  {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new instance of the attribute with the specified initial value.
+    /// </summary>
+    /// <param name="id">Command identifier.</param>
+    // --------------------------------------------------------------------------------------------
+    public ListCommandIdAttribute(uint id)
+      : base(id)
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new instance of the attribute with the specified initial value.
+    /// </summary>
+    /// <param name="guid">Command Guid</param>
+    /// <param name="id">Command identifier.</param>
+    // --------------------------------------------------------------------------------------------
+    public ListCommandIdAttribute(Guid guid, uint id)
+      : base(guid, id)
+    {
+    }
   }
 
   #endregion

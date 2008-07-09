@@ -17,6 +17,7 @@ namespace DeepDiver.DynamicToolWindow
   // ================================================================================================
   [Guid("F0E1E9A1-9860-484d-AD5D-367D79AABF55")]
   [InitialCaption("Dynamic Tool Window")]
+  [BitmapResourceId(301)]
   class DynamicWindowPane : ToolWindowPane<DynamicToolWindowPackage, DynamicWindowControl>
   {
     private OutputWindowPane _OutputPane;

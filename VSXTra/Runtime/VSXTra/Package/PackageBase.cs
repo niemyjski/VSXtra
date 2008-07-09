@@ -479,7 +479,7 @@ namespace VSXtra
 
       // ---Look in the Attributes of this package and see if this package
       // --- support this type of ToolWindow
-      foreach (var tool in GetType().AttributesOfType<ProvideToolWindowAttribute>())
+      foreach (var tool in GetType().AttributesOfType<XtraProvideToolWindowAttribute>())
       {
         if (tool.ToolType == toolWindowType)
         {
@@ -501,7 +501,7 @@ namespace VSXtra
     /// <returns>An instance of a class derived from ToolWindowPane</returns>
     // --------------------------------------------------------------------------------------------
     private IToolWindowPaneBehavior CreateToolWindow(Type toolWindowType, int id, 
-      ProvideToolWindowAttribute tool)
+      XtraProvideToolWindowAttribute tool)
     {
       if (id < 0)
         throw new ArgumentOutOfRangeException(
@@ -650,7 +650,7 @@ namespace VSXtra
     /// <param name="tool">Optional attribute used for initialization.</param>
     /// <returns>An instance of the tool window</returns>
     // --------------------------------------------------------------------------------------------
-    private IToolWindowPaneBehavior FindToolWindow(Type toolWindowType, int id, bool create, ProvideToolWindowAttribute tool)
+    private IToolWindowPaneBehavior FindToolWindow(Type toolWindowType, int id, bool create, XtraProvideToolWindowAttribute tool)
     {
       // --- Check, if we have already created the specified tool window instance
       Dictionary<int, IToolWindowPaneBehavior> toolInstances;
@@ -1437,7 +1437,7 @@ namespace VSXtra
       int instanceID = (int)id;
 
       // --- Find the Type for this GUID
-      foreach (var tool in GetType().AttributesOfType<ProvideToolWindowAttribute>())
+      foreach (var tool in GetType().AttributesOfType<XtraProvideToolWindowAttribute>())
       {
         if (tool.ToolType.GUID == toolWindowType)
         {

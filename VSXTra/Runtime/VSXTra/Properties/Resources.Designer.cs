@@ -79,6 +79,15 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Both in and out parameters should not be specified.
+        /// </summary>
+        internal static string BothInOutParamsIllegal {
+            get {
+                return ResourceManager.GetString("BothInOutParamsIllegal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to More than one change method declared for a command..
         /// </summary>
         internal static string CommandDispatcher_DuplicateChange {
@@ -142,6 +151,15 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EventArgs are required..
+        /// </summary>
+        internal static string EventArgsRequired {
+            get {
+                return ResourceManager.GetString("EventArgsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown format.
         /// </summary>
         internal static string ExceptionMessageFormat {
@@ -196,6 +214,24 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Both in and out parameters can not be NULL.
+        /// </summary>
+        internal static string InOutParamCantBeNULL {
+            get {
+                return ResourceManager.GetString("InOutParamCantBeNULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In parameter may not be specified.
+        /// </summary>
+        internal static string InParamIllegal {
+            get {
+                return ResourceManager.GetString("InParamIllegal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Only types implementing IToolbarProvider are accepted in ToolbarAttribute..
         /// </summary>
         internal static string IToolbarProvider_Expected {
@@ -210,6 +246,24 @@ namespace VSXtra.Properties {
         internal static string IUIContextGuidType_Expected {
             get {
                 return ResourceManager.GetString("IUIContextGuidType_Expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only types implementing IWindowKindGuidType are accepted..
+        /// </summary>
+        internal static string IWindowKindGuidType_Expected {
+            get {
+                return ResourceManager.GetString("IWindowKindGuidType_Expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Out parameter can not be NULL.
+        /// </summary>
+        internal static string OutParamRequired {
+            get {
+                return ResourceManager.GetString("OutParamRequired", resourceCulture);
             }
         }
         
@@ -264,6 +318,15 @@ namespace VSXtra.Properties {
         internal static string PackageNotFound {
             get {
                 return ResourceManager.GetString("PackageNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter must be valid string in list.
+        /// </summary>
+        internal static string ParamNotValidStringInList {
+            get {
+                return ResourceManager.GetString("ParamNotValidStringInList", resourceCulture);
             }
         }
         
