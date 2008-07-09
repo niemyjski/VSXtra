@@ -14,7 +14,8 @@ namespace DeepDiver.PersistedToolWindow
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideLoadKey("Standard", "1.0", "PersistedToolWindow", "DeepDiver", 1)]
   [ProvideMenuResource(1000, 1)]
-  [ProvideToolWindow(typeof(PersistedWindowPane))]
+  [XtraProvideToolWindow(typeof(PersistedWindowPane), Style = VsDockStyle.Tabbed, 
+    Window = typeof(WindowKind.SolutionExplorer))]
   [Guid(GuidList.guidPersistedToolWindowPkgString)]
   public sealed class PersistedToolWindowPackage : PackageBase
   {

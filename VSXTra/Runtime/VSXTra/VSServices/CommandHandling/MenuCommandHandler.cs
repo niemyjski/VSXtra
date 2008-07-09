@@ -38,7 +38,7 @@ namespace VSXtra
   /// handlers.
   /// </summary>
   /// <remarks>
-  /// A simplemenu command handler contains methods to execute the command or respond to
+  /// A simple menu command handler contains methods to execute the command or respond to
   /// the status query or change events.
   /// </remarks>
   // ====================================================================================
@@ -104,7 +104,7 @@ namespace VSXtra
       foreach (object attr in GetType().GetCustomAttributes(false))
       {
         var idAttr = attr as CommandIdAttribute;
-        if (idAttr != null)
+        if (idAttr != null && attr.GetType() == typeof(CommandIdAttribute))
         {
           if (idAttr.Guid != Guid.Empty) commandGuid = idAttr.Guid;
           _CommandId = new CommandID(commandGuid, (int)idAttr.Id);
@@ -205,6 +205,17 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Callback method called when the command is to be executed.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void ExecuteMenuCommandCallback(object sender, EventArgs e)
+    {
+      var command = sender as OleMenuCommand;
+      if (command != null) OnExecute(command);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Override this method to define how the command should be executed.
     /// </summary>
     /// <param name="command">OleMenuCommand instance</param>
@@ -261,7 +272,7 @@ namespace VSXtra
     /// Binds the command to the related menu and toolbar items.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public void Bind()
+    public virtual void Bind()
     {
       if (_Package == null) return;
       var mcs = ServiceProvider.GetService<IMenuCommandService, OleMenuCommandService>();
@@ -279,17 +290,6 @@ namespace VSXtra
     #endregion
 
     #region Private event handler methods
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Callback method called when the command is to be executed.
-    /// </summary>
-    // --------------------------------------------------------------------------------------------
-    private void ExecuteMenuCommandCallback(object sender, EventArgs e)
-    {
-      var command = sender as OleMenuCommand;
-      if (command != null) OnExecute(command);
-    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>

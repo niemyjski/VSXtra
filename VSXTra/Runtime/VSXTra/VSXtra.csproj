@@ -71,6 +71,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RegistrationAttributes\XtraProvideToolWindowAttribute.cs" />
     <Compile Include="RegistrationAttributes\XtraProvideAutoLoadAttribute.cs" />
     <Compile Include="Utility\Attributes\BoolAttribute.cs" />
     <Compile Include="Utility\Attributes\StringAttribute.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
     <Compile Include="VSServices\ActivityLog.cs" />
+    <Compile Include="VSServices\CommandHandling\ComboCommandHandler.cs" />
     <Compile Include="VSServices\CommandHandling\CommandDispatcher.cs" />
     <Compile Include="VSServices\CommandHandling\CommandDispatcherAttributes.cs" />
     <Compile Include="VSServices\CommandHandling\CommandGroup.cs" />
