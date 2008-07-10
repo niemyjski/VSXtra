@@ -20,7 +20,7 @@ namespace DeepDiver.ComboboxCommands
   /// </remarks>
   // ================================================================================================
   [Guid(GuidList.guidComboboxCommandsCmdSetString)]
-  public sealed class ComboCommandGroup : CommandGroup<ComboboxCommandsPackage>
+  public sealed partial class ComboCommandGroup : CommandGroup<ComboboxCommandsPackage>
   {
     // ================================================================================================
     /// <summary>
@@ -52,6 +52,38 @@ namespace DeepDiver.ComboboxCommands
       protected override void OnExecute(OleMenuCommand command)
       {
         VsMessageBox.Show(SelectedValue, Resources.MyDropDownCombo);
+      }
+    }
+
+    // ================================================================================================
+    /// <summary>
+    /// This command handler responds to the DropDownCombo events.
+    /// </summary>
+    // ================================================================================================
+    [CommandId(CmdIDs.cmdidMyIndexCombo)]
+    [ListCommandId(CmdIDs.cmdidMyIndexComboGetList)]
+    public sealed class IndexComboCommand : IndexComboCommandHandler
+    {
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// List of available values.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      protected override IEnumerable<string> GetListValues()
+      {
+        yield return Resources.Lions;
+        yield return Resources.Tigers;
+        yield return Resources.Bears;
+      }
+
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Displays a message box with the selected value.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      protected override void OnExecute(OleMenuCommand command)
+      {
+        VsMessageBox.Show(SelectedIndex.ToString(), Resources.MyDropDownCombo);
       }
     }
 
