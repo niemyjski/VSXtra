@@ -17,11 +17,11 @@ namespace VSXtra
   // ====================================================================================
   public abstract class ComboCommandHandler : MenuCommandHandler
   {
-    #region Private fields
+    #region Private and protected fields
 
     private readonly CommandID _GetListCommandId;
     private OleMenuCommand _GetListMenuCommand;
-    private List<string> _ListValues = new List<string>();
+    protected List<string> _ListValues;
 
     #endregion
     
@@ -80,7 +80,7 @@ namespace VSXtra
     /// Gets the value of the currently selected text.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public string SelectedValue { get; private set; }
+    public string SelectedValue { get; protected set; }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -113,8 +113,8 @@ namespace VSXtra
       if (_GetListCommandId != null)
       {
         _GetListMenuCommand = new OleMenuCommand(GetListCommandCallback, _GetListCommandId);
-        _GetListMenuCommand.ParametersDescription = ParamsAccepted;
         mcs.AddCommand(_GetListMenuCommand);
+        _GetListMenuCommand.ParametersDescription = ParamsAccepted;
       }
     }
 
@@ -134,7 +134,7 @@ namespace VSXtra
       var eventArgs = e as OleMenuCmdEventArgs;
       if (eventArgs != null)
       {
-        var newChoice = eventArgs.InValue as string;
+        var newChoice = eventArgs.InValue == null ? null : eventArgs.InValue.ToString();
         var vOut = eventArgs.OutValue;
         if (vOut != IntPtr.Zero && newChoice != null)
         {
@@ -143,7 +143,7 @@ namespace VSXtra
         if (vOut != IntPtr.Zero)
         {
           // --- When vOut is non-NULL, the IDE is requesting the current value for the combo
-          Marshal.GetNativeVariantForObject(SelectedValue, vOut);
+          Marshal.GetNativeVariantForObject(DisplayedValue, vOut);
         }
 
         else if (newChoice != null)
@@ -196,7 +196,7 @@ namespace VSXtra
         }
         if (vOut != IntPtr.Zero)
         {
-          _ListValues = new List<string>(GetListValues());
+          EnsureList();
           var stringArray = new string[_ListValues.Count];
           _ListValues.CopyTo(stringArray);
           Marshal.GetNativeVariantForObject(stringArray, vOut);
@@ -234,6 +234,16 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the value to be displayed in the combo box
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual string DisplayedValue
+    {
+      get { return SelectedValue; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Gets the strings accepted as input parameter.
     /// </summary>
     // --------------------------------------------------------------------------------------------
@@ -244,12 +254,40 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Override this method if you want to parse (and store) the selected value in a non-string 
-    /// form.
+    /// Gets the flag indicating if case sensitive compare is used when checking items or not.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    protected virtual void ParseSelectedValue()
+    protected virtual bool IsCaseSensitive
     {
+      get { return false; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the mode used for string comparison.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual StringComparison StringComparison
+    {
+      get
+      {
+        return IsCaseSensitive
+                 ? StringComparison.CurrentCultureIgnoreCase
+                 : System.StringComparison.CurrentCulture;
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method ensures that the list of combo box is filled up.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected void EnsureList()
+    {
+      if (_ListValues == null)
+      {
+        _ListValues = new List<string>(GetListValues());
+      }
     }
 
     #endregion
@@ -281,13 +319,89 @@ namespace VSXtra
       output = String.Empty;
       foreach (string item in ListValues)
       {
-        if (String.Compare(item, input, StringComparison.CurrentCultureIgnoreCase) == 0)
+        if (String.Compare(item, input, StringComparison) == 0)
         {
           output = item;
           return true;
         }
       }
       return false;
+    }
+  }
+
+  #endregion
+
+  #region IndexComboCommandHandler
+
+  // ====================================================================================
+  /// <summary>
+  /// This abstract class implements a Command handler for an IndexCombo.
+  /// </summary>
+  // ====================================================================================
+  public abstract class IndexComboCommandHandler : ComboCommandHandler
+  {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Override this method to check the validity of list items.
+    /// </summary>
+    /// <param name="input">Input item to check for validity.</param>
+    /// <param name="output">The selected item in form as it in the list of the combo.</param>
+    /// <returns>
+    /// True, if the item is valid; otherwise, false.
+    /// </returns>
+    /// <remarks>
+    /// The input is valid, if it represents an integer index in the range between 0 and the 
+    /// number of items in the combo - 1; or equals one of the items in the list.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    protected override bool IsInputValid(string input, out string output)
+    {
+      int index;
+      if (Int32.TryParse(input, out index))
+      {
+        if (index >= 0 && index < _ListValues.Count)
+        {
+          output = _ListValues[index];
+          SelectedIndex = index;
+          return true;
+        }
+      }
+      index = 0;
+      output = String.Empty;
+      foreach (var item in ListValues)
+      {
+        if (String.Compare(item, input, StringComparison) == 0)
+        {
+          output = item;
+          SelectedIndex = index;
+          return true;
+        }
+        index++;
+      }
+      return false;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gtes the selected index of the combo.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public int SelectedIndex { get; private set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Retrieves the currently selected value of the combo box.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected override string DisplayedValue
+    {
+      get
+      {
+        EnsureList();
+        return (SelectedIndex >= 0 && SelectedIndex < _ListValues.Count)
+                 ? _ListValues[SelectedIndex]
+                 : String.Empty;
+      }
     }
   }
 
@@ -312,15 +426,49 @@ namespace VSXtra
     /// This implementation always returns true.
     /// </returns>
     // --------------------------------------------------------------------------------------------
-    protected override bool IsInputValid(string input, out string output)
+    protected sealed override bool IsInputValid(string input, out string output)
     {
       output = input;
       return true;
     }
 
-    protected override IEnumerable<string> GetListValues()
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// An MRU Combo manages its list by itself. We do not need to create a list of our own.
+    /// </summary>
+    /// <returns></returns>
+    // --------------------------------------------------------------------------------------------
+    protected sealed override IEnumerable<string> GetListValues()
     {
-      return new List<string>();
+      return null;
+    }
+  }
+
+  #endregion
+
+  #region DynamicComboCommandHandler
+
+  // ====================================================================================
+  /// <summary>
+  /// This abstract class implements a Command handler for an DynamicCombo.
+  /// </summary>
+  // ====================================================================================
+  public abstract class DynamicComboCommandHandler : ComboCommandHandler
+  {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Checks if the selected item is valid or not.
+    /// </summary>
+    /// <param name="input">Input item to check for validity.</param>
+    /// <param name="output">The selected item in form as it in the list of the combo.</param>
+    /// <returns>
+    /// True, if the item is valid; otherwise, false.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    protected override bool IsInputValid(string input, out string output)
+    {
+      output = input;
+      return true;
     }
   }
 

@@ -37,7 +37,7 @@
 
       <!--Note: a INDEXCOMBO does not let the user type into the combo box; they can only pick from the list 
         	 The index of the element selected is returned. -->
-      <Combo guid="guidComboBoxCmdSet" id="cmdidMyIndexCombo" priority="0x0010" type="IndexCombo" defaultWidth="100" idCommandList="cmdidMyIndexComboGetList">
+      <Combo guid="guidComboBoxCmdSet" id="cmdidMyIndexCombo" priority="0x0010" type="IndexCombo" defaultWidth="120" idCommandList="cmdidMyIndexComboGetList">
         <Parent guid="guidComboBoxCmdSet" id="MyToolbarGroup"/>
         <CommandFlag>IconAndText</CommandFlag>
         <CommandFlag>CommandWellOnly</CommandFlag>
