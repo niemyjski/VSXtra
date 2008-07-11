@@ -172,7 +172,7 @@ namespace VSXtra
           childKey.SetValue("Orientation", OrientationToString(Orientation));
         if (Style != VsDockStyle.none)
           childKey.SetValue("Style", StyleToString(Style));
-        if (_DockedWith.GUID != Guid.Empty)
+        if (_DockedWith != null && _DockedWith.GUID != Guid.Empty)
           childKey.SetValue("Window", _DockedWith.GUID.ToString("B"));
         if (_Position.Width != 0 && _Position.Height != 0)
         {

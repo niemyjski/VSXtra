@@ -27,9 +27,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistedToolWindow", "Samp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComboboxCommands", "Samples\MenusAndCommands\ComboboxCommands\ComboboxCommands.csproj", "{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiToolWindow", "Samples\ToolWindows\MultiToolWindow\MultiToolWindow.csproj", "{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs02.codeplex.com/
 		SccLocalPath0 = .
@@ -57,6 +59,10 @@ Global
 		SccProjectTopLevelParentUniqueName6 = VSXTra.sln
 		SccProjectName6 = Samples/MenusAndCommands/ComboboxCommands
 		SccLocalPath6 = Samples\\MenusAndCommands\\ComboboxCommands
+		SccProjectUniqueName7 = Samples\\ToolWindows\\MultiToolWindow\\MultiToolWindow.csproj
+		SccProjectTopLevelParentUniqueName7 = VSXTra.sln
+		SccProjectName7 = Samples/ToolWindows/MultiToolWindow
+		SccLocalPath7 = Samples\\ToolWindows\\MultiToolWindow
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +93,10 @@ Global
 		{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,5 +111,6 @@ Global
 		{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78} = {F990B9E3-95D8-4DFE-B104-83652F77652B}
 		{7277A590-9A1E-4A87-8105-88EDA21BAF8B} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
 		{398B3601-9835-4B22-B515-FBE62A2573F2} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
 	EndGlobalSection
 EndGlobal

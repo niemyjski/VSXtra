@@ -12,7 +12,8 @@ namespace VSXtra
 {
   // ================================================================================================
   /// <summary>
-  /// This static class is a wrapper class around the SvSUIShell operations.
+  /// This static class is a wrapper class around the message box functionality of the SvSUIShell 
+  /// service.
   /// </summary>
   // ================================================================================================
   public static class VsMessageBox

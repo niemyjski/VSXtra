@@ -31,7 +31,6 @@ namespace DeepDiver.ComboboxCommands
         { 4.0, 3.0, 2.0, 1.5, 1.25, 1.0, .75, .66, .50, .33, .25, .10 };
       private readonly string _ZoomToFit = Resources.ZoomToFit;
       private readonly string _Zoom_to_Fit = Resources.Zoom_to_Fit;
-      private double _CurrentZoomFactor;
       private readonly NumberFormatInfo _NumberFormatInfo;
 
 
@@ -42,7 +41,7 @@ namespace DeepDiver.ComboboxCommands
       // --------------------------------------------------------------------------------------------
       public DynamicComboCommand()
       {
-        _CurrentZoomFactor = 1.0;
+        CurrentZoomFactor = 1.0;
         SelectedValue = "100 %";
         _NumberFormatInfo = (NumberFormatInfo)CultureInfo.CurrentUICulture.NumberFormat.Clone();
       }
@@ -54,7 +53,7 @@ namespace DeepDiver.ComboboxCommands
       // --------------------------------------------------------------------------------------------
       protected override void OnExecute(OleMenuCommand command)
       {
-        VsMessageBox.Show(_CurrentZoomFactor.ToString(), Resources.MyDynamicCombo);
+        VsMessageBox.Show(CurrentZoomFactor.ToString(), Resources.MyDynamicCombo);
       }
 
       // --------------------------------------------------------------------------------------------
@@ -83,7 +82,7 @@ namespace DeepDiver.ComboboxCommands
       {
         if (input.Equals(_ZoomToFit) || input.Equals(_Zoom_to_Fit))
         {
-          _CurrentZoomFactor = 0;
+          CurrentZoomFactor = 0;
           output = _Zoom_to_Fit;
           return true;
         }
@@ -91,15 +90,15 @@ namespace DeepDiver.ComboboxCommands
         // --- a localized percentage in a string!).  So, we need to remove any occurence of the localized Percent 
         // --- symbol, then parse the value that's left
         output = input;
-        _CurrentZoomFactor = 0;
+        CurrentZoomFactor = 0;
         try
         {
           float newZoom = Single.Parse(input.Replace(NumberFormatInfo.InvariantInfo.PercentSymbol, ""), CultureInfo.CurrentCulture);
           newZoom = (float)Math.Round(newZoom);
           if (newZoom < 0)
             throw (new ArgumentException(Resources.ZoomMustBeGTZero));
-          _CurrentZoomFactor = newZoom / (float)100.0;
-          output = _CurrentZoomFactor.ToString("P0", _NumberFormatInfo);
+          CurrentZoomFactor = newZoom / (float)100.0;
+          output = CurrentZoomFactor.ToString("P0", _NumberFormatInfo);
         }
         catch (FormatException)
         {
@@ -117,10 +116,7 @@ namespace DeepDiver.ComboboxCommands
       /// Gets the currently selected zoom factor
       /// </summary>
       // --------------------------------------------------------------------------------------------
-      public double CurrentZoomFactor
-      {
-        get { return _CurrentZoomFactor; }
-      }
+      public double CurrentZoomFactor { get; private set; }
     }
   }
 }
