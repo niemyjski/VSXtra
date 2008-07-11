@@ -71,6 +71,14 @@ namespace VSXtra
     /// </summary>
     // --------------------------------------------------------------------------------------------
     void OnToolBarAdded();
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets the instance ID of the tool window created.
+    /// </summary>
+    /// <param name="instanceId">Instance ID to set for the tool window.</param>
+    // --------------------------------------------------------------------------------------------
+    void SetInstanceId(int instanceId);
   }
 
   #endregion
@@ -94,6 +102,9 @@ namespace VSXtra
     where TUIControl : UserControl, new()
   {
     #region Private fields
+
+    /// <summary>Caption of the tool window</summary>
+    private int _InstanceID;
 
     /// <summary>Caption of the tool window</summary>
     private string _Caption;
@@ -191,7 +202,33 @@ namespace VSXtra
 
     #endregion
 
+    #region IToolWindowPaneBehavior
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets the instance ID of the tool window created.
+    /// </summary>
+    /// <param name="instanceId">Instance ID to set for the tool window.</param>
+    // --------------------------------------------------------------------------------------------
+    void IToolWindowPaneBehavior.SetInstanceId(int instanceId)
+    {
+      _InstanceID = instanceId;
+    }
+
+    #endregion
+
     #region Public properties
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the instance ID belonging to this tool window instance.
+    /// </summary>
+    /// <value>Instance ID belonging to this tool window instance.</value>
+    // --------------------------------------------------------------------------------------------
+    public int InstanceID
+    {
+      get { return _InstanceID; }
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>

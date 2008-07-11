@@ -178,8 +178,12 @@ namespace VSXtra
           select method;
         foreach (var method in commandMethods)
         {
-          var menuInfo = ObtainCommandMethodAttributes(method, defaultGuid);
-          MergeCommandMethodInfo(target, menuInfo);
+          foreach (CommandIdAttribute idAttr in 
+            method.GetCustomAttributes(typeof(CommandIdAttribute), false))
+          {
+            var menuInfo = ObtainCommandMethodAttributes(idAttr, method, defaultGuid);
+            MergeCommandMethodInfo(target, menuInfo);
+          }
         }
         _Targets.Add(targetType, target);
       }
@@ -239,13 +243,14 @@ namespace VSXtra
     /// <summary>
     /// Obtains the menu information for a command handler method.
     /// </summary>
+    /// <param name="idAttr">CommandID attribute belonging to the command.</param>
     /// <param name="method">Method information to scan for attributes.</param>
     /// <param name="defaultGuid">
     /// Default GUID to be used if not defined with the command handler.
     /// </param>
     /// <returns>MenuCommandInfo instance about the method.</returns>
     // --------------------------------------------------------------------------------------------
-    private static MenuCommandInfo ObtainCommandMethodAttributes(MethodInfo method, Guid defaultGuid)
+    private static MenuCommandInfo ObtainCommandMethodAttributes(CommandIdAttribute idAttr, MethodInfo method, Guid defaultGuid)
     {
       var menuInfo = new MenuCommandInfo();
       bool commandAttrFound = false;
@@ -277,13 +282,11 @@ namespace VSXtra
           menuInfo.Promote = promoteAttr.Value;
         }
 
-        // --- Obtain command ID and handle the defaultvalue of the command GUID
-        var commandIdAttr = attr as CommandIdAttribute;
-        if (commandIdAttr == null) continue;
-        menuInfo.Guid = commandIdAttr.Guid == Guid.Empty
+        // --- Set command ID and handle the defaultvalue of the command GUID
+        menuInfo.Guid = idAttr.Guid == Guid.Empty
                           ? defaultGuid
-                          : commandIdAttr.Guid;
-        menuInfo.Id = commandIdAttr.Id;
+                          : idAttr.Guid;
+        menuInfo.Id = idAttr.Id;
       }
       return menuInfo;
     }

@@ -14,7 +14,7 @@ namespace VSXtra
   /// This attribute class defines the Command Id of a menu command.
   /// </summary>
   // ================================================================================================
-  [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method)]
+  [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method, AllowMultiple = true)]
   public class CommandIdAttribute : Attribute
   {
     // --------------------------------------------------------------------------------------------

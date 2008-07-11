@@ -1,22 +1,22 @@
 ﻿// ================================================================================================
-// DynamicToolWindowPackage.cs
+// MultiToolWindowPackage.cs
 //
-// Created: 2008.07.01, by Istvan Novak (DeepDiver)
+// Created: 2008.07.11, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using VSXtra;
 
-namespace DeepDiver.DynamicToolWindow
+namespace DeepDiver.MultiToolWindow
 {
   [PackageRegistration(UseManagedResourcesOnly = true)]
   [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0")]
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
-  [ProvideLoadKey("Standard", "1.0", "DynamicToolWindow", "DeepDiver", 1)]
+  [ProvideLoadKey("Standard", "1.0", "MultiToolWindow", "DeepDiver", 1)]
   [ProvideMenuResource(1000, 1)]
-  [XtraProvideToolWindow(typeof(DynamicWindowPane), MultiInstances = true)]
-  [Guid(GuidList.guidDynamicToolWindowPkgString)]
-  public sealed class DynamicToolWindowPackage : PackageBase
+  [XtraProvideToolWindow(typeof(NumberStackWindowPane))]
+  [Guid(GuidList.guidMultiToolWindowPkgString)]
+  public sealed class MultiToolWindowPackage : PackageBase
   {
   }
 }

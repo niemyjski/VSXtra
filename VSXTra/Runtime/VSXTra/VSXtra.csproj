@@ -105,6 +105,7 @@
     <Compile Include="VSServices\OutputWindow\OutputWindowPane.cs" />
     <Compile Include="VSServices\SelectionTracking\CustomTypeDescriptorBase.cs" />
     <Compile Include="VSServices\VsMessageBox.cs" />
+    <Compile Include="VSServices\VsUIShell.cs" />
     <Compile Include="VSServices\WindowPanes\ToolWindowAttributes.cs" />
     <Compile Include="VSServices\WindowPanes\ToolWindowPane.cs" />
     <Compile Include="VSServices\WindowPanes\WindowFrame.cs" />

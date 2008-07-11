@@ -516,6 +516,7 @@ namespace VSXtra
 
       // --- First create an instance of the ToolWindowPane
       var window = (IToolWindowPaneBehavior)Activator.CreateInstance(toolWindowType);
+      window.SetInstanceId(id);
 
       // --- Check if this window has a ToolBar
       bool hasToolBar = (window.ToolBar != null);
