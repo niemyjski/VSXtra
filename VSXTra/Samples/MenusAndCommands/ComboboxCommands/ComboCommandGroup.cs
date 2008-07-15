@@ -57,7 +57,7 @@ namespace DeepDiver.ComboboxCommands
 
     // ================================================================================================
     /// <summary>
-    /// This command handler responds to the DropDownCombo events.
+    /// This command handler responds to the IndexCombo events.
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidMyIndexCombo)]
@@ -89,7 +89,7 @@ namespace DeepDiver.ComboboxCommands
 
     // ================================================================================================
     /// <summary>
-    /// This command handler responds to the DropDownCombo events.
+    /// This command handler responds to the MRUCombo events.
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidMyMRUCombo)]

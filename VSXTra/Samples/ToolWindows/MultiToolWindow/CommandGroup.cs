@@ -17,14 +17,17 @@ namespace DeepDiver.MultiToolWindow
   public sealed class CommandGroup: CommandGroup<MultiToolWindowPackage>
   {
     [CommandId(CmdIDs.cmdidShowFirstWindow)]
-    [ShowToolWindowAction(typeof(NumberStackWindowPane), 1)]
+    [ShowToolWindowAction(typeof(NumberStackWindowPane1))]
     public sealed class ShowStackWindow1: MenuCommandHandler {}
 
     [CommandId(CmdIDs.cmdidShowSecondWindow)]
-    [ShowToolWindowAction(typeof(NumberStackWindowPane), 2)]
+    [ShowToolWindowAction(typeof(NumberStackWindowPane2))]
     public sealed class ShowStackWindow2 : MenuCommandHandler { }
 
-    [CommandId(CmdIDs.cmdidStackWindowToolbar)]
-    public sealed class StackWindowToolbar : ToolbarDefinition { }
+    [CommandId(CmdIDs.cmdidStackWindowToolbar1)]
+    public sealed class StackWindowToolbar1 : ToolbarDefinition { }
+
+    [CommandId(CmdIDs.cmdidStackWindowToolbar2)]
+    public sealed class StackWindowToolbar2 : ToolbarDefinition { }
   }
 }

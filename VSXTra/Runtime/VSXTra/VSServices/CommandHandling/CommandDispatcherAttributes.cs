@@ -121,4 +121,81 @@ namespace VSXtra
   }
 
   #endregion
+
+  #region CommandMapAttribute
+
+  // ================================================================================================
+  /// <summary>
+  /// This attribute defines a command map.
+  /// </summary>
+  /// <remarks>
+  /// This attribute can be attached to a class to refine command mappings used there.
+  /// </remarks>
+  // ================================================================================================
+  [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+  public sealed class CommandMapAttribute: Attribute
+  {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new command mapping with the specified parameters.
+    /// </summary>
+    /// <param name="guid">Guid of the related mapping.</param>
+    /// <param name="idFrom">Start of ID range mapped.</param>
+    /// <param name="idTo">End of ID range mapped.</param>
+    /// <param name="offset">Offset used to define the new maping.</param>
+    // --------------------------------------------------------------------------------------------
+    public CommandMapAttribute(Guid guid, uint idFrom, uint idTo, int offset)
+    {
+      Guid = guid;
+      IdFrom = idFrom;
+      IdTo = idTo;
+      Offset = offset;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new command mapping with the specified parameters.
+    /// </summary>
+    /// <param name="idFrom">Start of ID range mapped.</param>
+    /// <param name="idTo">End of ID range mapped.</param>
+    /// <param name="offset">Offset used to define the new maping.</param>
+    // --------------------------------------------------------------------------------------------
+    public CommandMapAttribute(uint idFrom, uint idTo, int offset)
+    {
+      Guid = Guid.Empty;
+      IdFrom = idFrom;
+      IdTo = idTo;
+      Offset = offset;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the Guid of the related mapping.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public Guid Guid { get; private set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the start of ID range mapped.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public uint IdFrom { get; private set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the end of ID range mapped.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public uint IdTo { get; private set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the offset used for mapping.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public int Offset { get; private set; }
+  }
+
+  #endregion
 }

@@ -7,7 +7,8 @@ namespace DeepDiver.MultiToolWindow
 {
   static class CmdIDs
   {
-    public const uint cmdidStackWindowToolbar = 0x2000;
+    public const uint cmdidStackWindowToolbar1 = 0x2000;
+    public const uint cmdidStackWindowToolbar2 = 0x2001;
 
     public const uint cmdidShowFirstWindow = 0x100;
     public const uint cmdidShowSecondWindow = 0x101;

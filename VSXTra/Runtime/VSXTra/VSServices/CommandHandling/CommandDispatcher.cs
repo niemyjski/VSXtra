@@ -134,7 +134,7 @@ namespace VSXtra
           // --- Promote to the parent OleMenuCommandService, if required.
           if (menuInfo.Promote && parent != null)
           {
-            if (parent.FindCommand(id) != null)
+            if (parent.FindCommand(id) == null)
               parent.AddCommand(command);
           }
         }
@@ -166,6 +166,14 @@ namespace VSXtra
         Guid defaultGuid = defaultGuidAttr == null
           ? (GuidProvider == null ? targetType.GUID : GuidProvider.CommandGuid)
           : defaultGuidAttr.Value.GUID;
+        target.DefaultGuid = defaultGuid;
+
+        // --- Obtain command mapping information
+        var mappings = targetType.AttributesOfType<CommandMapAttribute>();
+        foreach (var attr in mappings)
+        {
+          target.Mappings.Add(attr);
+        }
 
         // --- Obtain all methods that can be used as command methods
         var commandMethods =
@@ -193,11 +201,29 @@ namespace VSXtra
     /// <summary>
     /// Merges menu information with the specified target information.
     /// </summary>
-    /// <param name="target">Target top merge the menu into.</param>
+    /// <param name="target">Target to merge the menu into.</param>
     /// <param name="info">Menu command information to merge.</param>
     // --------------------------------------------------------------------------------------------
     private static void MergeCommandMethodInfo(CommandTargetInfo target, MenuCommandInfo info)
     {
+      // --- Apply mappings
+      foreach (var mapping in target.Mappings)
+      {
+        // --- Check for mapping GUID
+        if ((mapping.Guid == Guid.Empty && info.Guid == target.DefaultGuid) ||
+            mapping.Guid != info.Guid)
+        {
+          // --- Mapping GUID matches, check for ID range
+          if (info.Id >= mapping.IdFrom && info.Id <= mapping.IdTo)
+          {
+            // --- ID in the mapping range, apply offset
+            info.Id = (uint) ((int) info.Id + mapping.Offset);
+            break;
+          }
+        }
+      }
+
+      // --- Actual merging starts here
       Dictionary<uint, MenuCommandInfo> commandsForGroup;
       if (!target.TryGetValue(info.Guid, out commandsForGroup))
       {
@@ -405,6 +431,9 @@ namespace VSXtra
     // ================================================================================================
     private class CommandTargetInfo : Dictionary<Guid, Dictionary<uint, MenuCommandInfo>>
     {
+      private readonly List<CommandMapAttribute> _Mappings = new List<CommandMapAttribute>();
+      private Guid _DefaultGuid = Guid.Empty;
+
       // --------------------------------------------------------------------------------------------
       /// <summary>
       /// Finds the command information in the dictionary.
@@ -424,6 +453,27 @@ namespace VSXtra
         MenuCommandInfo result;
         commandGroup.TryGetValue((uint) command.CommandID.ID, out result);
         return result;
+      }
+
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Gets the list of mappings related to the menu command info.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      public List<CommandMapAttribute> Mappings
+      {
+        get { return _Mappings; }
+      }
+
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Gets or sets the default Guid belonging to this menu command info.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      public Guid DefaultGuid
+      {
+        get { return _DefaultGuid; }
+        set { _DefaultGuid = value; }
       }
     }
 
