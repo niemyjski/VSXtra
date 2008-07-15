@@ -4,6 +4,7 @@
 // Created: 2008.06.29, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using Microsoft.VisualStudio;
 
 namespace VSXtra
 {
@@ -55,6 +56,42 @@ namespace VSXtra
     /// </summary>
     // --------------------------------------------------------------------------------------------
     public Guid Guid { get; private set; }
+  }
+
+  #endregion
+
+  #region VsCommandIdAttribute
+
+  // ================================================================================================
+  /// <summary>
+  /// This attribute class defines the Command Id of a menu command belonging to standard Visual 
+  /// Studio commands.
+  /// </summary>
+  // ================================================================================================
+  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
+  public sealed class VsCommandIdAttribute : CommandIdAttribute
+  {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new instance of the attribute with the specified initial value.
+    /// </summary>
+    /// <param name="id">Command identifier.</param>
+    // --------------------------------------------------------------------------------------------
+    public VsCommandIdAttribute(uint id)
+      : base(VSConstants.GUID_VSStandardCommandSet97, id)
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new instance of the attribute with the specified initial value.
+    /// </summary>
+    /// <param name="id">Command identifier.</param>
+    // --------------------------------------------------------------------------------------------
+    public VsCommandIdAttribute(VSConstants.VSStd97CmdID id)
+      : base(VSConstants.GUID_VSStandardCommandSet97, (uint)id)
+    {
+    }
   }
 
   #endregion

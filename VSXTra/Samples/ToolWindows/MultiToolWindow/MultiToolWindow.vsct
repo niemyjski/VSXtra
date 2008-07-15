@@ -6,8 +6,15 @@
 
   <Commands package="guidMultiToolWindowPkg">
     <Menus>
-      <Menu guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar" priority="0x0000" type="ToolWindowToolbar">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar"/>
+      <Menu guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar1" priority="0x0000" type="ToolWindowToolbar">
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar1"/>
+        <Strings>
+          <ButtonText>StackWindowToolBar</ButtonText>
+          <CommandName>Stack Window Toolbar</CommandName>
+        </Strings>
+      </Menu>
+      <Menu guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar2" priority="0x0000" type="ToolWindowToolbar">
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar2"/>
         <Strings>
           <ButtonText>StackWindowToolBar</ButtonText>
           <CommandName>Stack Window Toolbar</CommandName>
@@ -19,8 +26,11 @@
       <Group guid="guidMultiToolWindowCmdSet" id="MultiWindowGroup" priority="0x0200">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_WINDOWS"/>
       </Group>
-      <Group guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup" priority="0x0500">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar"/>
+      <Group guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup1" priority="0x0500">
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar1"/>
+      </Group>
+      <Group guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup2" priority="0x0500">
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar2"/>
       </Group>
     </Groups>
     
@@ -44,7 +54,7 @@
       
       <!-- Toolbar buttons for window #1 -->
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidAdd1" priority="0x100" type="Button">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup"/>
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup1"/>
         <Icon guid="guidOfficeIcon" id="msotcidPlus"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -52,7 +62,7 @@
         </Strings>
       </Button>
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidSubtract1" priority="0x100" type="Button">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup"/>
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup1"/>
         <Icon guid="guidOfficeIcon" id="msotcidMinus"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -60,7 +70,7 @@
         </Strings>
       </Button>
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidMultiply1" priority="0x100" type="Button">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup"/>
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup1"/>
         <Icon guid="guidOfficeIcon" id="msotcidMultiply"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -68,7 +78,7 @@
         </Strings>
       </Button>
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidDivide1" priority="0x100" type="Button">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup"/>
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup1"/>
         <Icon guid="guidOfficeIcon" id="msotcidDivide"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -78,7 +88,7 @@
 
       <!-- Toolbar buttons for window #2 -->
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidAdd2" priority="0x100" type="Button">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup"/>
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup2"/>
         <Icon guid="guidOfficeIcon" id="msotcidPlus"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -86,7 +96,7 @@
         </Strings>
       </Button>
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidSubtract2" priority="0x100" type="Button">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup"/>
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup2"/>
         <Icon guid="guidOfficeIcon" id="msotcidMinus"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -94,7 +104,7 @@
         </Strings>
       </Button>
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidMultiply2" priority="0x100" type="Button">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup"/>
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup2"/>
         <Icon guid="guidOfficeIcon" id="msotcidMultiply"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -102,7 +112,7 @@
         </Strings>
       </Button>
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidDivide2" priority="0x100" type="Button">
-        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup"/>
+        <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup2"/>
         <Icon guid="guidOfficeIcon" id="msotcidDivide"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
@@ -122,8 +132,10 @@
     
     <GuidSymbol name="guidMultiToolWindowCmdSet" value="{18fe7969-c755-450a-9067-a9098f179b48}">
       <IDSymbol name="MultiWindowGroup" value="0x1020" />
-      <IDSymbol name="StackWindowToolbarGroup" value="0x1021" />
-      <IDSymbol name="StackWindowToolbar" value="0x2000" />
+      <IDSymbol name="StackWindowToolbarGroup1" value="0x1021" />
+      <IDSymbol name="StackWindowToolbarGroup2" value="0x1022" />
+      <IDSymbol name="StackWindowToolbar1" value="0x2000" />
+      <IDSymbol name="StackWindowToolbar2" value="0x2001" />
       <IDSymbol name="cmdidShowFirstWindow" value="0x0100" />
       <IDSymbol name="cmdidShowSecondWindow" value="0x0101" />
       <IDSymbol name="cmdidAdd1" value="0x0102" />

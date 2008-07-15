@@ -20,7 +20,7 @@ namespace DeepDiver.ComboboxCommands
   {
     // ================================================================================================
     /// <summary>
-    /// This command handler responds to the DropDownCombo events.
+    /// This command handler responds to the DynamicCombo events.
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidMyDynamicCombo)]
