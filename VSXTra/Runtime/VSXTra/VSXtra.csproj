@@ -71,6 +71,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RegistrationAttributes\XtraProvideOptionDialogPageAttribute.cs" />
+    <Compile Include="RegistrationAttributes\XtraProvideOptionPageAttribute.cs" />
     <Compile Include="RegistrationAttributes\XtraProvideToolWindowAttribute.cs" />
     <Compile Include="RegistrationAttributes\XtraProvideAutoLoadAttribute.cs" />
     <Compile Include="Utility\Attributes\BoolAttribute.cs" />

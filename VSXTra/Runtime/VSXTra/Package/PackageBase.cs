@@ -13,13 +13,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.Win32;
 using VSXtra.Properties;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using IServiceProvider = System.IServiceProvider;
@@ -67,6 +70,18 @@ namespace VSXtra
     // track of them, so that is why we implement a service container in our package.
     IServiceContainer,
 
+    // Implementing this interface allows our package providing access to user-specific options in 
+    // the user options file associated with the solution.
+    IVsPersistSolutionOpts,
+
+    // Our package implements this interface to state information persisted by the Visual Studio 
+    // settings mechanism.
+    IVsUserSettings,
+
+    // The package provides this interface to provide support for migrating user settings.
+    IVsUserSettingsMigration,
+
+    // Provides the ability to create multiple tool windows.
     IVsToolWindowFactory
   {
     #region Private fields
@@ -91,10 +106,28 @@ namespace VSXtra
     private Dictionary<Type, object> _Services;
 
     /// <summary>Dictionary for tool window instances.</summary>
-    private readonly Dictionary<Type, Dictionary<int, IToolWindowPaneBehavior>> _ToolWindows =
+    private Dictionary<Type, Dictionary<int, IToolWindowPaneBehavior>> _ToolWindows =
       new Dictionary<Type, Dictionary<int, IToolWindowPaneBehavior>>();
 
-    private Container _ComponentToolWindows; // this is the toolwindows that implement IComponent
+    /// <summary>Container for tool windows implementing IComponent</summary>
+    private Container _ComponentToolWindows;
+
+    /// <summary>List of option keys used by this package</summary>
+    private List<string> _OptionKeys;
+
+    /// <summary>Container of oages and profiles used by this package</summary>
+    private Container _PagesAndProfiles;
+
+    #endregion
+
+    #region Private enums
+
+    private enum ProfileManagerLoadAction
+    {
+      None,
+      LoadPropsFromRegistry,
+      ResetSettings
+    }
 
     #endregion
 
@@ -131,9 +164,40 @@ namespace VSXtra
     {
       if (!disposing) return;
 
+      DestroyPages();
       DestroyComponentToolWindows();
       DestroyServices();
       DestroyServiceProvider();
+
+      // --- Release references to containers
+      if (_ToolWindows != null) _ToolWindows = null;
+      if (_OptionKeys != null) _OptionKeys = null;
+
+      // --- Disconnect user preference change events
+      SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Destroys all pages used by this package.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void DestroyPages()
+    {
+      if (_PagesAndProfiles != null)
+      {
+        var pagesAndProfiles = _PagesAndProfiles;
+        _PagesAndProfiles = null;
+        try
+        {
+          pagesAndProfiles.Dispose();
+        }
+        catch (Exception e)
+        {
+          VsDebug.Fail(String.Format("Failed to dispose component toolwindows for package {0}\n{1}", 
+                                     GetType().FullName, e.Message));
+        }
+      }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -234,6 +298,27 @@ namespace VSXtra
           }
         }
         _ServiceProvider = null;
+      }
+    }
+
+    #endregion
+
+    #region Public properties
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>Gets the root key for the Visual Studio user settings.</summary>
+    /// <remarks>
+    /// This property returns the registry root for the current user. Typically this is 
+    /// HKCU\Software\Microsoft\VisualStudio\[ver] but this can change based on any alternate 
+    /// root that the shell is initialized with. This key is read-write.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    public RegistryKey UserRegistryRoot
+    {
+      get
+      {
+        return VSRegistry.RegistryRoot(_ServiceProvider, 
+          __VsLocalRegistryType.RegType_UserSettings, true);
       }
     }
 
@@ -367,6 +452,51 @@ namespace VSXtra
       return (TInterface)GetGlobalService(typeof(SInterface));
     }
 
+    /// <include file='doc\Package.uex' path='docs/doc[@for="Package.GetDialogPage"]' />
+    /// <devdoc>
+    ///     This method returns the requested dialog page.  Dialog
+    ///     pages are cached so they can keep a single instance
+    ///     of their state.  This method allows a deriving class
+    ///     to get a cached dialog page.  The object will be 
+    ///     dynamically created if it is not in the cache.
+    /// </devdoc>
+    protected IDialogPageBehavior GetDialogPage(Type dialogPageType)
+    {
+      // --- Check the current package state and input parameters
+      if (_Zombied)
+        Marshal.ThrowExceptionForHR(NativeMethods.E_UNEXPECTED);
+      if (dialogPageType == null)
+        throw new ArgumentNullException("dialogPageType");
+      if (!typeof(IDialogPageBehavior).IsAssignableFrom(dialogPageType))
+        throw new ArgumentException(string.Format(Resources.Culture, Resources.Package_BadDialogPageType, dialogPageType.FullName));
+
+      // --- Check, if the specified options page has already been created.
+      if (_PagesAndProfiles != null)
+      {
+        foreach (var page in _PagesAndProfiles.Components)
+        {
+          if (page.GetType() == dialogPageType)
+          {
+            return (IDialogPageBehavior)page;
+          }
+        }
+      }
+
+      // --- This type of options page has not been created yet, so it's time to do it.
+      var ctor = dialogPageType.GetConstructor(new Type[] { });
+      if (ctor == null)
+        throw new ArgumentException(string.Format(Resources.Culture, Resources.Package_PageCtorMissing, dialogPageType.FullName));
+      var p = ctor.Invoke(new object[] { }) as IDialogPageBehavior;
+
+      if (_PagesAndProfiles == null)
+      {
+        _PagesAndProfiles = new PackageContainer(this);
+      }
+      _PagesAndProfiles.Add(p);
+
+      return p;
+    }
+
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the instance of the specified sited package.
@@ -472,10 +602,9 @@ namespace VSXtra
       if (id < 0)
         throw new ArgumentOutOfRangeException(
           string.Format(Resources.Culture, Resources.Package_InvalidInstanceID, id));
-      
-      // TODO: Check if TWindow is ToolWindowPane<,>
-      // if (!typeof(TWindow).IsSubclassOf(typeof(ToolWindowPane)))
-      //   throw new ArgumentException(Resources.Package_InvalidToolWindowClass);
+
+      if (!typeof(IToolWindowPaneBehavior).IsAssignableFrom(toolWindowType))
+        throw new ArgumentException(Resources.Package_InvalidToolWindowClass);
 
       // ---Look in the Attributes of this package and see if this package
       // --- support this type of ToolWindow
@@ -500,7 +629,7 @@ namespace VSXtra
     /// <param name="tool">Attribute used to create the tool window</param>
     /// <returns>An instance of a class derived from ToolWindowPane</returns>
     // --------------------------------------------------------------------------------------------
-    private IToolWindowPaneBehavior CreateToolWindow(Type toolWindowType, int id, 
+    private IToolWindowPaneBehavior CreateToolWindow(Type toolWindowType, int id,
       XtraProvideToolWindowAttribute tool)
     {
       if (id < 0)
@@ -510,24 +639,23 @@ namespace VSXtra
       if (tool == null)
         throw new ArgumentNullException("tool");
 
-      // TODO: Check if TWindow is ToolWindowPane<,>
-      // if (!typeof(TWindow).IsSubclassOf(typeof(ToolWindowPane)))
-      //   throw new ArgumentException(Resources.Package_InvalidToolWindowClass);
+      if (!typeof (IToolWindowPaneBehavior).IsAssignableFrom(toolWindowType))
+        throw new ArgumentException(Resources.Package_InvalidToolWindowClass);
 
       // --- First create an instance of the ToolWindowPane
-      var window = (IToolWindowPaneBehavior)Activator.CreateInstance(toolWindowType);
+      var window = (IToolWindowPaneBehavior) Activator.CreateInstance(toolWindowType);
       window.SetInstanceId(id);
 
       // --- Check if this window has a ToolBar
       bool hasToolBar = (window.ToolBar != null);
 
-      var flags = (uint)__VSCREATETOOLWIN.CTW_fInitNew;
+      var flags = (uint) __VSCREATETOOLWIN.CTW_fInitNew;
       if (!tool.Transient)
-        flags |= (uint)__VSCREATETOOLWIN.CTW_fForceCreate;
+        flags |= (uint) __VSCREATETOOLWIN.CTW_fForceCreate;
       if (hasToolBar)
-        flags |= (uint)__VSCREATETOOLWIN.CTW_fToolbarHost;
+        flags |= (uint) __VSCREATETOOLWIN.CTW_fToolbarHost;
       if (tool.MultiInstances)
-        flags |= (uint)__VSCREATETOOLWIN.CTW_fMultiInstance;
+        flags |= (uint) __VSCREATETOOLWIN.CTW_fMultiInstance;
       Guid emptyGuid = Guid.Empty;
       Guid toolClsid = window.ToolClsid;
       IVsWindowPane windowPane = null;
@@ -541,29 +669,29 @@ namespace VSXtra
       // Use IVsUIShell to create frame.
       var vsUiShell = this.GetService<SVsUIShell, IVsUIShell>();
       if (vsUiShell == null)
-        throw new Exception(string.Format(Resources.Culture, Resources.General_MissingService, typeof(SVsUIShell).FullName));
+        throw new Exception(string.Format(Resources.Culture, Resources.General_MissingService,
+                                          typeof (SVsUIShell).FullName));
 
-      int hr = vsUiShell.CreateToolWindow(flags,         // flags
-          (uint)id,               // instance ID
-          windowPane,             // IVsWindowPane to host in the toolwindow (null if toolClsid is specified)
-          ref toolClsid,          // toolClsid to host in the toolwindow (Guid.Empty if windowPane is not null)
-          ref persistenceGuid,    // persistence Guid
-          ref emptyGuid,          // auto activate Guid
-          null,                   // service provider
-          window.Caption,         // Window title
-          null,
-          out windowFrame);
+      int hr = vsUiShell.CreateToolWindow(flags, // flags
+                                          (uint) id, // instance ID
+                                          windowPane,
+                                          // IVsWindowPane to host in the toolwindow (null if toolClsid is specified)
+                                          ref toolClsid,
+                                          // toolClsid to host in the toolwindow (Guid.Empty if windowPane is not null)
+                                          ref persistenceGuid, // persistence Guid
+                                          ref emptyGuid, // auto activate Guid
+                                          null, // service provider
+                                          window.Caption, // Window title
+                                          null,
+                                          out windowFrame);
       NativeMethods.ThrowOnFailure(hr);
 
-      // --- We must set it at construction time...
-      //window.Package = this;
-
-      // If the toolwindow is a component, site it.
+      // --- If the toolwindow is a component, site it.
       IComponent component = null;
       if (window.Window is IComponent)
-        component = (IComponent)window.Window;
+        component = (IComponent) window.Window;
       else if (windowPane is IComponent)
-        component = (IComponent)windowPane;
+        component = (IComponent) windowPane;
       if (component != null)
       {
         if (_ComponentToolWindows == null)
@@ -576,32 +704,33 @@ namespace VSXtra
 
       if (hasToolBar && windowFrame != null)
       {
-        // Set the toolbar
-        IVsToolWindowToolbarHost toolBarHost;
+        // --- Set the toolbar
         object obj;
-        NativeMethods.ThrowOnFailure(windowFrame.GetProperty((int)__VSFPROPID.VSFPROPID_ToolbarHost, out obj));
-        toolBarHost = (IVsToolWindowToolbarHost)obj;
+        NativeMethods.ThrowOnFailure(windowFrame.GetProperty(
+                                       (int) __VSFPROPID.VSFPROPID_ToolbarHost, out obj));
+        var toolBarHost = obj as IVsToolWindowToolbarHost;
         if (toolBarHost != null)
         {
           Guid toolBarCommandSet = window.ToolBar.Guid;
-          NativeMethods.ThrowOnFailure(toolBarHost.AddToolbar((VSTWT_LOCATION)window.ToolBarLocation, ref toolBarCommandSet, (uint)window.ToolBar.ID));
+          NativeMethods.ThrowOnFailure(
+            toolBarHost.AddToolbar((VSTWT_LOCATION) window.ToolBarLocation, ref toolBarCommandSet,
+                                   (uint) window.ToolBar.ID));
         }
       }
 
       window.OnToolBarAdded();
 
       // --- If the ToolWindow was created successfully, keep track of it
-      if (window != null)
+      VsDebug.Assert(window != null, "At this point window assumed to be non-null.");
+      Dictionary<int, IToolWindowPaneBehavior> toolInstances;
+      if (!_ToolWindows.TryGetValue(toolWindowType, out toolInstances))
       {
-        Dictionary<int, IToolWindowPaneBehavior> toolInstances;
-        if (!_ToolWindows.TryGetValue(toolWindowType, out toolInstances))
-        {
-          toolInstances = new Dictionary<int, IToolWindowPaneBehavior>();
-          _ToolWindows.Add(toolWindowType, toolInstances);
-        }
-        VsDebug.Assert(!toolInstances.ContainsKey(id), "An existing tool window instance has been recreated.");
-        toolInstances.Add(id, window);
+        toolInstances = new Dictionary<int, IToolWindowPaneBehavior>();
+        _ToolWindows.Add(toolWindowType, toolInstances);
       }
+      VsDebug.Assert(!toolInstances.ContainsKey(id),
+                     "An existing tool window instance has been recreated.");
+      toolInstances.Add(id, window);
       return window;
     }
 
@@ -669,6 +798,62 @@ namespace VSXtra
       return window;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method adds a user option key name into the list of option keys that we will load and 
+    /// save from the solution file. You should call this early in your constructor. Calling this 
+    /// will cause the OnLoadOptions and OnSaveOptions methods to be invoked for each key you add.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected void AddOptionKey(string name)
+    {
+      if (_Zombied)
+        Marshal.ThrowExceptionForHR(NativeMethods.E_UNEXPECTED);
+
+      if (name == null)
+        throw new ArgumentNullException("name");
+
+      // --- The key is the class name of the service interface. While it would be a 
+      // --- lot more correct to use the fully-qualified class name, IStorage won't have it and 
+      // --- returns STG_E_INVALIDNAME. The doc's don't have any information here; I can only 
+      // --- assume it is because of the '.'.
+      // --- [clovett]: According to the docs for IStorage::CreateStream, the name cannot be 
+      // --- longer than 31 characters.
+      if (name.IndexOf('.') != -1 || name.Length > 31)
+        throw new ArgumentException(string.Format(Resources.Culture, Resources.Package_BadOptionName, name));
+      if (_OptionKeys == null)
+      {
+        _OptionKeys = new List<string>();
+      }
+      else
+      {
+        if (_OptionKeys.Contains(name))
+        {
+          throw new ArgumentException(string.Format(Resources.Culture, Resources.Package_OptionNameUsed, name));
+        }
+      }
+      _OptionKeys.Add(name);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Return the locale associated with this IServiceProvider.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public int GetProviderLocale()
+    {
+      int lcid = CultureInfo.CurrentCulture.LCID;
+      var loc = this.GetService<IUIHostLocale>();
+      VsDebug.Assert(loc != null, "Unable to get IUIHostLocale, defaulting CLR designer to current thread LCID");
+      if (loc != null)
+      {
+        uint locale;
+        NativeMethods.ThrowOnFailure(loc.GetUILocale(out locale));
+        lcid = (int)locale;
+      }
+      return lcid;
+    }
+
     #endregion
 
     #region Protected methods
@@ -700,6 +885,47 @@ namespace VSXtra
                                var handler = Activator.CreateInstance(t) as MenuCommandHandler;
                                if (handler != null) handler.Bind();
                              });
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method is executed when options are about to be read.
+    /// </summary>
+    /// <remarks>
+    /// This method can be overridden by the deriving class to load solution options.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void OnLoadOptions(string key, Stream stream)
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method is executed when options are about to be saved.
+    /// </summary>
+    /// <remarks>
+    /// This method can be overridden by the deriving class to save solution options.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void OnSaveOptions(string key, Stream stream)
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Responds to the event when user preferences has been changed.
+    /// </summary>
+    /// <remarks>
+    /// Invoked when a user setting has changed. Here we invalidate the cached locale data so we 
+    /// can obtain updated culture information.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    private static void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+    {
+      if (e.Category == UserPreferenceCategory.Locale)
+      {
+        CultureInfo.CurrentCulture.ClearCachedData();
+      }
     }
 
     #endregion
@@ -775,6 +1001,61 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     private void InternalInitialize()
     {
+      // --- If we have services to proffer, do that now.
+      if (_Services != null)
+      {
+        var ps = this.GetService<SProfferService, IProfferService>();
+        VsDebug.Assert(ps != null, 
+          "We have services to proffer but IProfferService is not available.");
+        if (ps != null)
+        {
+          foreach (var de in _Services)
+          {
+            var service = de.Value as ProfferedService;
+            if (service != null)
+            {
+              var serviceType = de.Key;
+              uint cookie;
+              var serviceGuid = serviceType.GUID;
+              NativeMethods.ThrowOnFailure(
+                  ps.ProfferService(ref serviceGuid, this, out cookie)
+              );
+              service.Cookie = cookie;
+            }
+          }
+        }
+      }
+
+      // --- Initialize this thread's culture info with that of the shell's LCID
+      int locale = GetProviderLocale();
+      Thread.CurrentThread.CurrentUICulture = new CultureInfo(locale);
+
+      // --- Begin listening to user preference change events
+      SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
+
+      // --- Be sure to load the package user options from the solution in case
+      // --- the package was not already loaded when the solution was opened.
+      if (null != _OptionKeys)
+      {
+        try
+        {
+          var pPersistance = this.GetService<SVsSolutionPersistence, IVsSolutionPersistence>();
+          if (pPersistance != null)
+          {
+            foreach (string key in _OptionKeys)
+            {
+              // --- Don't check for the error code because a failure here is
+              // --- expected and not a problem.
+              pPersistance.LoadPackageUserOpts(this, key);
+            }
+          }
+        }
+        catch (SystemException)
+        {
+          // --- no settings found, no problem.
+        }
+      }
+
       BindCommandHandlers(GetType().Assembly);
       Console.SetOut(OutputWindow.General);
     }
@@ -862,11 +1143,8 @@ namespace VSXtra
       if (_Zombied)
         Marshal.ThrowExceptionForHR(NativeMethods.E_UNEXPECTED);
 
-      // TODO: Implement tool window support
-      // Let the factory do the work
-      //int hr = ((IVsToolWindowFactory)this).CreateToolWindow(ref persistenceSlot, 0);
-      //return hr;
-      return NativeMethods.S_OK;
+      // --- Let the factory do the work
+      return ((IVsToolWindowFactory)this).CreateToolWindow(ref rguidPersistenceSlot, 0);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -924,97 +1202,83 @@ namespace VSXtra
       if (_Zombied)
         Marshal.ThrowExceptionForHR(NativeMethods.E_UNEXPECTED);
 
-      // TODO: Implement Property page support
-      //IWin32Window pageWindow = null;
+      IWin32Window pageWindow = null;
 
-      //// First, check out the active pages.
-      ////
-      //if (_pagesAndProfiles != null)
-      //{
-      //  foreach (object page in _pagesAndProfiles.Components)
-      //  {
-      //    if (page.GetType().GUID.Equals(rguidPage))
-      //    {
+      // --- First, check out the active pages.
+      if (_PagesAndProfiles != null)
+      {
+        foreach (var page in _PagesAndProfiles.Components)
+        {
+          if (page.GetType().GUID.Equals(rguidPage))
+          {
+            var w = page as IWin32Window;
+            if (w != null)
+            {
+              if (w is IDialogPageBehavior)
+              {
+                ((IDialogPageBehavior)w).ResetContainer();
+              }
+              pageWindow = w;
+              break;
+            }
+          }
+        }
+      }
 
-      //      // Found a match.
-      //      //
-      //      IWin32Window w = page as IWin32Window;
-      //      if (w != null)
-      //      {
-      //        if (w is DialogPage)
-      //        {
-      //          ((DialogPage)w).ResetContainer();
-      //        }
-      //        pageWindow = w;
-      //        break;
-      //      }
-      //    }
-      //  }
-      //}
+      if (pageWindow == null)
+      {
+        IDialogPageBehavior page = null;
 
-      //if (pageWindow == null)
-      //{
+        // --- Didn't find it in our cache. Now look in the metadata attributes for the class. 
+        // --- Look at all types at the same time.
+        var attributes = TypeDescriptor.GetAttributes(this);
+        foreach (Attribute attr in attributes)
+        {
+          var optionAttr = attr as XtraProvideOptionDialogPageAttribute;
+          if (optionAttr != null)
+          {
+            var pageType = optionAttr.PageType;
+            if (pageType.GUID.Equals(rguidPage))
+            {
+              // --- Found a matching attribute. Now go get the DialogPage with GetDialogPage.
+              // --- This has a side-effect of storing the page in _PagesAndProfiles for us.
+              //
+              page = GetDialogPage(pageType);
+              pageWindow = page;
+              break;
+            }
+          }
+          if (page != null)
+          {
+            if (_PagesAndProfiles == null)
+            {
+              _PagesAndProfiles = new PackageContainer(this);
+            }
+            _PagesAndProfiles.Add(page);
+            break;
+          }
+        }
+      }
 
-      //  DialogPage page = null;
+      // --- We should now have a page window. If we don't then the requested page doesn't exist.
+      if (pageWindow == null)
+      {
+        Marshal.ThrowExceptionForHR(NativeMethods.E_NOTIMPL);
+      }
 
-      //  // Didn't find it in our cache.  Now look in the metadata attributes
-      //  // for the class.  Look at all types at the same time.
-      //  //
-      //  AttributeCollection attributes = TypeDescriptor.GetAttributes(this);
-      //  foreach (Attribute attr in attributes)
-      //  {
-      //    if (attr is ProvideOptionDialogPageAttribute)
-      //    {
-      //      Type pageType = ((ProvideOptionDialogPageAttribute)attr).PageType;
-      //      if (pageType.GUID.Equals(rguidPage))
-      //      {
-
-      //        // Found a matching attribute.  Now go get the DialogPage with GetDialogPage.
-      //        // This has a side-effect of storing the page in
-      //        // _pagesAndProfiles for us.
-      //        //
-      //        page = GetDialogPage(pageType);
-      //        pageWindow = page;
-      //        break;
-      //      }
-      //    }
-
-      //    if (page != null)
-      //    {
-      //      if (_pagesAndProfiles == null)
-      //      {
-      //        _pagesAndProfiles = new PackageContainer(this);
-      //      }
-      //      _pagesAndProfiles.Add(page);
-
-      //      // No need to continue looking in the attributes, 
-      //      // we've already found the one we're looking for
-      //      break;
-      //    }
-      //  }
-      //}
-
-      //// We should now have a page window. If we don't then the requested page
-      //// doesn't exist.
-      ////
-      //if (pageWindow == null)
-      //{
-      //  Marshal.ThrowExceptionForHR(NativeMethods.E_NOTIMPL);
-      //}
-
-      //ppage[0].dwSize = (uint)Marshal.SizeOf(typeof(VSPROPSHEETPAGE));
-      //ppage[0].hwndDlg = pageWindow.Handle;
-      //// zero-out all the fields we aren't using.
-      //ppage[0].dwFlags = 0;
-      //ppage[0].HINSTANCE = 0;
-      //ppage[0].dwTemplateSize = 0;
-      //ppage[0].pTemplate = IntPtr.Zero;
-      //ppage[0].pfnDlgProc = IntPtr.Zero;
-      //ppage[0].lParam = IntPtr.Zero;
-      //ppage[0].pfnCallback = IntPtr.Zero;
-      //ppage[0].pcRefParent = IntPtr.Zero;
-      //ppage[0].dwReserved = 0;
-      //ppage[0].wTemplateId = (ushort)0;
+      ppage[0].dwSize = (uint)Marshal.SizeOf(typeof(VSPROPSHEETPAGE));
+      ppage[0].hwndDlg = pageWindow.Handle;
+      // --- Zero-out all the fields we aren't using.
+      ppage[0].dwFlags = 0;
+      ppage[0].HINSTANCE = 0;
+      ppage[0].dwTemplateSize = 0;
+      ppage[0].pTemplate = IntPtr.Zero;
+      ppage[0].pfnDlgProc = IntPtr.Zero;
+      ppage[0].lParam = IntPtr.Zero;
+      ppage[0].pfnCallback = IntPtr.Zero;
+      ppage[0].pcRefParent = IntPtr.Zero;
+      ppage[0].dwReserved = 0;
+      ppage[0].wTemplateId = 0;
 
       return NativeMethods.S_OK;
     }
@@ -1126,12 +1390,10 @@ namespace VSXtra
     int IOleCommandTarget.Exec(ref Guid guidGroup, uint nCmdId, uint nCmdExcept, IntPtr pIn, 
       IntPtr vOut)
     {
-      IOleCommandTarget target = this.GetService<IOleCommandTarget>();
-      if (target != null)
-      {
-        return target.Exec(ref guidGroup, nCmdId, nCmdExcept, pIn, vOut);
-      }
-      return NativeMethods.OLECMDERR_E_NOTSUPPORTED;
+      var target = this.GetService<IOleCommandTarget>();
+      return target != null 
+        ? target.Exec(ref guidGroup, nCmdId, nCmdExcept, pIn, vOut) 
+        : NativeMethods.OLECMDERR_E_NOTSUPPORTED;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -1166,12 +1428,10 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     int IOleCommandTarget.QueryStatus(ref Guid guidGroup, uint nCmdId, OLECMD[] oleCmd, IntPtr oleText)
     {
-      IOleCommandTarget target = this.GetService<IOleCommandTarget>();
-      if (target != null)
-      {
-        return target.QueryStatus(ref guidGroup, nCmdId, oleCmd, oleText);
-      }
-      return (NativeMethods.OLECMDERR_E_NOTSUPPORTED);
+      var target = this.GetService<IOleCommandTarget>();
+      return target != null 
+        ? target.QueryStatus(ref guidGroup, nCmdId, oleCmd, oleText) 
+        : (NativeMethods.OLECMDERR_E_NOTSUPPORTED);
     }
 
     #endregion
@@ -1236,10 +1496,10 @@ namespace VSXtra
         // --- If we're promoting, we need to store this guy in a promoted service object because 
         // --- we need to manage additional state.  We attempt to proffer at this time if we have 
         // --- a service provider.  If we don't, we will proffer when we get one.
-        ProfferedService service = new ProfferedService {Instance = serviceInstance};
+        var service = new ProfferedService {Instance = serviceInstance};
         if (_ServiceProvider != null)
         {
-          IProfferService ps = (IProfferService)GetService(typeof(SProfferService));
+          var ps = this.GetService<SProfferService, IProfferService>();
           if (ps != null)
           {
             uint cookie;
@@ -1310,17 +1570,17 @@ namespace VSXtra
         // --- If we're promoting, we need to store this guy in a promoted service object because 
         // --- we need to manage additional state.  We attempt to proffer at this time if we have 
         // --- a service provider.  If we don't, we will proffer when we get one.
-        ProfferedService service = new ProfferedService();
+        var service = new ProfferedService();
         _Services[serviceType] = service;
         service.Instance = callback;
 
         if (_ServiceProvider != null)
         {
-          IProfferService ps = (IProfferService)GetService(typeof(SProfferService));
+          var ps = this.GetService<SProfferService, IProfferService>();
           if (ps != null)
           {
             uint cookie;
-            Guid serviceGuid = serviceType.GUID;
+            var serviceGuid = serviceType.GUID;
             NativeMethods.ThrowOnFailure(ps.ProfferService(ref serviceGuid, this, out cookie));
             service.Cookie = cookie;
           }
@@ -1369,13 +1629,13 @@ namespace VSXtra
           try
           {
             // --- If the service is proffered, revoke it from the parent container.
-            ProfferedService service = value as ProfferedService;
+            var service = value as ProfferedService;
             if (null != service)
             {
               value = service.Instance;
               if (service.Cookie != 0)
               {
-                IProfferService ps = (IProfferService)GetService(typeof(SProfferService));
+                var ps = this.GetService<SProfferService, IProfferService>();
                 if (ps != null)
                 {
                   NativeMethods.ThrowOnFailure(ps.RevokeService(service.Cookie));
@@ -1418,6 +1678,218 @@ namespace VSXtra
 
     #endregion
 
+    #region IVsPersistSolutionOpts members
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Loads user options for a given solution.
+    /// </summary>
+    /// <remarks>
+    /// Called when a solution is opened, and allows us to inspect our options.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    int IVsPersistSolutionOpts.LoadUserOptions(IVsSolutionPersistence pPersistance, uint options)
+    {
+      int hr = NativeMethods.S_OK;
+      if ((options & (uint) __VSLOADUSEROPTS.LUO_OPENEDDSW) != 0)
+        return hr;
+
+      if (_OptionKeys != null)
+      {
+        foreach (string key in _OptionKeys)
+        {
+          hr = pPersistance.LoadPackageUserOpts(this, key);
+          if (NativeMethods.Failed(hr))
+            break;
+        }
+      }
+
+      // --- Shell relies on this being released when we're done with it. If you see strange
+      // --- faults in the shell when saving the solution, suspect this!
+      Marshal.ReleaseComObject(pPersistance);
+      NativeMethods.ThrowOnFailure(hr);
+      return hr;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Reads user options for a given solution.
+    /// </summary>
+    /// <remarks>
+    /// Called by the shell to load our solution options.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    int IVsPersistSolutionOpts.ReadUserOptions(IStream pStream, string pszKey)
+    {
+      try
+      {
+        var stream = new NativeMethods.DataStreamFromComStream(pStream);
+        using (stream)
+        {
+          OnLoadOptions(pszKey, stream);
+        }
+      }
+      finally
+      {
+        // --- Release the pointer because VS expects it to be released upon function return.
+        Marshal.ReleaseComObject(pStream);
+      }
+      return NativeMethods.S_OK;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Saves user options for a given solution.
+    /// </summary>
+    /// <remarks>
+    /// Called by the shell when we are to persist our service options
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    int IVsPersistSolutionOpts.SaveUserOptions(IVsSolutionPersistence pPersistance)
+    {
+      if (_OptionKeys != null)
+      {
+        foreach (string key in _OptionKeys)
+        {
+          NativeMethods.ThrowOnFailure(pPersistance.SavePackageUserOpts(this, key));
+        }
+      }
+
+      // --- Shell relies on this being released when we're done with it. If you see strange
+      // --- faults in the shell when saving the solution, suspect this!
+      Marshal.ReleaseComObject(pPersistance);
+      return NativeMethods.S_OK;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Writes user options for a given solution.
+    /// </summary>
+    /// <remarks>
+    /// Called by the shell to persist our solution options. Here is where the service can persist 
+    /// any objects that it cares about.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    int IVsPersistSolutionOpts.WriteUserOptions(IStream pStream, string pszKey)
+    {
+      try
+      {
+        var stream = new NativeMethods.DataStreamFromComStream(pStream);
+        using (stream)
+        {
+          OnSaveOptions(pszKey, stream);
+        }
+      }
+      finally
+      {
+        // --- Release the pointer because VS expects it to be released upon function return.
+        Marshal.ReleaseComObject(pStream);
+      }
+      return NativeMethods.S_OK;
+    }
+
+    #endregion
+
+    #region IVsUserSettings members
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Saves a VSPackage's configuration using the Visual Studio settings mechanism when the 
+    /// export option of the Import/Export Settings feature available on the IDE’s Tools menu is 
+    /// selected by a user.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    int IVsUserSettings.ExportSettings(string strPageGuid, IVsSettingsWriter writer)
+    {
+      VsDebug.Assert(!string.IsNullOrEmpty(strPageGuid), "Passed page guid cannot be null");
+      VsDebug.Assert(writer != null, "IVsSettingsWriter cannot be null");
+
+      var requestPageGuid = new Guid(strPageGuid);
+      var profileManager = GetProfileManager(requestPageGuid, ProfileManagerLoadAction.LoadPropsFromRegistry);
+      if (profileManager != null)
+      {
+        profileManager.SaveSettingsToXml(writer);
+      }
+      return NativeMethods.S_OK;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Retrieves a VSPackage's configuration using the Visual Studio settings mechanism when a 
+    /// user selects the import option of the Import/Export Settings feature on the IDE’s 
+    /// Tools menu.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    int IVsUserSettings.ImportSettings(string strPageGuid, IVsSettingsReader reader, uint flags, 
+      ref int restartRequired)
+    {
+      // --- Nobody should require a restart...
+      if (restartRequired > 0)
+        restartRequired = 0;
+
+      VsDebug.Assert(!string.IsNullOrEmpty(strPageGuid), "Passed page guid cannot be null");
+      VsDebug.Assert(reader != null, "IVsSettingsReader cannot be null");
+
+      var loadPropsFromRegistry = (flags & (uint)__UserSettingsFlags.USF_ResetOnImport) == 0;
+      var requestPageGuid = new Guid(strPageGuid);
+      var profileManager = GetProfileManager(requestPageGuid, 
+        loadPropsFromRegistry 
+          ? ProfileManagerLoadAction.LoadPropsFromRegistry 
+          : ProfileManagerLoadAction.ResetSettings);
+      if (profileManager != null)
+      {
+        // --- We get the live instance (if any) when we load
+        profileManager.LoadSettingsFromXml(reader);
+        // --- Update the store
+        profileManager.SaveSettingsToStorage();
+      }
+      return NativeMethods.S_OK;
+    }
+
+    #endregion
+
+    #region IVsUserSettingsMigration members
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Migrates user settings.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    int IVsUserSettingsMigration.MigrateSettings(IVsSettingsReader reader, IVsSettingsWriter writer, 
+      string strPageGuid)
+    {
+      VsDebug.Assert(!string.IsNullOrEmpty(strPageGuid), "Passed page guid cannot be null");
+      VsDebug.Assert(reader != null, "IVsSettingsReader cannot be null");
+      VsDebug.Assert(writer != null, "IVsSettingsWriter cannot be null");
+      var requestPageGuid = Guid.Empty;
+
+      try
+      {
+        requestPageGuid = new Guid(strPageGuid);
+      }
+      catch (FormatException)
+      {
+        // --- If this is thrown, it means strPageGuid is not really a GUID, but rather a
+        // --- tools options page name like "Environment.General".
+      }
+      IProfileMigrator profileMigrator;
+      if (requestPageGuid == Guid.Empty)
+      {
+        profileMigrator = GetAutomationObject(strPageGuid) as IProfileMigrator;
+      }
+      else
+      {
+        profileMigrator = GetProfileManager(requestPageGuid, ProfileManagerLoadAction.None) as IProfileMigrator;
+      }
+      if (profileMigrator != null)
+      {
+        profileMigrator.MigrateSettings(reader, writer);
+      }
+      return NativeMethods.S_OK;
+    }
+
+    #endregion
+
     #region IVsToolWindowFactory Members
 
     // --------------------------------------------------------------------------------------------
@@ -1435,7 +1907,7 @@ namespace VSXtra
       if (id > int.MaxValue)
         throw new ArgumentOutOfRangeException(String.Format(CultureInfo.CurrentUICulture, 
           "Instance ID cannot be more then {0}", int.MaxValue));
-      int instanceID = (int)id;
+      var instanceID = (int)id;
 
       // --- Find the Type for this GUID
       foreach (var tool in GetType().AttributesOfType<XtraProvideToolWindowAttribute>())
@@ -1455,69 +1927,81 @@ namespace VSXtra
 
     #region Virtual methods definitions
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method is called when the package has been sited in Visual Studio.
+    /// </summary>
+    /// <remarks>
+    /// Override this method to provide your own initialization steps. Here you can access VS Shell
+    /// services.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     protected virtual void Initialize()
     {
     }
 
-    /// <include file='doc\Package.uex' path='docs/doc[@for="Package.GetAutomationObject"]' />
-    /// <devdoc>
-    ///     This method returns the automation object for this package.
-    ///     The default implementation will return null if name is null, indicating there
-    ///     is no default automation object.  If name is non null, this will walk metadata
-    ///     attributes searching for an option page that has a name of the format
-    ///     &lt;Category&gt;.&lt;Name&gt;.  If the option page has this format and indicates that it
-    ///     supports automation, its automation object will be returned.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the automation object for this package.
+    /// </summary>
+    /// <remarks>
+    /// This method returns the automation object for this package. The default implementation 
+    /// will return null if name is null, indicating there is no default automation object. If 
+    /// name is non null, this will walk metadata attributes searching for an option page that has 
+    /// a name of the format &lt;Category&gt;.&lt;Name&gt;. If the option page has this format and 
+    /// indicates that it supports automation, its automation object will be returned.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     protected virtual object GetAutomationObject(string name)
     {
       if (_Zombied)
         Marshal.ThrowExceptionForHR(NativeMethods.E_UNEXPECTED);
 
-      if (name == null)
+      if (name == null) return null;
+      string[] nameParts = name.Split(new char[] { '.' });
+      if (nameParts.Length != 2)
       {
         return null;
       }
+
+      nameParts[0] = nameParts[0].Trim();
+      nameParts[1] = nameParts[1].Trim();
+
+      AttributeCollection attributes = TypeDescriptor.GetAttributes(this);
+      foreach (Attribute attr in attributes)
+      {
+        var pa = attr as XtraProvideOptionPageAttribute;
+        if (pa != null && pa.SupportsAutomation)
+        {
+          // --- Check to see if the name matches.
+          if (string.Compare(pa.CategoryName, nameParts[0], 
+            StringComparison.OrdinalIgnoreCase) != 0) continue;
+
+          if (string.Compare(pa.PageName, nameParts[1],
+            StringComparison.OrdinalIgnoreCase) != 0) continue;
+
+          // --- Ok, the name matches. Return this page's automation object.
+          var page = GetDialogPage(pa.PageType);
+          return page.AutomationObject;
+        }
+      }
       return null;
-      //string[] nameParts = name.Split(new char[] { '.' });
-      //if (nameParts.Length != 2)
-      //{
-      //  return null;
-      //}
-
-      //nameParts[0] = nameParts[0].Trim();
-      //nameParts[1] = nameParts[1].Trim();
-
-      //AttributeCollection attributes = TypeDescriptor.GetAttributes(this);
-      //foreach (Attribute attr in attributes)
-      //{
-      //  ProvideOptionPageAttribute pa = attr as ProvideOptionPageAttribute;
-      //  if (pa != null && pa.SupportsAutomation)
-      //  {
-
-      //    // Check to see if the name matches.
-      //    //
-      //    if (string.Compare(pa.CategoryName, nameParts[0], StringComparison.OrdinalIgnoreCase) != 0)
-      //    {
-      //      continue;
-      //    }
-
-      //    if (string.Compare(pa.PageName, nameParts[1], StringComparison.OrdinalIgnoreCase) != 0)
-      //    {
-      //      continue;
-      //    }
-
-      //    // Ok, the name matches.  Return this page's automation object.
-      //    //
-      //    DialogPage page = GetDialogPage(pa.PageType);
-      //    return page.AutomationObject;
-      //  }
-      //}
-
-      //// Failed.
-      ////
-      //return null;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Enables a VSPackage that requires user intervention to abort the shutdown process.
+    /// </summary>
+    /// <param name="canClose">
+    /// Flag indicating whether the VSPackage can close. Is set to true if the VSPackage can close.
+    /// </param>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    /// <remarks>
+    /// Inheritors must override the QueryClose method to respond to this event.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     protected virtual int QueryClose(out bool canClose)
     {
       canClose = true;
@@ -1541,30 +2025,6 @@ namespace VSXtra
       /// <summary>Cookie returned by IProfferService.ProfferService method</summary>
       public uint Cookie;
     }
-
-    //// --------------------------------------------------------------------------------------------
-    ///// <summary>
-    ///// This helper class holds information about a tool window instance.
-    ///// </summary>
-    //// --------------------------------------------------------------------------------------------
-    //private sealed class ToolWindowID
-    //{
-    //  /// <summary>Type of the tool window</summary>
-    //  public Type Type { get; private set; }
-    //  /// <summary>Id of the tool window instance</summary>
-    //  public int Id { get; private set; }
-
-    //  // --------------------------------------------------------------------------------------------
-    //  /// <summary>
-    //  /// Creates a new instance of the tool window id with the specified parameters
-    //  /// </summary>
-    //  // --------------------------------------------------------------------------------------------
-    //  public ToolWindowID(Type type, int id)
-    //  {
-    //    Type = type;
-    //    Id = id;
-    //  }
-    //}
 
     // ================================================================================================
     /// <summary>
@@ -1657,6 +2117,100 @@ namespace VSXtra
       }
       VsDebug.Fail("OnCreateService invoked for a service we didn't add");
       return null;
+    }
+
+    /// <include file='doc\Package.uex' path='docs/doc[@for="Package.GetProfileManager"]' />
+    /// <devdoc>
+    ///     This method returns the requested profile manager based on its guid.
+    ///     Profile managers are cached so they can keep a single instance
+    ///     of their state.  This method allows a deriving class
+    ///     to get a cached profile manager.  The object will be 
+    ///     dynamically created if it is not in the cache.
+    /// </devdoc>
+    private IProfileManager GetProfileManager(Guid objectGuid, ProfileManagerLoadAction loadAction)
+    {
+
+      IProfileManager result = null;
+
+      if (objectGuid == Guid.Empty)
+      {
+        throw new ArgumentNullException("objectGuid");
+      }
+      if (_PagesAndProfiles != null)
+      {
+        foreach (object profileManager in _PagesAndProfiles.Components)
+        {
+          if (profileManager.GetType().GUID.Equals(objectGuid))
+          {
+            if (profileManager is IProfileManager)
+            {
+              result = profileManager as IProfileManager;
+              if (result != null)
+              {
+                switch (loadAction)
+                {
+                  case ProfileManagerLoadAction.LoadPropsFromRegistry:
+                    result.LoadSettingsFromStorage();
+                    break;
+                  case ProfileManagerLoadAction.ResetSettings:
+                    result.ResetSettings();
+                    break;
+                }
+              }
+            }
+
+            // No need to keep on looking in the attributes since
+            // we've found the one we were looking for.
+
+            break;
+          }
+        }
+      }
+
+      if (result == null)
+      {
+
+        // Didn't find it in our cache.  Now look in the metadata attributes
+        // for the class.  Look at all types at the same time.
+        //
+        AttributeCollection attributes = TypeDescriptor.GetAttributes(this);
+        foreach (Attribute attr in attributes)
+        {
+          if (attr is ProvideProfileAttribute)
+          {
+            Type objectType = ((ProvideProfileAttribute)attr).ObjectType;
+            if (objectType.GUID.Equals(objectGuid))
+            {
+
+              // found it... now instanciate since it was not in the cache
+              // if not build a constructor for it
+
+              ConstructorInfo ctor = objectType.GetConstructor(new Type[] { });
+              if (ctor == null)
+              {
+                throw new ArgumentException(string.Format(Resources.Culture, Resources.Package_PageCtorMissing, objectType.FullName));
+              }
+              result = (IProfileManager)ctor.Invoke(new object[] { });
+
+              // if it's a DialogPage cache it
+              if (result != null)
+              {
+                if (_PagesAndProfiles == null)
+                {
+                  _PagesAndProfiles = new PackageContainer(this);
+                }
+                _PagesAndProfiles.Add((IComponent)result);
+              }
+
+              // No need to load settings from storage on first creation
+              // since that happens because of the Add above.
+
+              break;
+            }
+          }
+        }
+      }
+      return result;
     }
 
     #endregion

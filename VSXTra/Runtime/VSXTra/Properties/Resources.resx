@@ -225,4 +225,22 @@
   <data name="ParamNotValidStringInList" xml:space="preserve">
     <value>Parameter must be valid string in list</value>
   </data>
+  <data name="Package_PageNotDialogPage" xml:space="preserve">
+    <value>The page class {0} must derive from DialogPage&lt;,&gt;.</value>
+  </data>
+  <data name="Reg_NotifyOptionPage" xml:space="preserve">
+    <value>Option Page:      {0}\{1}</value>
+  </data>
+  <data name="Package_BadOptionName" xml:space="preserve">
+    <value>The solution option name {0} is invalid.  It cannot contain '.', '/' or other special characters.</value>
+  </data>
+  <data name="Package_OptionNameUsed" xml:space="preserve">
+    <value>The solution option name {0} is already used by this package.</value>
+  </data>
+  <data name="Package_PageCtorMissing" xml:space="preserve">
+    <value>The page type {0} does not offer an empty constructor.</value>
+  </data>
+  <data name="Package_BadDialogPageType" xml:space="preserve">
+    <value>The dialog page type {0} does not derive from DialogPage.</value>
+  </data>
 </root>
