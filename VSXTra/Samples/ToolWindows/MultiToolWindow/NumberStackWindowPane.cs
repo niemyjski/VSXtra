@@ -41,11 +41,10 @@ namespace DeepDiver.MultiToolWindow
     /// <summary>
     /// Executes the Add operator.
     /// </summary>
-    /// <param name="command">Command object.</param>
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [CommandId(CmdIDs.cmdidAdd1)]
-    protected void AddExec(OleMenuCommand command)
+    protected void AddExec()
     {
       UIControl.Operation((x, y) => { checked { return x + y; } });
     }
@@ -54,11 +53,10 @@ namespace DeepDiver.MultiToolWindow
     /// <summary>
     /// Executes the Subtract operator.
     /// </summary>
-    /// <param name="command">Command object.</param>
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [CommandId(CmdIDs.cmdidSubtract1)]
-    protected void SubtractExec(OleMenuCommand command)
+    protected void SubtractExec()
     {
       UIControl.Operation((x, y) => { checked { return x - y; } });
     }
@@ -67,11 +65,10 @@ namespace DeepDiver.MultiToolWindow
     /// <summary>
     /// Executes the Multiply operator.
     /// </summary>
-    /// <param name="command">Command object.</param>
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [CommandId(CmdIDs.cmdidMultiply1)]
-    protected void MultiplyExec(OleMenuCommand command)
+    protected void MultiplyExec()
     {
       UIControl.Operation((x, y) => { checked { return x * y; } });
     }
@@ -80,11 +77,10 @@ namespace DeepDiver.MultiToolWindow
     /// <summary>
     /// Executes the Divide operator.
     /// </summary>
-    /// <param name="command">Command object.</param>
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [CommandId(CmdIDs.cmdidDivide1)]
-    protected void DivideExec(OleMenuCommand command)
+    protected void DivideExec()
     {
       UIControl.Operation((x, y) => { checked { return x / y; } });
     }
@@ -120,39 +116,34 @@ namespace DeepDiver.MultiToolWindow
     /// <summary>
     /// Executes the Cut command.
     /// </summary>
-    /// <param name="command">Command object.</param>
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [VsCommandId(VSConstants.VSStd97CmdID.Cut)]
-    protected void CutExec(OleMenuCommand command)
+    protected void CutExec()
     {
-      int value = UIControl.PopValue();
-      Clipboard.SetText(value.ToString());
+      Clipboard.SetText(UIControl.PopValue().ToString());
     }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Executes the Copy command.
     /// </summary>
-    /// <param name="command">Command object.</param>
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [VsCommandId(VSConstants.VSStd97CmdID.Copy)]
-    protected void CopyExec(OleMenuCommand command)
+    protected void CopyExec()
     {
-      int value = UIControl.PeekValue();
-      Clipboard.SetText(value.ToString());
+      Clipboard.SetText(UIControl.PeekValue().ToString());
     }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Executes the Paste command.
     /// </summary>
-    /// <param name="command">Command object.</param>
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [VsCommandId(VSConstants.VSStd97CmdID.Paste)]
-    protected void PasteExec(OleMenuCommand command)
+    protected void PasteExec()
     {
       UIControl.PushText(Clipboard.GetText());
     }
@@ -166,6 +157,7 @@ namespace DeepDiver.MultiToolWindow
   /// </summary>
   // ================================================================================================
   [Guid("B097B9C4-D98C-45fe-B355-DE4865E77DCF")]
+  [InitialCaption("Stack Window #1")]
   [BitmapResourceId(300, 1)]
   [ToolbarLocation(ToolbarLocation.Right)]
   [Toolbar(typeof(CommandGroup.StackWindowToolbar1))]
@@ -179,6 +171,7 @@ namespace DeepDiver.MultiToolWindow
   /// </summary>
   // ================================================================================================
   [Guid("7B5DC947-D280-4255-B525-3AA62AAA52D4")]
+  [InitialCaption("Stack Window #2")]
   [BitmapResourceId(300, 2)]
   [ToolbarLocation(ToolbarLocation.Right)]
   [Toolbar(typeof(CommandGroup.StackWindowToolbar2))]

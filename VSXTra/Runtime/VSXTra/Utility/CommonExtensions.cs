@@ -207,5 +207,16 @@ namespace VSXtra
                ? attrs[0] as TAttr
                : null;
     }
+
+    public static bool DerivesFromGenericTypeType(this Type type, Type generic)
+    {
+      while (type != null)
+      {
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == generic)
+          return true;
+        type = type.BaseType;
+      }
+      return false;
+    }
   }
 }

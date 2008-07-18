@@ -1,97 +1,199 @@
-//------------------------------------------------------------------------------
-// <copyright file="DialogPage.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>                                                                
-//------------------------------------------------------------------------------
+// ================================================================================================
+// DialogPage.cs
+//
+// This source code is created by using the source code provided with the VS 2008 SDK. Many 
+// patterns and implementation details are defined there. The code here is intended to be the base
+// of a new framework for developing VSPackages.
+// The code here is experimental and fully opened for community.
+//
+// Created: 2008.07.16, by Istvan Novak (DeepDiver)
+// ================================================================================================
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Windows.Forms.Design;
-using Microsoft.Win32;
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Linq;
 using IServiceProvider = System.IServiceProvider;
 
 namespace VSXtra
 {
-
-
-  /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage"]' />
-  /// <devdoc>
-  ///     DialogPage encompasses a tools dialog page.  The default dialog page 
-  ///     examines itself for public properties, and offers these properties 
-  ///     to the user in a property grid.  You can customize this behavior, 
-  ///     however by overriding various methods on the page.  The dialog 
-  ///     page will automatically persist any changes made to it to the user's 
-  ///     section of the registry, provided that those properties provide 
-  ///     support for to/from string conversions on their type converter.
-  /// </devdoc>
-  [CLSCompliant(false), ComVisible(true)]
-  public class DialogPage : Component,
-      IWin32Window,
-      IProfileManager
+  // ================================================================================================
+  /// <summary>
+  /// This interface summarizes the behavior expected from a DialogPage.
+  /// </summary>
+  // ================================================================================================
+  public interface IDialogPageBehavior: 
+    IComponent,
+    IWin32Window
   {
+    object AutomationObject { get;  }
+    void ResetContainer();
+  }
 
-    private IWin32Window _window;
-    private DialogSubclass _subclass;
-    private DialogContainer _container;
-    private string _settingsPath;
-    private bool _initializing = false;
-    private bool _uiActive = false;
-    private bool _propertyChangedHooked = false;
-    private EventHandler _onPropertyChanged;
+  // ================================================================================================
+  /// <summary>
+  /// DialogPage encompasses a tools dialog page. The default dialog page examines itself for public 
+  /// properties, and offers these properties to the user in a property grid. You can customize this 
+  /// behavior, however by overriding various methods on the page. The dialog page will 
+  /// automatically persist any changes made to it to the user's section of the registry, provided 
+  /// that those properties provide support for to/from string conversions on their type converter.
+  /// </summary>
+  // ================================================================================================
+  [CLSCompliant(false), ComVisible(true)]
+  public class DialogPage<TPackage, TUIControl> : Component,
+    // --- This interface makes our dialog page recognizable by a package as a dialog page.
+    IDialogPageBehavior,
+    // --- We need to expose Win32 window handles, so we implement this interface 
+    IProfileManager
+    where TPackage: PackageBase
+    where TUIControl: Control, new()
+  {
+    #region Private fields
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.DialogPage"]' />
-    /// <devdoc>
+    /// <summary>UI of the dialog page</summary>
+    private readonly TUIControl _UIControl;
+
+    /// <summary>Represents the window behind the dialog page</summary>
+    private IWin32Window _Window;
+
+    /// <summary>Represents the native window behind the dialog page</summary>
+    private DialogSubclass _Subclass;
+
+    private DialogContainer _Container;
+    private string _SettingsPath;
+    private bool _Initializing;
+    private bool _UIActive;
+    private bool _PropertyChangedHooked;
+    private EventHandler _OnPropertyChanged;
+
+    #endregion
+
+    #region Lifecycle methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Constructs the Dialog Page.
-    /// </devdoc>
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     public DialogPage()
     {
       HookProperties(true);
+      _UIControl = new TUIControl();
+      InitPage();
     }
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.AutomationObject"]' />
-    /// <devdoc>
-    ///     The object the dialog page is going to browse.  The
-    ///     default returns "this", but you can change it to
-    ///     browse any object you want.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initialize the option page.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void InitPage()
+    {
+      UIControl.Location = new Point(0, 0);
+      OnPageCreated();
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Disposes this object.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        // --- First dispose the dialog container
+        if (_Container != null)
+        {
+          try
+          {
+            _Container.Dispose();
+          }
+          catch (Exception)
+          {
+            VsDebug.Fail("Failed to dispose container");
+          }
+          _Container = null;
+        }
+
+        // --- Dispose the window itself
+        if (_Window != null && _Window is IDisposable)
+        {
+          try
+          {
+            ((IDisposable)_Window).Dispose();
+          }
+          catch (Exception)
+          {
+            Debug.Fail("Failed to dispose window");
+          }
+          _Window = null;
+        }
+
+        // --- Reset the dialog subclass
+        if (_Subclass != null)
+        {
+          _Subclass = null;
+        }
+
+        // --- Unhook dialog page properties
+        HookProperties(false);
+      }
+      base.Dispose(disposing);
+    }
+
+    #endregion
+
+    #region Public and protected properties
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Override this method to initialize control behind the page before 
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void OnPageCreated()
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Override this method to initialize the page after page data has been loaded.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void OnPageDataLoaded()
+    {
+    }
+
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// The object the dialog page is going to browse. The default returns "this", but you can 
+    /// change it to browse any object you want.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual object AutomationObject
     {
-      get
-      {
-        return this;
-      }
+      get { return this; }
     }
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage".Site]' />
-    /// <devdoc>
-    ///     Override for the site property.  This override is used so we can
-    ///     load and save our settings at the appropriate time.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Override for the site property. This override is used so we can load and save our settings 
+    /// at the appropriate time.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     public override ISite Site
     {
-      get
-      {
-        return base.Site;
-
-      }
+      get { return base.Site; }
       set
       {
-        if (value == null && base.Site != null)
-        {
-          // This is dangerous at shut down time and is causing
-          // bad ExecutionEngineExceptions. It's also entirely redundant.
-          //SaveSettingsToStorage();
-        }
-
         base.Site = value;
-
         if (value != null)
         {
           LoadSettingsFromStorage();
@@ -99,111 +201,90 @@ namespace VSXtra
       }
     }
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage".Window]' />
-    /// <devdoc>
-    ///     The window this dialog page will use for its UI.
-    ///     This window handle must be constant, so if you are
-    ///     returning a Windows Forms control you must make sure
-    ///     it does not recreate its handle.  If the window object
-    ///     implements IComponent it will be sited by the 
-    ///     dialog page so it can get access to global services.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// The window this dialog page will use for its UI. This window handle must be constant, so 
+    /// if you are returning a Windows Forms control you must make sure it does not recreate its 
+    /// handle. If the window object implements IComponent it will be sited by the dialog page so 
+    /// it can get access to global services.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     protected virtual IWin32Window Window
     {
+      get { return _UIControl; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This is where the settings are stored under [UserRegistryRoot]\DialogPage, the default
+    /// is the full type name of your AutomationObject.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected string SettingsRegistryPath
+    {
       get
       {
-        PropertyGrid grid = new PropertyGrid();
-        grid.Location = new Point(0, 0);
-        grid.ToolbarVisible = false;
-        grid.CommandsVisibleIfAvailable = false;
-        grid.SelectedObject = AutomationObject;
-        return grid;
+        return _SettingsPath ??
+               (_SettingsPath = "DialogPage\\" + AutomationObject.GetType().FullName);
       }
-    }
-
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.Dispose"]' />
-    /// <devdoc>
-    ///     Disposes this object.
-    /// </devdoc>
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing)
+      set
       {
-
-        if (_container != null)
-        {
-          try
-          {
-            _container.Dispose();
-          }
-          catch (Exception)
-          {
-            Debug.Fail("Failed to dispose container");
-          }
-          _container = null;
-        }
-
-        if (_window != null && _window is IDisposable)
-        {
-          try
-          {
-            ((IDisposable)_window).Dispose();
-          }
-          catch (Exception)
-          {
-            Debug.Fail("Failed to dispose window");
-          }
-          _window = null;
-        }
-
-        if (_subclass != null)
-        {
-          _subclass = null;
-        }
-
-        HookProperties(false);
+        _SettingsPath = value;
       }
-      base.Dispose(disposing);
     }
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.LoadSettingsFromStorage"]' />
-    /// <devdoc>
-    ///     This method is called when the dialog page should load
-    ///     its default settings from the registry.  The default
-    ///     implementation gets the Package service, gets the
-    ///     user registry key, and reads in all properties for this
-    ///     page that could be converted from strings.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the control representing the UI of this option page.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public TUIControl UIControl
+    {
+      get { return _UIControl; }
+    }
+
+    #endregion
+
+    #region IProfileManager implementation
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Loads the settings belonging to this dialog page from the store.
+    /// </summary>
+    /// <remarks>
+    /// This method is called when the dialog page should load its default settings from the 
+    /// registry. The default implementation gets the Package service, gets the user registry key, 
+    /// and reads in all properties for this page that could be converted from strings.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     public virtual void LoadSettingsFromStorage()
     {
-      _initializing = true;
+      _Initializing = true;
       try
       {
-        Package package = (Package)GetService(typeof(Package));
-        Debug.Assert(package != null, "No package service; we cannot load settings");
+        // --- Obtain registry key for the package
+        var package = PackageBase.GetPackageInstance<TPackage>();
+        VsDebug.Assert(package != null, "No package service; we cannot load settings");
         if (package != null)
         {
-          using (RegistryKey rootKey = package.UserRegistryRoot)
+          using (var rootKey = package.UserRegistryRoot)
           {
-
-            string path = this.SettingsRegistryPath;
-            object automationObject = this.AutomationObject;
-
-            RegistryKey key = rootKey.OpenSubKey(path, false /* writable */);
+            // --- Obtain the path where settings are stored
+            var path = SettingsRegistryPath;
+            object automationObject = AutomationObject;
+            var key = rootKey.OpenSubKey(path, false);
             if (key != null)
             {
               using (key)
               {
-
+                // --- Read each property from the store using the invariant string form
                 string[] valueNames = key.GetValueNames();
-                PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(automationObject);
-
-                foreach (string valueName in valueNames)
+                var properties = TypeDescriptor.GetProperties(automationObject);
+                foreach (var valueName in valueNames)
                 {
-                  string value = key.GetValue(valueName).ToString();
-
-                  PropertyDescriptor prop = properties[valueName];
+                  var value = key.GetValue(valueName).ToString();
+                  var prop = properties[valueName];
                   if (prop != null && prop.Converter.CanConvertFrom(typeof(string)))
                   {
                     prop.SetValue(automationObject, prop.Converter.ConvertFromInvariantString(value));
@@ -216,34 +297,43 @@ namespace VSXtra
       }
       finally
       {
-        _initializing = false;
+        _Initializing = false;
       }
-      HookProperties(true); //hook if this failed during construction.
+
+      // --- Hook in the properties
+      HookProperties(true);
+      OnPageDataLoaded();
     }
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.LoadSettingsFromXml"]' />
-    /// <devdoc>
-    ///     This method is called when the dialog page should load
-    ///     its default settings from the profile XML file.  
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Writes a VSPackage's configuration to disk using the Visual Studio settings mechanism when 
+    /// the export option of an Import/Export Settings feature available on the IDE’s Tools menu 
+    /// is selected by a user.
+    /// </summary>
+    /// <remarks>
+    /// This method is called when the dialog page should load its default settings from the 
+    /// profile XML file.  
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     public virtual void LoadSettingsFromXml(IVsSettingsReader reader)
     {
-      _initializing = true;
+      _Initializing = true;
       try
       {
-        object automationObject = this.AutomationObject;
-        PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(automationObject, new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
-
+        object automationObject = AutomationObject;
+        var properties = TypeDescriptor.GetProperties(automationObject, 
+          new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
         foreach (PropertyDescriptor property in properties)
         {
-          TypeConverter converter = property.Converter;
+          var converter = property.Converter;
           if (converter.CanConvertTo(typeof(string)) && converter.CanConvertFrom(typeof(string)))
           {
-            // read from the xml feed
-            string value = null;
+            // --- read from the xml feed
             object cv = null;
             try
             {
+              string value;
               if (NativeMethods.Succeeded(reader.ReadSettingString(property.Name, out value)) && (value != null))
               {
                 cv = property.Converter.ConvertFromInvariantString(value);
@@ -251,11 +341,12 @@ namespace VSXtra
             }
             catch (Exception)
             {
-              // ReadSettingString throws an exception if the property 
-              // is not found and we also catch ConvertFromInvariantString
-              // exceptions so that we gracefully handle bad vssettings.
+              // --- ReadSettingString throws an exception if the property is not found and we also 
+              // --- catch ConvertFromInvariantString exceptions so that we gracefully handle bad 
+              // --- vssettings.
+              VsDebug.Fail("Error in ReadSettingsString ignored.");
             }
-            //not all values have to be present
+            // --- Not all values have to be present
             if (cv != null)
             {
               property.SetValue(automationObject, cv);
@@ -265,133 +356,61 @@ namespace VSXtra
       }
       finally
       {
-        _initializing = false;    //we have loaded from storage
+        _Initializing = false;
       }
-      HookProperties(true); //hook if this failed during construction.
+
+      // --- Hook in properties
+      HookProperties(true);
+      OnPageDataLoaded();
     }
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.ResetSettings"]' />
-    /// <devdoc>Override this method in order to reset your settings to your default values.</devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Resets the user settings.
+    /// </summary>
+    /// <remarks>
+    /// Override this method in order to reset your settings to your default values.</devdoc>
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     public virtual void ResetSettings()
     {
     }
 
-    /// <devdoc>
-    /// This function hooks property change events so that we automatically serialize
-    /// if the value changes outside of UI and loading
-    /// </devdoc>
-    private void HookProperties(bool hook)
-    {
-      if (_propertyChangedHooked != hook)
-      {
-
-        if (_onPropertyChanged == null)
-          _onPropertyChanged = new EventHandler(OnPropertyChanged);
-
-        object automationObject = null;
-        try
-        {
-          automationObject = this.AutomationObject;
-        }
-        catch (Exception e)
-        {
-          Debug.Fail(e.ToString());  //assert this so we don't ship bad code.
-        }
-
-        if (automationObject != null)
-        {
-          PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(automationObject, new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
-
-          foreach (PropertyDescriptor property in properties)
-          {
-            if (hook)
-              property.AddValueChanged(automationObject, _onPropertyChanged);
-            else
-              property.RemoveValueChanged(automationObject, _onPropertyChanged);
-          }
-          _propertyChangedHooked = hook;
-        }
-      }
-    }
-
-    // Convert an item property value changed event into a list changed event
-    private void OnPropertyChanged(object sender, EventArgs e)
-    {
-      if (!_initializing && !_uiActive)
-        SaveSettingsToStorage();
-    }
-
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.OnActivate"]' />
-    /// <devdoc>
-    ///     This method is called when VS wants to activate this
-    ///     page.  If true is returned, the page is activated.
-    /// </devdoc>
-    protected virtual void OnActivate(CancelEventArgs e)
-    {
-      _uiActive = true;
-    }
-
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.OnClosed"]' />
-    /// <devdoc>
-    ///     This event is raised when the page is closed.   
-    /// </devdoc>
-    protected virtual void OnClosed(EventArgs e)
-    {
-      _uiActive = false;
-      LoadSettingsFromStorage(); //reload whatever is saved in storage so if someone is accessing this object, it will have the correct values.
-    }
-
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.OnDeactivate"]' />
-    /// <devdoc>
-    ///     This method is called when VS wants to deatviate this
-    ///     page.  If true is returned, the page is deactivated.
-    /// </devdoc>
-    protected virtual void OnDeactivate(CancelEventArgs e)
-    {
-    }
-
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.OnApply"]' />
-    /// <devdoc>
-    ///     This method is called when VS wants to save the user's 
-    ///     changes then the dialog is dismissed.
-    /// </devdoc>
-    protected virtual void OnApply(PageApplyEventArgs e)
-    {
-      SaveSettingsToStorage();
-    }
-
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.SaveSettingsToStorage"]' />
-    /// <devdoc>
-    ///     This method does the reverse of LoadSettingsFromStorage.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Writes a VSPackage's configuration to local storage (typically the registry) following 
+    /// state update.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     public virtual void SaveSettingsToStorage()
     {
-      Package package = (Package)GetService(typeof(Package));
-      Debug.Assert(package != null, "No package service; we cannot load settings");
+      var package = PackageBase.GetPackageInstance<TPackage>();
+      VsDebug.Assert(package != null, "No package service; we cannot load settings");
       if (package != null)
       {
-        using (RegistryKey rootKey = package.UserRegistryRoot)
+        // --- Oper the user registry key to save back settings.
+        using (var rootKey = package.UserRegistryRoot)
         {
-
-          string path = SettingsRegistryPath;
-          object automationObject = this.AutomationObject;
-          RegistryKey key = rootKey.OpenSubKey(path, true /* writable */);
+          var path = SettingsRegistryPath;
+          var automationObject = AutomationObject;
+          var key = rootKey.OpenSubKey(path, true) ?? rootKey.CreateSubKey(path);
           if (key == null)
           {
-            key = rootKey.CreateSubKey(path);
+            VsDebug.Fail("Could not obtain storage key.");
+            return;
           }
-
           using (key)
           {
-
-            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(automationObject, new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
-
+            var properties = TypeDescriptor.GetProperties(automationObject, 
+              new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
             foreach (PropertyDescriptor property in properties)
             {
-              TypeConverter converter = property.Converter;
-              if (converter.CanConvertTo(typeof(string)) && converter.CanConvertFrom(typeof(string)))
+              var converter = property.Converter;
+              if (converter.CanConvertTo(typeof(string)) && 
+                converter.CanConvertFrom(typeof(string)))
               {
-                key.SetValue(property.Name, converter.ConvertToInvariantString(property.GetValue(automationObject)));
+                key.SetValue(property.Name, 
+                  converter.ConvertToInvariantString(property.GetValue(automationObject)));
               }
             }
           }
@@ -399,27 +418,27 @@ namespace VSXtra
       }
     }
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.SaveSettingsToXml"]' />
-    /// <devdoc>
-    ///     This method does the reverse of LoadSettingsFromXml.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Writes a VSPackage's configuration to disk using the Visual Studio settings mechanism when
+    /// an import option of the Import/Export Settings command on the IDE’s Tools menu is selected 
+    /// by a user.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     public virtual void SaveSettingsToXml(IVsSettingsWriter writer)
     {
-      object automationObject = this.AutomationObject;
+      object automationObject = AutomationObject;
       PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(automationObject, new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
-      // [clovett] Sort the names so that tests can depend on the order returned, otherwise the order changes
-      // randomly based on some internal hashtable seed.  Besides it makes it easier for the user to
-      // read the .vssettings files.
-      ArrayList sortedNames = new ArrayList();
-      foreach (PropertyDescriptor property in properties)
-      {
-        sortedNames.Add(property.Name);
-      }
-      sortedNames.Sort();
+      // --- [clovett] Sort the names so that tests can depend on the order returned, otherwise the 
+      // --- order changes randomly based on some internal hashtable seed. Besides it makes it 
+      // --- easier for the user to read the .vssettings files.
+      var sortedNames = from PropertyDescriptor prop in properties
+                        orderby prop.Name
+                        select prop.Name;
       foreach (string name in sortedNames)
       {
-        PropertyDescriptor property = properties[name];
-        TypeConverter converter = property.Converter;
+        var property = properties[name];
+        var converter = property.Converter;
         if (converter.CanConvertTo(typeof(string)) && converter.CanConvertFrom(typeof(string)))
         {
           NativeMethods.ThrowOnFailure(
@@ -429,221 +448,308 @@ namespace VSXtra
       }
     }
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.SettingsRegistryPath"]' />
-    /// <devdoc>
-    /// This is where the settings are stored under [UserRegistryRoot]\DialogPage, the default
-    /// is the full type name of your AutomationObject.
-    /// </devdoc>
-    protected string SettingsRegistryPath
+    #endregion
+
+    #region Private methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This function hooks property change events so that we automatically serialize
+    /// if the value changes outside of UI and loading
+    /// </summary>
+    /// <param name="hook">
+    /// True if properties should be hooked; otherwise they should be unhooked.
+    /// </param>
+    // --------------------------------------------------------------------------------------------
+    private void HookProperties(bool hook)
     {
-      get
+      if (_PropertyChangedHooked != hook)
       {
-        if (this._settingsPath == null)
+        if (_OnPropertyChanged == null) _OnPropertyChanged = OnPropertyChanged;
+        object automationObject = null;
+        try
         {
-          this._settingsPath = "DialogPage\\" + this.AutomationObject.GetType().FullName;
+          automationObject = AutomationObject;
         }
-        return this._settingsPath;
-      }
-      set
-      {
-        this._settingsPath = value;
+        catch (Exception e)
+        {
+          VsDebug.Fail(e.ToString());
+        }
+        if (automationObject != null)
+        {
+          var properties = TypeDescriptor.GetProperties(automationObject, 
+            new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
+
+          foreach (PropertyDescriptor property in properties)
+          {
+            if (hook)
+              property.AddValueChanged(automationObject, _OnPropertyChanged);
+            else
+              property.RemoveValueChanged(automationObject, _OnPropertyChanged);
+          }
+          _PropertyChangedHooked = hook;
+        }
       }
     }
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.IWin32Window.Handle"]/*' />
-    /// <internalonly/>
-    /// <devdoc>
-    /// IWin32Window implementation.  This just delegates to the Window property.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Convert an item property value changed event into a list changed event
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void OnPropertyChanged(object sender, EventArgs e)
+    {
+      if (!_Initializing && !_UIActive)
+        SaveSettingsToStorage();
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Resets the dialog container.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    void IDialogPageBehavior.ResetContainer()
+    {
+      var component = _Window as IComponent;
+      if (_Container != null && component != null)
+      {
+        _Container.ResetAmbientProperties();
+        _Container.Remove(component);
+        _Container.Add(component);
+      }
+    }
+
+    #endregion
+
+    #region Virtual event methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method is called when VS wants to activate this page. If true is returned, the page is activated.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void OnActivate(CancelEventArgs e)
+    {
+      _UIActive = true;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This event is raised when the page is closed.   
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void OnClosed(EventArgs e)
+    {
+      _UIActive = false;
+      LoadSettingsFromStorage();
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method is called when VS wants to deatviate this page. If true is returned, the page 
+    /// is deactivated.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void OnDeactivate(CancelEventArgs e)
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method is called when VS wants to save the user's changes then the dialog is dismissed.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void OnApply(PageApplyEventArgs e)
+    {
+      SaveSettingsToStorage();
+    }
+
+    #endregion
+
+    #region IWin32Window implementation
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// IWin32Window implementation. This just delegates to the Window property.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     IntPtr IWin32Window.Handle
     {
       get
       {
-
-        if (_window == null)
+        if (_Window == null)
         {
-          _window = Window;
-          if (_window is IComponent)
+          _Window = Window;
+          if (_Window is IComponent)
           {
-            if (_container == null)
+            if (_Container == null)
             {
-              _container = new DialogContainer(Site);
+              _Container = new DialogContainer(Site);
             }
-            _container.Add((IComponent)_window);
+            _Container.Add((IComponent)_Window);
           }
-          if (_subclass == null)
+          if (_Subclass == null)
           {
-            _subclass = new DialogSubclass(this);
+            _Subclass = new DialogSubclass(this);
           }
         }
-
-        if (_subclass.Handle != _window.Handle)
+        if (_Subclass.Handle != _Window.Handle)
         {
-          _subclass.AssignHandle(_window.Handle);
+          _Subclass.AssignHandle(_Window.Handle);
         }
-
-        return _window.Handle;
+        return _Window.Handle;
       }
     }
 
-    internal void ResetContainer()
-    {
-      if (_container != null && _window is IComponent)
-      {
-        // This resets the AmbientProperties.
-        _container._ambientProperties = null;
-        _container.Remove((IComponent)_window);
-        _container.Add((IComponent)_window);
-      }
-    }
+    #endregion
 
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.ApplyKind"]/*' />
-    /// <devdoc>
-    /// Apply behavior.  Allows the OnApply event to be canceled with optional navigation instructions.
-    /// </devdoc>
-    public enum ApplyKind
-    {
-      /// <summary>
-      /// Apply - Allows the changes to be applied
-      /// </summary>
-      Apply = 0,
+    #region PageApplyEventArgs
 
-      /// <summary>
-      /// CancelNavigate - Cancels the apply event and navigates to the page cancelling the event.
-      /// </summary>
-      Cancel = 1,
-
-      /// <summary>
-      /// CancelNoNavigate - Cancels the apply event and returns the active page, not the page cancelling the event.
-      /// </summary>
-      CancelNoNavigate = 2
-    };
-
-    /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.PageApplyEventArgs"]/*' />
-    /// <devdoc>
+    // ================================================================================================
+    /// <summary>
     /// Event arguments to allow the OnApply method to indicate how to handle the apply event.
-    /// </devdoc>
+    /// </summary>
+    // ================================================================================================
     protected class PageApplyEventArgs : EventArgs
     {
-      private ApplyKind _apply = ApplyKind.Apply;
+      public PageApplyKind ApplyBehavior { get; set; }
 
-      /// <include file='doc\DialogPage.uex' path='docs/doc[@for="DialogPage.AutomationObject.ApplyBehavior"]' />
-      public ApplyKind ApplyBehavior
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Creates a new instance of the event argument class.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      public PageApplyEventArgs()
       {
-        get
-        {
-          return _apply;
-        }
-        set
-        {
-          _apply = value;
-        }
+        ApplyBehavior = PageApplyKind.Apply;
       }
     }
 
-    /// <devdoc>
-    ///     This class derives from container to provide a service provider
-    ///     connection to the dialog page.
-    /// </devdoc>
+    #endregion
+
+    #region DialogContainer
+
+    // ================================================================================================
+    /// <summary>
+    /// This class derives from container to provide a service provider connection to the dialog page.
+    /// </summary>
+    // ================================================================================================
     private sealed class DialogContainer : Container
     {
+      private readonly IServiceProvider _ServiceProvider;
+      private AmbientProperties _AmbientProperties;
 
-      private IServiceProvider _provider;
-      internal AmbientProperties _ambientProperties;
-
-      /// <devdoc>
-      ///     Creates a new container using the given service provider.
-      /// </devdoc>
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Creates a new container using the given service provider.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public DialogContainer(IServiceProvider provider)
       {
-        _provider = provider;
+        _ServiceProvider = provider;
       }
 
-      /// <devdoc>
-      ///     Override to GetService so we can route requests
-      ///     to the package's service provider.
-      /// </devdoc>
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Override to GetService so we can route requests to the package's service provider.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       protected override object GetService(Type serviceType)
       {
         if (serviceType == null)
         {
           throw new ArgumentNullException("serviceType");
         }
+
+        // --- Handle AmbinetProperties as special type.
         if (serviceType == typeof(AmbientProperties))
         {
-          if (_ambientProperties == null)
+          if (_AmbientProperties == null)
           {
-            IUIService uis = GetService(typeof(IUIService)) as IUIService;
-            _ambientProperties = new AmbientProperties();
-            _ambientProperties.Font = (Font)uis.Styles["DialogFont"];
+            var uis = GetService(typeof(IUIService)) as IUIService;
+            _AmbientProperties = new AmbientProperties();
+            if (uis != null) _AmbientProperties.Font = (Font)uis.Styles["DialogFont"];
           }
-          return _ambientProperties;
+          return _AmbientProperties;
         }
-        if (_provider != null)
+
+        // --- Route requests to the owner package's service provider.
+        if (_ServiceProvider != null)
         {
-          object service = _provider.GetService(serviceType);
-          if (service != null)
-          {
-            return service;
-          }
+          var service = _ServiceProvider.GetService(serviceType);
+          if (service != null) return service;
         }
         return base.GetService(serviceType);
       }
+
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Resets the AmbientProperties to null.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      public void ResetAmbientProperties()
+      {
+        _AmbientProperties = null;
+      }
     }
 
-    /// <devdoc>
-    ///     This class derives from NativeWindow to provide a hook
-    ///     into the window handle.  We use this hook so we can
-    ///     respond to property sheet window messages that VS
-    ///     will send us.
-    /// </devdoc>
+    #endregion
+
+    #region DialogSubclass 
+
+    // ================================================================================================
+    /// <summary>
+    /// This class derives from NativeWindow to provide a hook into the window handle. We use this 
+    /// hook so we can respond to property sheet window messages that VS will send us.
+    /// </summary>
+    // ================================================================================================
     private sealed class DialogSubclass : NativeWindow
     {
+      private readonly DialogPage<TPackage, TUIControl> _Page;
+      private bool _CloseCalled;
 
-      private DialogPage _page;
-      private bool _closeCalled;
-
-      /// <devdoc>
-      ///     Create a new DialogSubclass
-      /// </devdoc>
-      internal DialogSubclass(DialogPage page)
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Create a new DialogSubclass instance
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      internal DialogSubclass(DialogPage<TPackage, TUIControl> page)
       {
-        _page = page;
-        _closeCalled = false;
+        _Page = page;
+        _CloseCalled = false;
       }
 
-      /// <devdoc>
-      ///     Override for WndProc to handle our PSP messages
-      /// </devdoc>
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Override for WndProc to handle our PSP messages
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       protected override void WndProc(ref Message m)
       {
-
         CancelEventArgs ce;
-
         switch (m.Msg)
         {
           case NativeMethods.WM_NOTIFY:
-            NativeMethods.NMHDR nmhdr = (NativeMethods.NMHDR)Marshal.PtrToStructure(m.LParam, typeof(NativeMethods.NMHDR));
+            var nmhdr = (NativeMethods.NMHDR)Marshal.PtrToStructure(m.LParam, typeof(NativeMethods.NMHDR));
             switch (nmhdr.code)
             {
               case NativeMethods.PSN_RESET:
-                _closeCalled = true;
-                _page.OnClosed(EventArgs.Empty);
+                _CloseCalled = true;
+                _Page.OnClosed(EventArgs.Empty);
                 return;
               case NativeMethods.PSN_APPLY:
-                PageApplyEventArgs pae = new PageApplyEventArgs();
-                _page.OnApply(pae);
+                var pae = new PageApplyEventArgs();
+                _Page.OnApply(pae);
                 switch (pae.ApplyBehavior)
                 {
-                  case ApplyKind.Cancel:
+                  case PageApplyKind.Cancel:
                     m.Result = (IntPtr)NativeMethods.PSNRET_INVALID;
                     break;
 
-                  case ApplyKind.CancelNoNavigate:
+                  case PageApplyKind.CancelNoNavigate:
                     m.Result = (IntPtr)NativeMethods.PSNRET_INVALID_NOCHANGEPAGE;
                     break;
 
-                  case ApplyKind.Apply:
                   default:
                     m.Result = IntPtr.Zero;
                     break;
@@ -652,34 +758,81 @@ namespace VSXtra
                 return;
               case NativeMethods.PSN_KILLACTIVE:
                 ce = new CancelEventArgs();
-                _page.OnDeactivate(ce);
+                _Page.OnDeactivate(ce);
                 m.Result = (IntPtr)(ce.Cancel ? 1 : 0);
                 UnsafeNativeMethods.SetWindowLong(m.HWnd, NativeMethods.DWL_MSGRESULT, m.Result);
                 return;
               case NativeMethods.PSN_SETACTIVE:
-                _closeCalled = false;
+                _CloseCalled = false;
                 ce = new CancelEventArgs();
-                _page.OnActivate(ce);
+                _Page.OnActivate(ce);
                 m.Result = (IntPtr)(ce.Cancel ? -1 : 0);
                 UnsafeNativeMethods.SetWindowLong(m.HWnd, NativeMethods.DWL_MSGRESULT, m.Result);
                 return;
             }
             break;
-          case NativeMethods.WM_DESTROY:
 
-            // we can't tell the difference between OK and Apply (see above), so
-            // if we get a destroy and close hasn't been called, make sure we call it
-            //
-            if (!_closeCalled && _page != null)
+          case NativeMethods.WM_DESTROY:
+            // --- We can't tell the difference between OK and Apply (see above), so if we get a 
+            // --- destroy and close hasn't been called, make sure we call it
+            if (!_CloseCalled && _Page != null)
             {
-              _page.OnClosed(EventArgs.Empty);
+              _Page.OnClosed(EventArgs.Empty);
             }
             break;
         }
-
         base.WndProc(ref m);
       }
     }
+
+    #endregion
   }
+
+  public class DialogPage<TPackage>: DialogPage<TPackage, PropertyGrid>
+    where TPackage: PackageBase
+  {
+    protected override void OnPageCreated()
+    {
+      UIControl.ToolbarVisible = false;
+      UIControl.CommandsVisibleIfAvailable = false;
+      UIControl.SelectedObject = AutomationObject;
+    }
+  }
+
+  #region PageApplyKind
+
+  // ================================================================================================
+  /// <summary>
+  /// This enum defines the possible kinds of page apply behaviour.
+  /// </summary>
+  /// <remarks>
+  /// Allows the OnApply event to be canceled with optional navigation instructions.
+  /// </remarks>
+  // ================================================================================================
+  public enum PageApplyKind
+  {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Apply - Allows the changes to be applied
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    Apply = 0,
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// CancelNavigate - Cancels the apply event and navigates to the page cancelling the event.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    Cancel = 1,
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// CancelNoNavigate - Cancels the apply event and returns the active page, not the page cancelling the event.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    CancelNoNavigate = 2
+  };
+
+  #endregion
 }
 

@@ -179,9 +179,14 @@ namespace VSXtra
         var commandMethods =
           from method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
           where method.ReturnType == typeof (void) &&
-                method.GetParameters().Count() == 1 &&
-                method.GetParameters()[0].ParameterType == typeof (OleMenuCommand) &&
-                Attribute.IsDefined(method, typeof (CommandMethodAttribute)) &&
+                (
+                  method.GetParameters().Count() == 0 &&
+                  Attribute.IsDefined(method, typeof(CommandExecMethodAttribute))
+                  ||
+                  method.GetParameters().Count() == 1 &&
+                  method.GetParameters()[0].ParameterType == typeof (OleMenuCommand) &&
+                  Attribute.IsDefined(method, typeof (CommandMethodAttribute))
+                ) &&
                 Attribute.IsDefined(method, typeof(CommandIdAttribute))
           select method;
         foreach (var method in commandMethods)
@@ -377,7 +382,10 @@ namespace VSXtra
       if (commandMethod == null) return;
 
       // --- Execute the command
-      var parameters = new object[] {command};
+      var parameters = 
+        commandMethod.GetParameters().Count() == 0
+        ? new object[0]
+        : new object[] {command};
       commandMethod.Invoke(EventTarget, parameters);
     }
 

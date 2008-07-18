@@ -268,6 +268,24 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The dialog page type {0} does not derive from DialogPage..
+        /// </summary>
+        internal static string Package_BadDialogPageType {
+            get {
+                return ResourceManager.GetString("Package_BadDialogPageType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The solution option name {0} is invalid.  It cannot contain &apos;.&apos;, &apos;/&apos; or other special characters..
+        /// </summary>
+        internal static string Package_BadOptionName {
+            get {
+                return ResourceManager.GetString("Package_BadOptionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tool window cannot be created..
         /// </summary>
         internal static string Package_CannotCreateToolWindow {
@@ -304,6 +322,33 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The solution option name {0} is already used by this package..
+        /// </summary>
+        internal static string Package_OptionNameUsed {
+            get {
+                return ResourceManager.GetString("Package_OptionNameUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The page type {0} does not offer an empty constructor..
+        /// </summary>
+        internal static string Package_PageCtorMissing {
+            get {
+                return ResourceManager.GetString("Package_PageCtorMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The page class {0} must derive from DialogPage&lt;,&gt;..
+        /// </summary>
+        internal static string Package_PageNotDialogPage {
+            get {
+                return ResourceManager.GetString("Package_PageNotDialogPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A site has already been set on package {0}..
         /// </summary>
         internal static string Package_SiteAlreadySet {
@@ -336,6 +381,15 @@ namespace VSXtra.Properties {
         internal static string Reg_NotifyAutoLoad {
             get {
                 return ResourceManager.GetString("Reg_NotifyAutoLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option Page:      {0}\{1}.
+        /// </summary>
+        internal static string Reg_NotifyOptionPage {
+            get {
+                return ResourceManager.GetString("Reg_NotifyOptionPage", resourceCulture);
             }
         }
         
