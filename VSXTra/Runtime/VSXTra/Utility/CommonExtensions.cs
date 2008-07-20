@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Linq;
 
 namespace VSXtra
 {
@@ -208,7 +209,17 @@ namespace VSXtra
                : null;
     }
 
-    public static bool DerivesFromGenericTypeType(this Type type, Type generic)
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Checks if the specified type derives from the given generic type.
+    /// </summary>
+    /// <param name="type">Type to check</param>
+    /// <param name="generic">Generic type to check as base class</param>
+    /// <returns>
+    /// True, if the specified type derives from the given generic interface; otherwise, false.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    public static bool DerivesFromGenericType(this Type type, Type generic)
     {
       while (type != null)
       {
@@ -217,6 +228,68 @@ namespace VSXtra
         type = type.BaseType;
       }
       return false;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the generic parameter of the specified generic types at the given posititon.
+    /// </summary>
+    /// <param name="type">Type to check.</param>
+    /// <param name="generic">Generic type definition to obtain parameter for.</param>
+    /// <param name="position">Position of the parameter.</param>
+    /// <returns>
+    /// Type parameter at the specified position if the parameter exists; otherwise, null.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    public static Type GenericParameterOfType(this Type type, Type generic, int position)
+    {
+      while (type != null)
+      {
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == generic)
+        {
+          var args = type.GetGenericArguments();
+          return position >= 0 && position < args.Length
+                   ? args[position]
+                   : null;
+        }
+        type = type.BaseType;
+      }
+      return null;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Checks if a type implements the specified generic interface.
+    /// </summary>
+    /// <param name="type">Type to check</param>
+    /// <param name="generic">Generic interface to check.</param>
+    /// <returns>
+    /// True, if the type implements the specified generic interface; otherwise, false.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    public static bool ImplementsGenericType(this Type type, Type generic)
+    {
+      // --- We check only for generic interfaces.
+      if (!generic.IsGenericTypeDefinition || !generic.IsInterface) return false;
+
+      return type.GetInterfaces().Any(
+        t => t.IsGenericType && !t.IsGenericTypeDefinition &&
+          t.GetGenericTypeDefinition() == generic);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the generic interface type
+    /// </summary>
+    /// <param name="type">Type to check</param>
+    /// <param name="generic">Generic interface to check.</param>
+    /// <returns>Closed type definition implementing the generic interface.</returns>
+    // --------------------------------------------------------------------------------------------
+    public static Type GetImplementorOfGenericInterface(this Type type, Type generic)
+    {
+      return type.GetInterfaces().First(
+        t => t.IsGenericType && !t.IsGenericTypeDefinition && 
+          t.GetGenericTypeDefinition() == generic);
     }
   }
 }

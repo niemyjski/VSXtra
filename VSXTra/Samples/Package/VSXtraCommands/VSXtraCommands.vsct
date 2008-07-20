@@ -1,0 +1,594 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- The content of this file is a refactored version of the PowerCommand.vsct file. -->
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+  <Commands package="guidVSXtraCommandsPkg">
+    <Groups>
+      <Group guid="guidVSXtraCommandSet" id="grpidOpenVSCommandPromptCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidOpenVSCommandPromptCommandGroup1" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidOpenVSCommandPromptCommandGroup2" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidOpenVSCommandPromptCommandGroup3" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidTransformTemplatesCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidTransformTemplatesCommandGroup1" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCollapseProjectsCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCollapseProjectsCommandGroup1" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCollapseProjectsCommandGroup2" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNFOLDER" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidOpenContainingFolderCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidEditProjectCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidPasteReferenceCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_REFERENCEROOT" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidPasteReferenceCommandGroup1" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidPasteReferenceCommandGroup2" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_WEBPROJECT" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCopyReferenceCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_REFERENCE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCopyAsProjectReferenceCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCopyReferencesCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_REFERENCEROOT" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidReloadProjectsCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidUnloadProjectsCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidRemoveSortUsingsCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidRemoveSortUsingsCommandGroup1" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCopyClassCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidPasteClassCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidPasteClassCommandGroup1" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCloseAllDocumentsCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_EZDOCWINTAB" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCopyPathCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCopyPathCommandGroup1" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCopyPathCommandGroup2" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidCopyPathCommandGroup3" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidEmailCodeSnippetCommandGroup" priority="0x0100">
+        <Parent guid="guidCodeEditorGroup" id="grpidCodeEditorGroup" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidInsertGuidAttributeCommandGroup" priority="0x0100">
+        <Parent guid="guidCodeEditorGroup" id="grpidCodeEditorGroup" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidUndoCloseCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_EDIT" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidClearAllPanesCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_OUTPUTWINDOW" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidShowAllFilesCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_PROJWIN" />
+      </Group>
+      <Group guid="guidVSXtraCommandSet" id="grpidShowUndoCloseToolWindowCommandGroup" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_WINDOWS" />
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidVSXtraCommandSet" id="cmdidOpenVSCommandPromptCommand" priority="0x0100" type="Button">
+        <Icon guid="guidOpenVSCommandPromptCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Open Command Prompt</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidTransformTemplatesCommand" priority="0x0100" type="Button">
+        <Icon guid="guidTransformTemplatesCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Transform Templates</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidCollapseProjectsCommand" priority="0x0100" type="Button">
+        <Icon guid="guidCollapseProjectsCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Collapse Projects</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidOpenContainingFolderCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidOpenContainingFolderCommandGroup" />
+        <Icon guid="guidOpenContainingFolderCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Open Containing Folder</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidExtractToConstantCommand" priority="0x0100" type="Button">
+        <Icon guid="guidExtractToConstantCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Extract Constant...</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidEditProjectCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidEditProjectCommandGroup" />
+        <Icon guid="guidEditProjectCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Edit Project File</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidPasteReferenceCommand" priority="0x0100" type="Button">
+        <Icon guid="guidPasteReferenceCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Paste Reference</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidCopyReferenceCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidCopyReferenceCommandGroup" />
+        <Icon guid="guidCopyReferenceCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Copy Reference</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidCopyAsProjectReferenceCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidCopyAsProjectReferenceCommandGroup" />
+        <Icon guid="guidCopyAsProjectReferenceCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Copy As Project Reference</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidClearRecentFileListCommand" priority="0x0100" type="Button">
+        <Icon guid="guidClearRecentFileListCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Clear Recent File List</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidClearRecentProjectListCommand" priority="0x0100" type="Button">
+        <Icon guid="guidClearRecentProjectListCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Clear Recent Project List</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidCopyReferencesCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidCopyReferencesCommandGroup" />
+        <Icon guid="guidCopyReferencesCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Copy References</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidReloadProjectsCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidReloadProjectsCommandGroup" />
+        <Icon guid="guidReloadProjectsCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Reload Projects</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidUnloadProjectsCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidUnloadProjectsCommandGroup" />
+        <Icon guid="guidUnloadProjectsCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Unload Projects</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidRemoveSortUsingsCommand" priority="0x0100" type="Button">
+        <Icon guid="guidRemoveSortUsingsCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Remove and Sort Usings</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidCopyClassCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidCopyClassCommandGroup" />
+        <Icon guid="guidCopyClassCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Copy Class</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidPasteClassCommand" priority="0x0100" type="Button">
+        <Icon guid="guidPasteClassCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Paste Class</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidCloseAllDocumentsCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidCloseAllDocumentsCommandGroup" />
+        <Icon guid="guidCloseAllDocumentsCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Close All</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidCopyPathCommand" priority="0x0100" type="Button">
+        <Icon guid="guidCopyPathCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Copy Path</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidEmailCodeSnippetCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidEmailCodeSnippetCommandGroup" />
+        <Icon guid="guidEmailCodeSnippetCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Email CodeSnippet</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidInsertGuidAttributeCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidInsertGuidAttributeCommandGroup" />
+        <Icon guid="guidInsertGuidAttributeCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Insert Guid Attribute</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidUndoCloseCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidUndoCloseCommandGroup" />
+        <Icon guid="guidUndoCloseCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Undo Close</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidClearAllPanesCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidClearAllPanesCommandGroup" />
+        <Icon guid="guidClearAllPanesCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Clear All Panes</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidShowAllFilesCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidShowAllFilesCommandGroup" />
+        <Icon guid="guidShowAllFilesCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Show All Files</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidVSXtraCommandSet" id="cmdidShowUndoCloseToolWindowCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSXtraCommandSet" id="grpidShowUndoCloseToolWindowCommandGroup" />
+        <Icon guid="guidShowUndoCloseToolWindowCommandBitmap" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Undo Close Window</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+    
+    <Bitmaps>
+      <Bitmap guid="guidOpenVSCommandPromptCommandBitmap" href="Resources\OpenCmd.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidTransformTemplatesCommandBitmap" href="Resources\TransformTemplates.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidCollapseProjectsCommandBitmap" href="Resources\CollapseProjects.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidOpenContainingFolderCommandBitmap" href="Resources\OpenContainingFolderFolder.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidExtractToConstantCommandBitmap" href="Resources\ExtractConstant.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidEditProjectCommandBitmap" href="Resources\EditProject.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidPasteReferenceCommandBitmap" href="Resources\Paste.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidCopyReferenceCommandBitmap" href="Resources\Copy.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidCopyAsProjectReferenceCommandBitmap" href="Resources\Copy.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidClearRecentFileListCommandBitmap" href="Resources\ClearRecentList.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidClearRecentProjectListCommandBitmap" href="Resources\ClearRecentList.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidCopyReferencesCommandBitmap" href="Resources\Copy.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidReloadProjectsCommandBitmap" href="Resources\Empty16.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidUnloadProjectsCommandBitmap" href="Resources\Empty16.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidRemoveSortUsingsCommandBitmap" href="Resources\RemoveSort.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidCopyClassCommandBitmap" href="Resources\Copy.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidPasteClassCommandBitmap" href="Resources\Paste.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidCloseAllDocumentsCommandBitmap" href="Resources\Empty16.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidCopyPathCommandBitmap" href="Resources\Empty16.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidEmailCodeSnippetCommandBitmap" href="Resources\EmailCodeSnippet.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidInsertGuidAttributeCommandBitmap" href="Resources\CreateGuid.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidUndoCloseCommandBitmap" href="Resources\UndoClose.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidClearAllPanesCommandBitmap" href="Resources\ClearAllPanes.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidShowAllFilesCommandBitmap" href="Resources\ShowAllFiles.bmp" usedList="bmpPic1" />
+      <Bitmap guid="guidShowUndoCloseToolWindowCommandBitmap" href="Resources\UndoClose.bmp" usedList="bmpPic1" />
+    </Bitmaps>
+  </Commands>
+
+  <CommandPlacements>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidClearRecentFileListCommand" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDG_VS_FILE_FMRU_CASCADE"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidClearRecentProjectListCommand" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDG_VS_FILE_PMRU_CASCADE"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidOpenVSCommandPromptCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidOpenVSCommandPromptCommandGroup"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidOpenVSCommandPromptCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidOpenVSCommandPromptCommandGroup1"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidOpenVSCommandPromptCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidOpenVSCommandPromptCommandGroup2"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidOpenVSCommandPromptCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidOpenVSCommandPromptCommandGroup3"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidCollapseProjectsCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidCollapseProjectsCommandGroup"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidCollapseProjectsCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidCollapseProjectsCommandGroup1"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidCollapseProjectsCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidCollapseProjectsCommandGroup2"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidPasteReferenceCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidPasteReferenceCommandGroup"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidPasteReferenceCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidPasteReferenceCommandGroup1"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidPasteReferenceCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidPasteReferenceCommandGroup2"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidPasteClassCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidPasteClassCommandGroup"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidPasteClassCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidPasteClassCommandGroup1"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidExtractToConstantCommand" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDG_REFACTORING_COMMON"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidTransformTemplatesCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidTransformTemplatesCommandGroup"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidTransformTemplatesCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidTransformTemplatesCommandGroup1"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidRemoveSortUsingsCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidRemoveSortUsingsCommandGroup"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidRemoveSortUsingsCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidRemoveSortUsingsCommandGroup1"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidCopyPathCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidCopyPathCommandGroup"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidCopyPathCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidCopyPathCommandGroup1"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidCopyPathCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidCopyPathCommandGroup2"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSXtraCommandSet" id="cmdidCopyPathCommand" priority="0x0100">
+      <Parent guid="guidVSXtraCommandSet" id="grpidCopyPathCommandGroup3"/>
+    </CommandPlacement>
+  </CommandPlacements>
+  <KeyBindings>
+    <KeyBinding editor="guidVSStd97" guid="guidVSXtraCommandSet" id="cmdidUndoCloseCommand" key1="Z" mod1="Control Shift" />
+  </KeyBindings>
+  <Symbols>
+    <!-- VSXtra Package GUID -->
+    <GuidSymbol name="guidVSXtraCommandsPkg" value="{33838be2-98a7-4e2d-af1d-3138649f1758}" />
+
+    <!-- Code editor symbols -->
+    <GuidSymbol name="guidCodeEditorGroup" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
+      <IDSymbol name="grpidCodeEditorGroup" value="1037" />
+    </GuidSymbol>
+
+      <!-- VSXtra command set symbols -->
+    <GuidSymbol name="guidVSXtraCommandSet" value="{4a0c30b1-1530-48cb-83ef-69f5a39b4996}">
+      <!-- Group identifiers -->
+      <IDSymbol name="grpidOpenVSCommandPromptCommandGroup" value="0x1228" />
+      <IDSymbol name="grpidOpenVSCommandPromptCommandGroup1" value="0x1229" />
+      <IDSymbol name="grpidOpenVSCommandPromptCommandGroup2" value="0x1230" />
+      <IDSymbol name="grpidOpenVSCommandPromptCommandGroup3" value="0x1231" />
+      <IDSymbol name="grpidTransformTemplatesCommandGroup" value="0x38FA" />
+      <IDSymbol name="grpidTransformTemplatesCommandGroup1" value="0x37FA" />
+      <IDSymbol name="grpidCollapseProjectsCommandGroup" value="0x481B" />
+      <IDSymbol name="grpidCollapseProjectsCommandGroup1" value="0x4810" />
+      <IDSymbol name="grpidCollapseProjectsCommandGroup2" value="0x4811" />
+      <IDSymbol name="grpidOpenContainingFolderCommandGroup" value="0x58C4" />
+      <IDSymbol name="grpidEditProjectCommandGroup" value="0x202C" />
+      <IDSymbol name="grpidPasteReferenceCommandGroup" value="0x5DF3" />
+      <IDSymbol name="grpidPasteReferenceCommandGroup1" value="0x5DF4" />
+      <IDSymbol name="grpidPasteReferenceCommandGroup2" value="0x5DF5" />
+      <IDSymbol name="grpidCopyReferenceCommandGroup" value="0x27ED" />
+      <IDSymbol name="grpidCopyAsProjectReferenceCommandGroup" value="0x27E3" />
+      <IDSymbol name="grpidCopyReferencesCommandGroup" value="0x457E" />
+      <IDSymbol name="grpidUndoCloseCommandGroup" value="0x5F5D" />
+      <IDSymbol name="grpidReloadProjectsCommandGroup" value="0x7230" />
+      <IDSymbol name="grpidUnloadProjectsCommandGroup" value="0x3EF4" />
+      <IDSymbol name="grpidRemoveSortUsingsCommandGroup" value="0x2CC9" />
+      <IDSymbol name="grpidRemoveSortUsingsCommandGroup1" value="0x2CC6" />
+      <IDSymbol name="grpidCopyClassCommandGroup" value="0x2DB3" />
+      <IDSymbol name="grpidPasteClassCommandGroup" value="0x3F25" />
+      <IDSymbol name="grpidPasteClassCommandGroup1" value="0x3F20" />
+      <IDSymbol name="grpidCloseAllDocumentsCommandGroup" value="0x289A" />
+      <IDSymbol name="grpidCopyPathCommandGroup" value="0x67DB" />
+      <IDSymbol name="grpidCopyPathCommandGroup1" value="0x67DC" />
+      <IDSymbol name="grpidCopyPathCommandGroup2" value="0x67DE" />
+      <IDSymbol name="grpidCopyPathCommandGroup3" value="0x67DD" />
+      <IDSymbol name="grpidEmailCodeSnippetCommandGroup" value="0x4B7E" />
+      <IDSymbol name="grpidInsertGuidAttributeCommandGroup" value="0x714D" />
+      <IDSymbol name="grpidClearAllPanesCommandGroup" value="0x2733" />
+      <IDSymbol name="grpidShowAllFilesCommandGroup" value="0x750B" />
+      <IDSymbol name="grpidShowUndoCloseToolWindowCommandGroup" value="0x4FE5" />
+
+      <!-- Command identifiers -->
+      <IDSymbol name="cmdidOpenVSCommandPromptCommand" value="0x731C" />
+      <IDSymbol name="cmdidTransformTemplatesCommand" value="0x19EF" />
+      <IDSymbol name="cmdidCollapseProjectsCommand" value="0x2910" />
+      <IDSymbol name="cmdidOpenContainingFolderCommand" value="0x39B9" />
+      <IDSymbol name="cmdidExtractToConstantCommand" value="0x757A" />
+      <IDSymbol name="cmdidEditProjectCommand" value="0x0121" />
+      <IDSymbol name="cmdidPasteReferenceCommand" value="0x7C09" />
+      <IDSymbol name="cmdidCopyReferenceCommand" value="0x08E2" />
+      <IDSymbol name="cmdidCopyAsProjectReferenceCommand" value="0x0810" />
+      <IDSymbol name="cmdidClearRecentFileListCommand" value="0x0F7D" />
+      <IDSymbol name="cmdidClearRecentProjectListCommand" value="0x0F70" />
+      <IDSymbol name="cmdidCopyReferencesCommand" value="0x2673" />
+      <IDSymbol name="cmdidUndoCloseCommand" value="0x667D" />
+      <IDSymbol name="cmdidReloadProjectsCommand" value="0x5325" />
+      <IDSymbol name="cmdidUnloadProjectsCommand" value="0x1FE9" />
+      <IDSymbol name="cmdidRemoveSortUsingsCommand" value="0x0DBE" />
+      <IDSymbol name="cmdidCopyClassCommand" value="0x0EA8" />
+      <IDSymbol name="cmdidPasteClassCommand" value="0x201A" />
+      <IDSymbol name="cmdidCloseAllDocumentsCommand" value="0x098F" />
+      <IDSymbol name="cmdidCopyPathCommand" value="0x5A09" />
+      <IDSymbol name="cmdidEmailCodeSnippetCommand" value="0x3DAC" />
+      <IDSymbol name="cmdidInsertGuidAttributeCommand" value="0x265A" />
+      <IDSymbol name="cmdidClearAllPanesCommand" value="0x2E52" />
+      <IDSymbol name="cmdidShowAllFilesCommand" value="0x2A19" />
+      <IDSymbol name="cmdidShowUndoCloseToolWindowCommand" value="0x4213" />
+    </GuidSymbol>
+
+    <!-- VSXtra bitmap symbols -->
+    <GuidSymbol name="guidOpenVSCommandPromptCommandBitmap" value="{8869332D-04E4-460A-B056-6BD8A5B61EB9}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidTransformTemplatesCommandBitmap" value="{B052A091-6D85-4E8A-BED7-DB616F783596}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidCollapseProjectsCommandBitmap" value="{08FB9E92-439E-478A-A559-ADFD40BD18B7}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidOpenContainingFolderCommandBitmap" value="{2C996D4A-9BE7-48E4-B032-C06B68C6D16E}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidExtractToConstantCommandBitmap" value="{12FA778B-C1F9-4AF0-919B-E98B8D4E338B}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidEditProjectCommandBitmap" value="{07741E8C-C8F4-4DBF-8F82-D28CDFEF9BC1}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidPasteReferenceCommandBitmap" value="{EC78AB43-C81D-463C-9D3A-5E66D799B48B}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidCopyReferenceCommandBitmap" value="{221A65EB-782B-42AA-B4B5-C494CD01EA1C}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidCopyAsProjectReferenceCommandBitmap" value="{7D8BE582-B2EB-40de-9FC3-148D4E551EA6}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidClearRecentFileListCommandBitmap" value="{2257108B-4FA4-482F-AA21-85A38811AF74}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidClearRecentProjectListCommandBitmap" value="{0B023836-159A-4000-A5F4-EC37AF9F0538}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidCopyReferencesCommandBitmap" value="{F55ABF30-F5D5-403E-B93D-5459B3F35155}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidReloadProjectsCommandBitmap" value="{16CE2B07-5434-4CDE-97E8-2C1D0EA2511F}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidUnloadProjectsCommandBitmap" value="{1B121FAA-8568-4FB5-85EE-8C8B58029CB3}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidRemoveSortUsingsCommandBitmap" value="{244A7017-0796-44D1-BF50-B50B9761577B}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidCopyClassCommandBitmap" value="{A3A2497E-3074-4A07-9A0C-3BEC8DFE5628}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidPasteClassCommandBitmap" value="{E4E20208-C171-42E6-9AFB-DF5B758B9A29}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidCloseAllDocumentsCommandBitmap" value="{BA0ABC4F-4E8B-4459-B9F9-445D53A348CE}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidCopyPathCommandBitmap" value="{841DCDEE-63A0-4D75-A489-B5B7F40D5C0F}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidEmailCodeSnippetCommandBitmap" value="{1EFE93B0-6D59-4A08-A887-955A52F63A88}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidInsertGuidAttributeCommandBitmap" value="{5AB16CB2-B3E4-49CE-8E6D-0146B260ECAC}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidUndoCloseCommandBitmap" value="{281ECFFD-6A4F-47C8-90DC-8D178C841E72}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidClearAllPanesCommandBitmap" value="{A5C5DE6C-2190-4C36-BF71-216124C6F3AC}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidShowAllFilesCommandBitmap" value="{5D54AAE4-AEBE-49A1-B6C4-3029F0942298}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidShowUndoCloseToolWindowCommandBitmap" value="{E41A3D70-5EFC-4F17-9047-B2B423D201AD}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

@@ -41,7 +41,7 @@ namespace DeepDiver.PersistedToolWindow
     /// </summary>
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
-    [PromoteCommand]
+    [Promote]
     [CommandId(CmdIDs.cmdidRefreshWindowsList)]
     private void RefreshList(OleMenuCommand command)
     {
