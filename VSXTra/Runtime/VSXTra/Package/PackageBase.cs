@@ -105,6 +105,10 @@ namespace VSXtra
     /// <summary>Dictionary for service instances.</summary>
     private Dictionary<Type, object> _Services;
 
+    /// <summary>Automatically registered services.</summary>
+    private readonly Dictionary<Type, Type> _AutoRegisteredServices = 
+      new Dictionary<Type, Type>();
+
     /// <summary>Dictionary for tool window instances.</summary>
     private Dictionary<Type, Dictionary<int, IToolWindowPaneBehavior>> _ToolWindows =
       new Dictionary<Type, Dictionary<int, IToolWindowPaneBehavior>>();
@@ -367,7 +371,12 @@ namespace VSXtra
             // --- type here.  That way they'll just fail instead of stack fault.
             _Services[serviceType] = null;
             value = scValue(this, serviceType);
-            if (value != null && !value.GetType().IsCOMObject && !serviceType.IsAssignableFrom(value.GetType()))
+
+            // --- Check if the requested service either implements serviceType or derives from
+            // --- VsxService<,servieType>
+            if (value != null && !value.GetType().IsCOMObject && 
+              !serviceType.IsAssignableFrom(value.GetType()) &&
+              value.GetType().GenericParameterOfType(typeof(VsxService<,>), 1) != serviceType)
             {
               // --- Callback passed us a bad service. NULL it, rather than throwing an exception.
               // --- Callers here do not need to be prepared to handle bad callback implemetations.
@@ -873,18 +882,21 @@ namespace VSXtra
     {
       var handlerTypes =
         from commandGroup in asm.GetTypes()
-        where typeof (ICommandGroupProvider).IsAssignableFrom(commandGroup) &&
-          !Attribute.IsDefined(commandGroup, typeof(ManualBindAttribute))
+        where
+          // --- Derives from CommandGroup<TPackage> where TPackage is this type
+          commandGroup.GenericParameterOfType(typeof (CommandGroup<>), 0) == GetType() &&
+          !Attribute.IsDefined(commandGroup, typeof (ManualBindAttribute))
         from handler in commandGroup.GetNestedTypes()
-        where typeof (MenuCommandHandler).IsAssignableFrom(handler.BaseType) && 
-          !handler.IsAbstract &&
-          !Attribute.IsDefined(handler, typeof(ManualBindAttribute))
-        select handler;                         
-      handlerTypes.ForEach(t =>
-                             {
-                               var handler = Activator.CreateInstance(t) as MenuCommandHandler;
-                               if (handler != null) handler.Bind();
-                             });
+        where typeof (MenuCommandHandler).IsAssignableFrom(handler.BaseType) &&
+              !handler.IsAbstract &&
+              !Attribute.IsDefined(handler, typeof (ManualBindAttribute))
+        select handler;
+      handlerTypes.ForEach(
+        t =>
+          {
+            var handler = Activator.CreateInstance(t) as MenuCommandHandler;
+            if (handler != null) handler.Bind();
+          });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -926,6 +938,72 @@ namespace VSXtra
       {
         CultureInfo.CurrentCulture.ClearCachedData();
       }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Scans the types of the specified assembly and binds appropriate service types to this 
+    /// package.
+    /// </summary>
+    /// <param name="assembly">Assembly to scan for service types.</param>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void BindServiceTypes(Assembly assembly)
+    {
+      var serviceTypes =
+        from type in assembly.GetTypes()
+        where type.ImplementsGenericType(typeof(IVsxService<,>)) &&
+          !Attribute.IsDefined(type, typeof(ManualBindAttribute))
+        select type;
+      serviceTypes.ForEach(
+        t =>
+          {
+            var closedType =
+              t.GetImplementorOfGenericInterface(typeof (IVsxService<,>));
+            if (closedType.GetGenericArguments()[0] != GetType()) return;
+
+            // --- This service belongs to this package, we register it
+            var serviceType = closedType.GetGenericArguments()[1];
+            if (_AutoRegisteredServices.ContainsKey(serviceType)) return;
+
+            // --- This is the first service for this type to register
+            _AutoRegisteredServices.Add(serviceType, t);
+            var container = this as IServiceContainer;
+            bool promote = Attribute.IsDefined(t, typeof (PromoteAttribute));
+            if (Attribute.IsDefined(t, typeof (AutoCreateServiceAttribute)))
+            {
+              container.AddService(serviceType, Activator.CreateInstance(t), promote);
+            }
+            else
+            {
+              container.AddService(serviceType, CreateServiceInstance, promote);
+            }
+          }
+        );
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Override this method to bind services manually.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void RegisterServices()
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method is used for automatically registered service types as ServiceCreationCallback 
+    /// method.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private object CreateServiceInstance(IServiceContainer container, Type serviceType)
+    {
+      // --- We accept only this package's container
+      if (container != this) return null;
+      Type implType;
+      return _AutoRegisteredServices.TryGetValue(serviceType, out implType) 
+        ? Activator.CreateInstance(implType) 
+        : null;
     }
 
     #endregion
@@ -1001,6 +1079,9 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     private void InternalInitialize()
     {
+      BindServiceTypes(GetType().Assembly);
+      RegisterServices();
+
       // --- If we have services to proffer, do that now.
       if (_Services != null)
       {

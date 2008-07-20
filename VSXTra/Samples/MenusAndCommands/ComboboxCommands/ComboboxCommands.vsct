@@ -25,7 +25,7 @@
       <Combo guid="guidComboBoxCmdSet" id="cmdidMyDropDownCombo" priority="0x0010" type="DropDownCombo" defaultWidth="180" idCommandList="cmdidMyDropDownComboGetList">
         <Parent guid="guidComboBoxCmdSet" id="MyToolbarGroup"/>
         <CommandFlag>IconAndText</CommandFlag>
-        <!--<CommandFlag>CommandWellOnly</CommandFlag>-->
+        <CommandFlag>CommandWellOnly</CommandFlag>
         <Strings>
           <MenuText>DropDown Combo: </MenuText>
           <ButtonText>DropDown Combo</ButtonText>

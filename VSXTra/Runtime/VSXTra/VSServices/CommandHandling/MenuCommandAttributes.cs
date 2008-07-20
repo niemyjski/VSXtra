@@ -133,21 +133,6 @@ namespace VSXtra
 
   #endregion
 
-  #region ManualBindAttribute
-
-  // ================================================================================================
-  /// <summary>
-  /// This attribute signs that a menu command handler is to be bound with the 
-  /// OleMenuCommandService manually.
-  /// </summary>
-  // ================================================================================================
-  [AttributeUsage(AttributeTargets.Class)]
-  public sealed class ManualBindAttribute : Attribute
-  {
-  }
-
-  #endregion
-
   #region ActionAttribute
 
   // ================================================================================================

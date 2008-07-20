@@ -43,7 +43,6 @@ namespace DeepDiver.OutputWindowWithAutoLoad
   {
     protected override void Initialize()
     {
-      base.Initialize();
       Console.WriteLine();
       Console.WriteLine("This package demonstrates how to use the Output window.");
       

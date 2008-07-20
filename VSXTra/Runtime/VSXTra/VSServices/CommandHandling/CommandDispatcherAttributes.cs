@@ -88,40 +88,6 @@ namespace VSXtra
 
   #endregion
 
-  #region PromoteCommandAttribute
-
-  // ================================================================================================
-  /// <summary>
-  /// This attribute marks a command method to be promoted to the parent level.
-  /// </summary>
-  // ================================================================================================
-  [AttributeUsage(AttributeTargets.Method)]
-  public sealed class PromoteCommandAttribute : BoolAttribute
-  {
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Creates an attribute instance with its initial value.
-    /// </summary>
-    /// <param name="value">Intial attribute value.</param>
-    // --------------------------------------------------------------------------------------------
-    public PromoteCommandAttribute(bool value)
-      : base(value)
-    {
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Creates an attribute instance with "true" value.
-    /// </summary>
-    // --------------------------------------------------------------------------------------------
-    public PromoteCommandAttribute()
-      : base(true)
-    {
-    }
-  }
-
-  #endregion
-
   #region CommandMapAttribute
 
   // ================================================================================================

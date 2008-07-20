@@ -307,10 +307,10 @@ namespace VSXtra
         }
 
         // --- Check promote flag
-        var promoteAttr = attr as PromoteCommandAttribute;
+        var promoteAttr = attr as PromoteAttribute;
         if (promoteAttr != null)
         {
-          menuInfo.Promote = promoteAttr.Value;
+          menuInfo.Promote = true;
         }
 
         // --- Set command ID and handle the defaultvalue of the command GUID

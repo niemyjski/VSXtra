@@ -40,7 +40,7 @@ namespace VSXtra
       }
 
       // --- Then make sure that it derives from DialogPage.
-      if (!pageType.DerivesFromGenericTypeType(typeof(DialogPage<,>)))
+      if (!pageType.DerivesFromGenericType(typeof(DialogPage<,>)))
       {
         throw new ArgumentException(string.Format(Resources.Culture, Resources.Package_PageNotDialogPage, pageType.FullName));
       }

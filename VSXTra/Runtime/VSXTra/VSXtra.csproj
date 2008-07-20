@@ -89,6 +89,7 @@
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
     <Compile Include="VSServices\ActivityLog.cs" />
+    <Compile Include="VSServices\CommonAttributes.cs" />
     <Compile Include="VSServices\CommandHandling\ComboCommandHandler.cs" />
     <Compile Include="VSServices\CommandHandling\CommandDispatcher.cs" />
     <Compile Include="VSServices\CommandHandling\CommandDispatcherAttributes.cs" />
@@ -106,6 +107,8 @@
     <Compile Include="VSServices\OutputWindow\OutputWindow.cs" />
     <Compile Include="VSServices\OutputWindow\OutputWindowPane.cs" />
     <Compile Include="VSServices\SelectionTracking\CustomTypeDescriptorBase.cs" />
+    <Compile Include="VSServices\ServiceHandling\ServiceAttributes.cs" />
+    <Compile Include="VSServices\ServiceHandling\VsxService.cs" />
     <Compile Include="VSServices\VsMessageBox.cs" />
     <Compile Include="VSServices\VsUIShell.cs" />
     <Compile Include="VSServices\WindowPanes\ToolWindowAttributes.cs" />

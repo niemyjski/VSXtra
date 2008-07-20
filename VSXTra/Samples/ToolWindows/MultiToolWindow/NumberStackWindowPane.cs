@@ -27,7 +27,7 @@ namespace DeepDiver.MultiToolWindow
     /// <param name="command">Command object to set the status for.</param>
     // --------------------------------------------------------------------------------------------
     [CommandStatusMethod]
-    [PromoteCommand]
+    [Promote]
     [CommandId(CmdIDs.cmdidAdd1)]
     [CommandId(CmdIDs.cmdidSubtract1)]
     [CommandId(CmdIDs.cmdidMultiply1)]
