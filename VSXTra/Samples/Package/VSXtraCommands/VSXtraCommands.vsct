@@ -268,7 +268,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Close All</ButtonText>
+          <ButtonText>(x) Close All</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidVSXtraCommandSet" id="cmdidCopyPathCommand" priority="0x0100" type="Button">
@@ -515,79 +515,79 @@
     </GuidSymbol>
 
     <!-- VSXtra bitmap symbols -->
-    <GuidSymbol name="guidOpenVSCommandPromptCommandBitmap" value="{8869332D-04E4-460A-B056-6BD8A5B61EB9}">
+    <GuidSymbol name="guidOpenVSCommandPromptCommandBitmap" value="{AAD9A4A7-9F83-4f7e-88ED-128B9DB0B1D9}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidTransformTemplatesCommandBitmap" value="{B052A091-6D85-4E8A-BED7-DB616F783596}">
+    <GuidSymbol name="guidTransformTemplatesCommandBitmap" value="{0194F0E5-AAB2-4451-976C-46E792626CE7}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidCollapseProjectsCommandBitmap" value="{08FB9E92-439E-478A-A559-ADFD40BD18B7}">
+    <GuidSymbol name="guidCollapseProjectsCommandBitmap" value="{72AF8069-9807-40ab-92BB-0B8753C66C9F}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidOpenContainingFolderCommandBitmap" value="{2C996D4A-9BE7-48E4-B032-C06B68C6D16E}">
+    <GuidSymbol name="guidOpenContainingFolderCommandBitmap" value="{CDF77115-2C48-4045-968D-CFCF7C87E63A}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidExtractToConstantCommandBitmap" value="{12FA778B-C1F9-4AF0-919B-E98B8D4E338B}">
+    <GuidSymbol name="guidExtractToConstantCommandBitmap" value="{E1A2C06F-0FD6-4ee7-AD07-FFF6FA7A13C4}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidEditProjectCommandBitmap" value="{07741E8C-C8F4-4DBF-8F82-D28CDFEF9BC1}">
+    <GuidSymbol name="guidEditProjectCommandBitmap" value="{715558B0-3936-4879-BB54-05AE1E8F70CF}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidPasteReferenceCommandBitmap" value="{EC78AB43-C81D-463C-9D3A-5E66D799B48B}">
+    <GuidSymbol name="guidPasteReferenceCommandBitmap" value="{7BB3CCFE-8816-4491-8A9B-F616FE2FFB98}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidCopyReferenceCommandBitmap" value="{221A65EB-782B-42AA-B4B5-C494CD01EA1C}">
+    <GuidSymbol name="guidCopyReferenceCommandBitmap" value="{F9804514-DD92-4c5c-B415-30891223B8C6}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidCopyAsProjectReferenceCommandBitmap" value="{7D8BE582-B2EB-40de-9FC3-148D4E551EA6}">
+    <GuidSymbol name="guidCopyAsProjectReferenceCommandBitmap" value="{53075856-C9EE-4c85-B849-0EF349C56B63}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidClearRecentFileListCommandBitmap" value="{2257108B-4FA4-482F-AA21-85A38811AF74}">
+    <GuidSymbol name="guidClearRecentFileListCommandBitmap" value="{50D2E430-7A88-4d90-B30F-6A6CBE03F084}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidClearRecentProjectListCommandBitmap" value="{0B023836-159A-4000-A5F4-EC37AF9F0538}">
+    <GuidSymbol name="guidClearRecentProjectListCommandBitmap" value="{7DBAB62B-7D8B-443b-8DC3-E278707492FB}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidCopyReferencesCommandBitmap" value="{F55ABF30-F5D5-403E-B93D-5459B3F35155}">
+    <GuidSymbol name="guidCopyReferencesCommandBitmap" value="{634BE607-A84F-4b13-95E4-00A1231F0F6D}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidReloadProjectsCommandBitmap" value="{16CE2B07-5434-4CDE-97E8-2C1D0EA2511F}">
+    <GuidSymbol name="guidReloadProjectsCommandBitmap" value="{F5440AE5-6217-49f6-963F-F2FA7970DF0A}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidUnloadProjectsCommandBitmap" value="{1B121FAA-8568-4FB5-85EE-8C8B58029CB3}">
+    <GuidSymbol name="guidUnloadProjectsCommandBitmap" value="{2F3B74E1-2202-4a09-908A-456AC0D2D835}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidRemoveSortUsingsCommandBitmap" value="{244A7017-0796-44D1-BF50-B50B9761577B}">
+    <GuidSymbol name="guidRemoveSortUsingsCommandBitmap" value="{08CD76F5-0367-404d-8AB8-63A2110F211E}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidCopyClassCommandBitmap" value="{A3A2497E-3074-4A07-9A0C-3BEC8DFE5628}">
+    <GuidSymbol name="guidCopyClassCommandBitmap" value="{88A07FA2-66FF-4ada-B336-3FD67685FD01}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidPasteClassCommandBitmap" value="{E4E20208-C171-42E6-9AFB-DF5B758B9A29}">
+    <GuidSymbol name="guidPasteClassCommandBitmap" value="{A8E58DED-6B15-4cce-BB10-F4B0BE1A6E92}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidCloseAllDocumentsCommandBitmap" value="{BA0ABC4F-4E8B-4459-B9F9-445D53A348CE}">
+    <GuidSymbol name="guidCloseAllDocumentsCommandBitmap" value="{FF924DCE-31C4-4571-A9BE-96A64256F7CD}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidCopyPathCommandBitmap" value="{841DCDEE-63A0-4D75-A489-B5B7F40D5C0F}">
+    <GuidSymbol name="guidCopyPathCommandBitmap" value="{E04EA952-83FC-463a-A674-294CFD6AFD7C}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidEmailCodeSnippetCommandBitmap" value="{1EFE93B0-6D59-4A08-A887-955A52F63A88}">
+    <GuidSymbol name="guidEmailCodeSnippetCommandBitmap" value="{7C70CB72-3285-41d2-9D20-AD7D6891D8A5}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidInsertGuidAttributeCommandBitmap" value="{5AB16CB2-B3E4-49CE-8E6D-0146B260ECAC}">
+    <GuidSymbol name="guidInsertGuidAttributeCommandBitmap" value="{5A427976-4D60-447f-8A02-F71A39B4C54C}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidUndoCloseCommandBitmap" value="{281ECFFD-6A4F-47C8-90DC-8D178C841E72}">
+    <GuidSymbol name="guidUndoCloseCommandBitmap" value="{9B4E953F-C0AE-4de5-8658-2D04080AB0E9}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidClearAllPanesCommandBitmap" value="{A5C5DE6C-2190-4C36-BF71-216124C6F3AC}">
+    <GuidSymbol name="guidClearAllPanesCommandBitmap" value="{C8899AB4-EF66-470c-80B7-0F9FC95A2AC8}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidShowAllFilesCommandBitmap" value="{5D54AAE4-AEBE-49A1-B6C4-3029F0942298}">
+    <GuidSymbol name="guidShowAllFilesCommandBitmap" value="{D2FAC6A5-F2CA-401f-AE5C-5254FFBEDA78}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
-    <GuidSymbol name="guidShowUndoCloseToolWindowCommandBitmap" value="{E41A3D70-5EFC-4F17-9047-B2B423D201AD}">
+    <GuidSymbol name="guidShowUndoCloseToolWindowCommandBitmap" value="{66304404-8CAF-43d2-9511-4C40EC031B72}">
       <IDSymbol name="bmpPic1" value="1" />
     </GuidSymbol>
   </Symbols>

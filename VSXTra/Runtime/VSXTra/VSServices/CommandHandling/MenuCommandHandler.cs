@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using VSXtra.Properties;
@@ -132,6 +133,26 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the Guid part of the CommandID belonging to the menu command.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public Guid Guid
+    {
+      get { return _CommandId == null ? Guid.Empty : _CommandId.Guid; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the Id part of the CommandID belonging to the menu command.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public int Id
+    {
+      get { return _CommandId == null ? 0 : _CommandId.ID; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Gets the CommandID belonging to the menu command.
     /// </summary>
     // --------------------------------------------------------------------------------------------
@@ -197,6 +218,36 @@ namespace VSXtra
       MenuCommandHandler result;
       _Handlers.TryGetValue(typeof (THandler), out result);
       return result as THandler;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Retrieves an iterator for the registered command menu handlers.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static IEnumerable<Type> GetRegisteredHandlerTypes<TPackage>()
+      where TPackage: PackageBase
+    {
+      return
+        from type in _Handlers.Keys
+        where type.BaseType.GenericParameterOfType(typeof (CommandGroup<>), 0) == 
+          typeof (TPackage)
+        select type;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Retrieves an iterator for the registered command menu handlers.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static IEnumerable<MenuCommandHandler> GetRegisteredHandlerInstances<TPackage>()
+      where TPackage : PackageBase
+    {
+      return
+        from handler in _Handlers.Values
+        where handler.GetType().DeclaringType.GenericParameterOfType(typeof(CommandGroup<>), 0) ==
+          typeof(TPackage)
+        select handler;
     }
 
     #endregion

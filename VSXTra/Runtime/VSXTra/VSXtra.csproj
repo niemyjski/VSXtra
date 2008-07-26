@@ -37,6 +37,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PublicAssemblies\EnvDTE.dll</HintPath>
+    </Reference>
+    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PublicAssemblies\EnvDTE90.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.9.0, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -88,6 +97,7 @@
     <Compile Include="Utility\StringResolver.cs" />
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
+    <Compile Include="VSCommands\VsCommands.cs" />
     <Compile Include="VSServices\ActivityLog.cs" />
     <Compile Include="VSServices\CommonAttributes.cs" />
     <Compile Include="VSServices\CommandHandling\ComboCommandHandler.cs" />
@@ -109,6 +119,7 @@
     <Compile Include="VSServices\SelectionTracking\CustomTypeDescriptorBase.cs" />
     <Compile Include="VSServices\ServiceHandling\ServiceAttributes.cs" />
     <Compile Include="VSServices\ServiceHandling\VsxService.cs" />
+    <Compile Include="VSServices\VsIde.cs" />
     <Compile Include="VSServices\VsMessageBox.cs" />
     <Compile Include="VSServices\VsUIShell.cs" />
     <Compile Include="VSServices\WindowPanes\ToolWindowAttributes.cs" />

@@ -17,7 +17,7 @@ namespace DeepDiver.ServicesReference
   // ================================================================================================
   [AutoCreateService]
   public class MyLocalService : VsxService<ServicesPackage, SMyLocalService>,
-    IMyLocalService, SMyLocalService
+    IMyLocalService
   {
     public int LocalServiceFunction()
     {

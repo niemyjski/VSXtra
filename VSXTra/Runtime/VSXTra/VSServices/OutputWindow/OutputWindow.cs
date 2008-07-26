@@ -4,6 +4,8 @@
 // Created: 2008.06.29, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -76,6 +78,25 @@ namespace VSXtra
     public static OutputWindowPane Silent
     {
       get { return GetPane(typeof(SilentPane)); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Iterates through the current collection of output window panes.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static IEnumerable<OutputWindowPane> OutputWindowPanes
+    {
+      get
+      {
+        foreach(EnvDTE.OutputWindowPane pane in VsIde.ToolWindows.OutputWindow.OutputWindowPanes)
+        {
+          IVsOutputWindowPane outPane;
+          Guid guid = new Guid(pane.Guid);
+          OutputWindowInstance.GetPane(ref guid, out outPane);
+          yield return new OutputWindowPane(null, outPane);
+        }
+      }
     }
 
     // --------------------------------------------------------------------------------------------
