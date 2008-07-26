@@ -8,7 +8,6 @@ using System.Windows.Forms;
 
 namespace VSXtra
 {
-
   #region WriteMessageAction
 
   // ================================================================================================
@@ -170,7 +169,7 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Cretaes an action to show up the specified instance of a window with the specified type.
+    /// Creates an action to show up the specified instance of a window with the specified type.
     /// </summary>
     /// <param name="type">Typeof the tool window.</param>
     /// <param name="instanceId">Tool window instance ID.</param>
@@ -190,6 +189,57 @@ namespace VSXtra
     public override void ExecuteAction(MenuCommandHandler command)
     {
       command.Package.ShowToolWindow(_Type, _InstanceId);
+    }
+  }
+
+  #endregion
+
+  #region ExecuteCommandAction
+
+  // ================================================================================================
+  /// <summary>
+  /// This class implements a menu action that puts a message to the output window.
+  /// </summary>
+  // ================================================================================================
+  public sealed class ExecuteCommandActionAttribute : ActionAttribute
+  {
+    private readonly string _CommandName;
+    private readonly string _Args;
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates an action with the specified command name and arguments.
+    /// </summary>
+    /// <param name="commandName">Name of command to execute.</param>
+    /// <param name="args">Optional command arguments</param>
+    // --------------------------------------------------------------------------------------------
+    public ExecuteCommandActionAttribute(string commandName, string args)
+    {
+      _CommandName = commandName;
+      _Args = args;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates an action with the specified command name and empty arguments.
+    /// </summary>
+    /// <param name="commandName">Name of command to execute.</param>
+    // --------------------------------------------------------------------------------------------
+    public ExecuteCommandActionAttribute(string commandName)
+    {
+      _CommandName = commandName;
+      _Args = string.Empty;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Puts the message to the current pane of the output window.
+    /// </summary>
+    /// <param name="command">Menu command handler instance.</param>
+    // --------------------------------------------------------------------------------------------
+    public override void ExecuteAction(MenuCommandHandler command)
+    {
+      VsIde.ExecuteMethod(_CommandName, _Args);
     }
   }
 

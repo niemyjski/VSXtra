@@ -461,14 +461,19 @@ namespace VSXtra
       return (TInterface)GetGlobalService(typeof(SInterface));
     }
 
-    /// <include file='doc\Package.uex' path='docs/doc[@for="Package.GetDialogPage"]' />
-    /// <devdoc>
-    ///     This method returns the requested dialog page.  Dialog
-    ///     pages are cached so they can keep a single instance
-    ///     of their state.  This method allows a deriving class
-    ///     to get a cached dialog page.  The object will be 
-    ///     dynamically created if it is not in the cache.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the dialog page with the specified type.
+    /// </summary>
+    /// <returns>
+    /// The dialog page of the specified type, if the package has that page; otherwise, null.
+    /// </returns>
+    /// <remarks>
+    /// Dialog pages are cached so they can keep a single instance of their state. This method 
+    /// allows a deriving class to get a cached dialog page. The object will be dynamically 
+    /// created if it is not in the cache.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     protected IDialogPageBehavior GetDialogPage(Type dialogPageType)
     {
       // --- Check the current package state and input parameters
@@ -504,6 +509,21 @@ namespace VSXtra
       _PagesAndProfiles.Add(p);
 
       return p;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the dialog page with the specified type.
+    /// </summary>
+    /// <typeparam name="TPage">Type of dialog page to request from this package.</typeparam>
+    /// <returns>
+    /// The dialog page of the specified type, if the package has that page; otherwise, null.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    public TPage GetDialogPage<TPage>()
+      where TPage : class, IDialogPageBehavior
+    {
+      return GetDialogPage(typeof (TPage)) as TPage;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -952,6 +972,7 @@ namespace VSXtra
       var serviceTypes =
         from type in assembly.GetTypes()
         where type.ImplementsGenericType(typeof(IVsxService<,>)) &&
+          !type.IsAbstract &&
           !Attribute.IsDefined(type, typeof(ManualBindAttribute))
         select type;
       serviceTypes.ForEach(

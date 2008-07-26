@@ -42,7 +42,7 @@ namespace VSXtra
     internal OutputWindowPane(OutputPaneDefinition paneDef, IVsOutputWindowPane pane)
     {
       _PaneDefinition = paneDef;
-      _Name = paneDef.Name;
+      if (paneDef != null) _Name = paneDef.Name;
       _Pane = pane;
     }
 
@@ -80,7 +80,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     public bool IsVirtual
     {
-      get { return _PaneDefinition == null || _PaneDefinition.IsSilent || _Pane == null; }
+      get { return _PaneDefinition != null && _PaneDefinition.IsSilent || _Pane == null; }
     }
 
     #endregion 
