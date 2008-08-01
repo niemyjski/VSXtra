@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+  <Commands package="guidOutputVsRegistryPkg">
+    <Groups>
+      <Group guid="guidOutputVsRegistryCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      </Group>
+    </Groups>
+    <Buttons>
+      <Button guid="guidOutputVsRegistryCmdSet" id="cmdidDisplayRegistryValues" priority="0x0100" type="Button">
+        <Parent guid="guidOutputVsRegistryCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <CommandName>cmdidDisplayRegistryValues</CommandName>
+          <ButtonText>Display Local Registry</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
+    </Bitmaps>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidOutputVsRegistryPkg" value="{9a43d7ee-e04f-4222-a9ed-a41b7adc52e7}" />
+    <GuidSymbol name="guidOutputVsRegistryCmdSet" value="{b91d4400-91ed-4e6f-939b-8e44cc5d5a68}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidDisplayRegistryValues" value="0x0100" />
+    </GuidSymbol>
+    
+    <GuidSymbol name="guidImages" value="{e511ac92-bcdb-43c6-b69b-59e831ee0034}" >
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

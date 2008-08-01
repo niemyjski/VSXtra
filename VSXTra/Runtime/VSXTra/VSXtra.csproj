@@ -97,7 +97,8 @@
     <Compile Include="Utility\StringResolver.cs" />
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
-    <Compile Include="VSCommands\VsCommands.cs" />
+    <Compile Include="VSCommands\FileCommands.cs" />
+    <Compile Include="VSCommands\WindowCommands.cs" />
     <Compile Include="VSServices\ActivityLog.cs" />
     <Compile Include="VSServices\CommonAttributes.cs" />
     <Compile Include="VSServices\CommandHandling\ComboCommandHandler.cs" />
@@ -116,11 +117,14 @@
     <Compile Include="VSServices\OutputWindow\OutputPaneDefinition.cs" />
     <Compile Include="VSServices\OutputWindow\OutputWindow.cs" />
     <Compile Include="VSServices\OutputWindow\OutputWindowPane.cs" />
+    <Compile Include="VSServices\Registry\PackageEntry.cs" />
+    <Compile Include="VSServices\Registry\RegistryEntry.cs" />
     <Compile Include="VSServices\SelectionTracking\CustomTypeDescriptorBase.cs" />
     <Compile Include="VSServices\ServiceHandling\ServiceAttributes.cs" />
     <Compile Include="VSServices\ServiceHandling\VsxService.cs" />
     <Compile Include="VSServices\VsIde.cs" />
     <Compile Include="VSServices\VsMessageBox.cs" />
+    <Compile Include="VSServices\Registry\VsRegistry.cs" />
     <Compile Include="VSServices\VsUIShell.cs" />
     <Compile Include="VSServices\WindowPanes\ToolWindowAttributes.cs" />
     <Compile Include="VSServices\WindowPanes\ToolWindowPane.cs" />

@@ -35,8 +35,8 @@ namespace DeepDiver.VSXtraCommands
       var commandService = this.GetService<SCommandManagerService, ICommandManagerService>();
       if (commandService != null)
       {
-        foreach (
-          var handler in MenuCommandHandler.GetRegisteredHandlerInstances<VSXtraCommandsPackage>())
+        foreach (var handler in MenuCommandHandler.
+          GetRegisteredHandlerInstances<VSXtraCommandsPackage>())
         {
           commandService.RegisterCommand(handler);
         }
