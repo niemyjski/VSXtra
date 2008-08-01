@@ -487,6 +487,10 @@
       <IDSymbol name="grpidShowUndoCloseToolWindowCommandGroup" value="0x4FE5" />
 
       <!-- Command identifiers -->
+      <IDSymbol name="cmdidClearAllPanesCommand" value="0x2000" />
+      <IDSymbol name="cmdidCloseAllDocumentsCommand" value="0x2001" />
+      <IDSymbol name="cmdidClearRecentFileListCommand" value="0x2002" />
+      <IDSymbol name="cmdidClearRecentProjectListCommand" value="0x2003" />
       <IDSymbol name="cmdidOpenVSCommandPromptCommand" value="0x731C" />
       <IDSymbol name="cmdidTransformTemplatesCommand" value="0x19EF" />
       <IDSymbol name="cmdidCollapseProjectsCommand" value="0x2910" />
@@ -496,8 +500,6 @@
       <IDSymbol name="cmdidPasteReferenceCommand" value="0x7C09" />
       <IDSymbol name="cmdidCopyReferenceCommand" value="0x08E2" />
       <IDSymbol name="cmdidCopyAsProjectReferenceCommand" value="0x0810" />
-      <IDSymbol name="cmdidClearRecentFileListCommand" value="0x0F7D" />
-      <IDSymbol name="cmdidClearRecentProjectListCommand" value="0x0F70" />
       <IDSymbol name="cmdidCopyReferencesCommand" value="0x2673" />
       <IDSymbol name="cmdidUndoCloseCommand" value="0x667D" />
       <IDSymbol name="cmdidReloadProjectsCommand" value="0x5325" />
@@ -505,11 +507,9 @@
       <IDSymbol name="cmdidRemoveSortUsingsCommand" value="0x0DBE" />
       <IDSymbol name="cmdidCopyClassCommand" value="0x0EA8" />
       <IDSymbol name="cmdidPasteClassCommand" value="0x201A" />
-      <IDSymbol name="cmdidCloseAllDocumentsCommand" value="0x098F" />
       <IDSymbol name="cmdidCopyPathCommand" value="0x5A09" />
       <IDSymbol name="cmdidEmailCodeSnippetCommand" value="0x3DAC" />
       <IDSymbol name="cmdidInsertGuidAttributeCommand" value="0x265A" />
-      <IDSymbol name="cmdidClearAllPanesCommand" value="0x2E52" />
       <IDSymbol name="cmdidShowAllFilesCommand" value="0x2A19" />
       <IDSymbol name="cmdidShowUndoCloseToolWindowCommand" value="0x4213" />
     </GuidSymbol>

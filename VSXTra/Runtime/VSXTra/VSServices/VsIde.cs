@@ -3,6 +3,8 @@
 //
 // Created: 2008.07.26, by Istvan Novak (DeepDiver)
 // ================================================================================================
+using System;
+using System.IO;
 using EnvDTE;
 using EnvDTE80;
 
@@ -14,7 +16,7 @@ namespace VSXtra
   /// instance.
   /// </summary>
   // ================================================================================================
-  public static class VsIde
+  public static partial class VsIde
   {
     #region Private fields
 
@@ -79,6 +81,38 @@ namespace VSXtra
     public static void ExecuteMethod(string commandName, string commandArgs)
     {
       DteInstance.ExecuteCommand(commandName, commandArgs);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Restarts Visual Studio.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static void RestartVS()
+    {
+      var vs = new System.Diagnostics.Process();
+      var args = Environment.GetCommandLineArgs();
+
+      vs.StartInfo.FileName = Path.GetFullPath(args[0]);
+      vs.StartInfo.Arguments = string.Join(" ", args, 1, args.Length - 1);
+      vs.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
+      vs.Start();
+
+      DteInstance.Quit();
+    }
+
+    #endregion
+
+    #region Private methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a command name from the specified prefix and command suffix.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private static string CreateCommandName(string prefix, string command)
+    {
+      return String.Format("{0}.{1}", prefix, command);
     }
 
     #endregion

@@ -13,7 +13,7 @@ namespace DeepDiver.VSXtraCommands
   {
     // ================================================================================================
     /// <summary>
-    /// This class implements the ClearAllPanes command.
+    /// This class clears all the panes of Output window.
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.ClearAllPanesCommand)]

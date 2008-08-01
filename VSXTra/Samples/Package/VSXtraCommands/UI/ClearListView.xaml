@@ -1,0 +1,23 @@
+﻿<Window x:Class="DeepDiver.VSXtraCommands.ClearListView" Name="ClearList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Clear List" Height="285" Width="507" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+    xmlns:l="clr-namespace:DeepDiver.VSXtraCommands"
+    >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="CellTemplate">
+                <CheckBox Click="chkEntry_Click" Name="chkEntry" IsChecked="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ListViewItem}},Path=IsSelected}" Content="{Binding}"/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Canvas Height="241" Width="484">
+        <Button Style="{DynamicResource XButton}" Height="23" Name="btnClickAndRestart" Command="l:ClearListView.DoClearAndRestart" Canvas.Left="281" Canvas.Top="204" Width="110">Clear and Restart</Button>
+        <Button Style="{DynamicResource XButton}" Height="23" Name="button2" Command="l:ClearListView.DoCancel" Width="75" IsCancel="False" Canvas.Left="400" Canvas.Top="204">Cancel</Button>
+        <ListView SelectionMode="Multiple" ItemsSource="{Binding ListEntries}" Name="lstEntries" ItemTemplate="{StaticResource CellTemplate}" Height="161" Width="465" Canvas.Left="10" Canvas.Top="32" />
+        <CheckBox Height="16" Name="chkSelectAll" Width="120" Click="chkSelectAll_Click" Canvas.Left="10" Canvas.Top="10">Select All</CheckBox>
+    </Canvas>
+</Window>

@@ -6,8 +6,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeepDiver.VSXtraCommands</RootNamespace>
-    <AssemblyName>VSXtraCommands</AssemblyName>
+    <RootNamespace>DeepDiver.OutputVsRegistry</RootNamespace>
+    <AssemblyName>OutputVsRegistry</AssemblyName>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -15,7 +15,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <ProjectGuid>{DA794D49-AFB1-490E-81B9-123DE477FC92}</ProjectGuid>
+    <ProjectGuid>{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,12 +42,6 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.9.0" />
-    <Reference Include="PresentationCore">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="PresentationFramework">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -57,62 +51,20 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\ClearAllPanes.cs" />
-    <Compile Include="Commands\ClearRecentLists.cs" />
-    <Compile Include="Commands\CloseAllDocuments.cs" />
-    <Compile Include="Commands\CommandGroup.cs" />
-    <Compile Include="Commands\CommandHandlerBase.cs" />
+    <Compile Include="CommandHandlers.cs" />
     <Compile Include="Guids.cs" />
-    <Compile Include="OptionsPages\CommandsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="OptionsPages\CommandsControl.designer.cs">
-      <DependentUpon>CommandsControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OptionsPages\CommandsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="OptionsPages\DisabledCommandsDictionaryConverter.cs" />
-    <Compile Include="OptionsPages\CommandRowItem.cs" />
-    <Compile Include="OptionsPages\GeneralControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="OptionsPages\GeneralControl.designer.cs">
-      <DependentUpon>GeneralControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OptionsPages\GeneralPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Services\CommandManagerService.cs" />
-    <Compile Include="Services\ICommandManagerService.cs" />
-    <Compile Include="Services\SCommandManagerService.cs" />
-    <Compile Include="UI\ClearListModel.cs" />
-    <Compile Include="UI\ClearListView.xaml.cs">
-      <DependentUpon>ClearListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="VSXtraCommandsPackage.cs" />
+    <Compile Include="OutputVsRegistryPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="OptionsPages\CommandsControl.resx">
-      <DependentUpon>CommandsControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OptionsPages\GeneralControl.resx">
-      <DependentUpon>GeneralControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -124,7 +76,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="VSXtraCommands.vsct">
+    <VSCTCompile Include="OutputVsRegistry.vsct">
       <ResourceName>1000</ResourceName>
     </VSCTCompile>
   </ItemGroup>
@@ -133,46 +85,13 @@
     <None Include="Resources\Images_32bit.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\ClearAllPanes.bmp" />
-    <Content Include="Resources\ClearRecentList.bmp" />
-    <Content Include="Resources\CollapseProjects.bmp" />
-    <Content Include="Resources\Command.bmp" />
-    <Content Include="Resources\Copy.bmp" />
-    <Content Include="Resources\CreateGuid.bmp" />
-    <Content Include="Resources\EditProject.bmp" />
-    <Content Include="Resources\EmailCodeSnippet.bmp" />
-    <Content Include="Resources\Empty16.bmp" />
-    <Content Include="Resources\ExtractConstant.bmp" />
-    <Content Include="Resources\OpenCmd.bmp" />
-    <Content Include="Resources\OpenContainingFolderFolder.bmp" />
     <Content Include="Resources\Package.ico" />
-    <Content Include="Resources\Paste.bmp" />
-    <Content Include="Resources\RemoveReferences.bmp" />
-    <Content Include="Resources\RemoveSort.bmp" />
-    <Content Include="Resources\ShowAllFiles.bmp" />
-    <Content Include="Resources\TransformTemplates.bmp" />
-    <Content Include="Resources\UndoClose.bmp" />
-    <Content Include="Resources\UndoCloseTW.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Runtime\VSXTra\VSXtra.csproj">
       <Project>{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}</Project>
       <Name>VSXtra</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="UI\ClearListView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\Styles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\Templates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <PropertyGroup>
     <!--
