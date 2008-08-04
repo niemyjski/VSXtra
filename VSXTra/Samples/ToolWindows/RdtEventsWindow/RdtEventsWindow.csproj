@@ -6,8 +6,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeepDiver.PersistedToolWindow</RootNamespace>
-    <AssemblyName>PersistedToolWindow</AssemblyName>
+    <RootNamespace>DeepDiver.RdtEventsWindow</RootNamespace>
+    <AssemblyName>RdtEventsWindow</AssemblyName>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -15,7 +15,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <ProjectGuid>{398B3601-9835-4B22-B515-FBE62A2573F2}</ProjectGuid>
+    <ProjectGuid>{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,28 +53,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandGroup.cs" />
     <Compile Include="Guids.cs" />
-    <Compile Include="PersistedWindowControl.cs">
+    <Compile Include="RdtEventControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="PersistedWindowControl.designer.cs">
-      <DependentUpon>PersistedWindowControl.cs</DependentUpon>
+    <Compile Include="RdtEventControl.designer.cs">
+      <DependentUpon>RdtEventControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="PersistedWindowPane.cs" />
+    <Compile Include="RdtEventsCommandGroup.cs" />
+    <Compile Include="RdtEventsOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RdtEventsWindowPane.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="PersistedToolWindowPackage.cs" />
+    <Compile Include="RdtEventsWindowPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
-    <Compile Include="SelectionProperties.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PersistedWindowControl.resx">
-      <DependentUpon>PersistedWindowControl.cs</DependentUpon>
+    <EmbeddedResource Include="RdtEventControl.resx">
+      <DependentUpon>RdtEventControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
@@ -88,14 +90,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="PersistedToolWindow.vsct">
+    <VSCTCompile Include="RdtEventsWindow.vsct">
       <ResourceName>1000</ResourceName>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
     <None Include="Resources\Images_32bit.bmp" />
-    <None Include="Resources\Images_24bit.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Package.ico" />

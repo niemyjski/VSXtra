@@ -113,6 +113,9 @@ namespace VSXtra
     /// <summary>User control representing the UI of the window pane.</summary>
     private readonly TUIControl _UIControl;
 
+    /// <summary>Object responsible for the selection tracking.</summary>
+    private SelectionTracker _SelectionTracker;
+
     #endregion
 
     #region Lifecycle methods
@@ -162,6 +165,11 @@ namespace VSXtra
     public IWin32Window Window
     {
       get { return _UIControl; }
+    }
+
+    public SelectionTracker SelectionTracker
+    {
+      get { return _SelectionTracker; }
     }
 
     #endregion
@@ -366,9 +374,25 @@ namespace VSXtra
       // --- We can initialize the window pane as soon as it gets sited.
       if (serviceProvider != null)
       {
+        InternalInit();
         Initialize();
       }
       return NativeMethods.S_OK;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Executes the internal initialization steps.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void InternalInit()
+    {
+      _SelectionTracker = new SelectionTracker(this);
+      var container = CreateSelectionContainer();
+      if (container != null)
+      {
+        _SelectionTracker.Container = container;
+      }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -791,6 +815,19 @@ namespace VSXtra
       var c = Control.FromChildHandle(m.HWnd);
       return c != null && 
         c.PreProcessControlMessage(ref m) == PreProcessControlState.MessageProcessed;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Override this method to change how the selection container of the window is created.
+    /// </summary>
+    /// <returns>
+    /// The selection container if the method creates it; otherwise, null.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    protected virtual SelectionContainer CreateSelectionContainer()
+    {
+      return null;
     }
 
     #endregion

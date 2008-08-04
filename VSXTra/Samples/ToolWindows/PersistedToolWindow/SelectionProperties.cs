@@ -20,7 +20,7 @@ namespace DeepDiver.PersistedToolWindow
 	/// we overload is the ComponentName.
   /// </remarks>
   // ================================================================================================
-  internal class SelectionProperties : CustomTypeDescriptorBase
+  public class SelectionProperties : CustomTypeDescriptorBase
 	{
     private Guid _PersistanceGuid = Guid.Empty;
 		private int _Index = -1;

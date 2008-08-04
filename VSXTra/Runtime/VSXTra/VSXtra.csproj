@@ -89,6 +89,7 @@
     <Compile Include="Utility\Attributes\TypeAttribute.cs" />
     <Compile Include="Utility\ComHelper.cs" />
     <Compile Include="Utility\Diagnostics\VsDebug.cs" />
+    <Compile Include="Utility\EventHooker.cs" />
     <Compile Include="Utility\GuidTypes\UIContext.cs" />
     <Compile Include="Utility\GuidTypes\WindowKind.cs" />
     <Compile Include="Utility\CommonExtensions.cs" />
@@ -119,7 +120,13 @@
     <Compile Include="VSServices\OutputWindow\OutputWindowPane.cs" />
     <Compile Include="VSServices\Registry\PackageEntry.cs" />
     <Compile Include="VSServices\Registry\RegistryEntry.cs" />
+    <Compile Include="VSServices\RunningDocumentTable\RdtEvents.cs" />
+    <Compile Include="VSServices\RunningDocumentTable\RdtFlags.cs" />
+    <Compile Include="VSServices\RunningDocumentTable\RunningDocumentInfo.cs" />
+    <Compile Include="VSServices\RunningDocumentTable\RunningDocumentTable.cs" />
     <Compile Include="VSServices\SelectionTracking\CustomTypeDescriptorBase.cs" />
+    <Compile Include="VSServices\SelectionTracking\SelectionTracker.cs" />
+    <Compile Include="VSServices\SelectionTracking\SolutionEvents.cs" />
     <Compile Include="VSServices\ServiceHandling\ServiceAttributes.cs" />
     <Compile Include="VSServices\ServiceHandling\VsxService.cs" />
     <Compile Include="VSServices\VsIde.cs" />

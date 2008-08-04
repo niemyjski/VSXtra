@@ -7,8 +7,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra;
 
 namespace DeepDiver.PersistedToolWindow
@@ -23,8 +21,6 @@ namespace DeepDiver.PersistedToolWindow
   public partial class PersistedWindowControl : UserControl
   {
     private List<WindowFrame> _ToolWindowList;
-    private ITrackSelection _TrackSelection;
-    private readonly SelectionContainer _SelectionContainer = new SelectionContainer();
     private bool _IgnoreSelectedObjectsChanges;
 
     // --------------------------------------------------------------------------------------------
@@ -39,26 +35,10 @@ namespace DeepDiver.PersistedToolWindow
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Track selection service for the tool window. This should be set by the tool window pane 
-    /// as soon as the tool window is created.
+    /// Gets or sets the selection tracker object.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    internal ITrackSelection TrackSelection
-    {
-      get { return _TrackSelection; }
-      set
-      {
-        if (value == null)
-          throw new ArgumentNullException("value");
-        _TrackSelection = value;
-        // --- Inititalize with an empty selection. Failure to do this would result in our 
-        // --- later calls to OnSelectChange to be ignored (unless focus is lost and regained).
-        _SelectionContainer.SelectableObjects = null;
-        _SelectionContainer.SelectedObjects = null;
-        _TrackSelection.OnSelectChange(_SelectionContainer);
-        _SelectionContainer.SelectedObjectsChanged += SelectedObjectsChanged;
-      }
-    }
+    public SelectionTracker SelectionTracker { get; set; }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -105,7 +85,7 @@ namespace DeepDiver.PersistedToolWindow
     private void listView1_SelectedIndexChanged(object sender, EventArgs e)
     {
       if (_IgnoreSelectedObjectsChanges) return;
-      var selectedObjects = new ArrayList();
+      var selectedObjects = new List<SelectionProperties>();
       if (listView1.SelectedItems.Count > 0)
       {
         int index = listView1.SelectedItems[0].Index;
@@ -113,35 +93,21 @@ namespace DeepDiver.PersistedToolWindow
         var properties = new SelectionProperties(frame.Caption, frame.Guid) { Index = index };
         selectedObjects.Add(properties);
       }
-      _SelectionContainer.SelectedObjects = selectedObjects;
-      _SelectionContainer.SelectableObjects = WindowsProperties;
-      TrackSelection.OnSelectChange(_SelectionContainer);
+      SelectionTracker.SelectObjects(selectedObjects, WindowsProperties);
     }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Handle change to the current selection is done throught the properties window drop 
-    /// down list.
+    /// Changes the current selection to the specified object.
     /// </summary>
-    /// <param name="sender">Sender</param>
-    /// <param name="e">Arguments</param>
+    /// <param name="selection">Current selection.</param>
     // --------------------------------------------------------------------------------------------
-    private void SelectedObjectsChanged(object sender, EventArgs e)
+    public void ChangeSelection(SelectionProperties selection)
     {
       _IgnoreSelectedObjectsChanges = true;
       try
       {
-        listView1.SelectedItems.Clear();
-        if (_SelectionContainer.SelectedObjects.Count > 0)
-        {
-          IEnumerator enumerator = _SelectionContainer.SelectedObjects.GetEnumerator();
-          if (enumerator.MoveNext())
-          {
-            var newSelection = (SelectionProperties)enumerator.Current;
-            int index = newSelection.Index;
-            listView1.Items[index].Selected = true;
-          }
-        }
+        if (selection != null) listView1.Items[selection.Index].Selected = true;
       }
       finally
       {

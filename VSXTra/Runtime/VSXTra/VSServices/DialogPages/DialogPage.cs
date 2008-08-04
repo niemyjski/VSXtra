@@ -239,6 +239,7 @@ namespace VSXtra
     /// Gets the control representing the UI of this option page.
     /// </summary>
     // --------------------------------------------------------------------------------------------
+    [Browsable(false)]
     public TUIControl UIControl
     {
       get { return _UIControl; }

@@ -3,9 +3,8 @@
 //
 // Created: 2008.07.05, by Istvan Novak (DeepDiver)
 // ================================================================================================
+using System;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra;
 
 namespace DeepDiver.PersistedToolWindow
@@ -21,6 +20,8 @@ namespace DeepDiver.PersistedToolWindow
   [Toolbar(typeof(DynamicToolWindowCommandGroup.PersistedWindowToolbar))]
   class PersistedWindowPane : ToolWindowPane<PersistedToolWindowPackage, PersistedWindowControl>
   {
+    #region Overridden methods
+
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Our tool window has been sited, refresh the list of tool windows.
@@ -29,9 +30,26 @@ namespace DeepDiver.PersistedToolWindow
     public override void OnToolWindowCreated()
     {
       base.OnToolWindowCreated();
-      UIControl.TrackSelection = GetService<STrackSelection, ITrackSelection>();
-      RefreshList(null);
+      UIControl.SelectionTracker = SelectionTracker;
+      SelectionTracker.SelectionChanged += OnSelectionChanged;
+      RefreshList();
     }
+
+    #endregion
+
+    #region Event handler methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This event method is called when the selection has been changed in the Properties window.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void OnSelectionChanged(object sender, EventArgs e)
+    {
+      UIControl.ChangeSelection(SelectionTracker.GetSelectedObject<SelectionProperties>());
+    }
+
+    #endregion
 
     #region Command handler methods
 
@@ -43,7 +61,7 @@ namespace DeepDiver.PersistedToolWindow
     [CommandExecMethod]
     [Promote]
     [CommandId(CmdIDs.cmdidRefreshWindowsList)]
-    private void RefreshList(OleMenuCommand command)
+    private void RefreshList()
     {
       UIControl.RefreshData();
     }
