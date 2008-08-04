@@ -39,9 +39,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicesReference", "Sample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutputVsRegistry", "Samples\OutputWindowSamples\OutputVsRegistry\OutputVsRegistry.csproj", "{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdtEventsWindow", "Samples\ToolWindows\RdtEventsWindow\RdtEventsWindow.csproj", "{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
+		SccNumberOfProjects = 13
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs02.codeplex.com/
 		SccLocalPath0 = .
@@ -89,6 +91,10 @@ Global
 		SccProjectTopLevelParentUniqueName11 = VSXTra.sln
 		SccProjectName11 = Samples/OutputWindowSamples/OutputVsRegistry
 		SccLocalPath11 = Samples\\OutputWindowSamples\\OutputVsRegistry
+		SccProjectUniqueName12 = Samples\\ToolWindows\\RdtEventsWindow\\RdtEventsWindow.csproj
+		SccProjectTopLevelParentUniqueName12 = VSXTra.sln
+		SccProjectName12 = Samples/ToolWindows/RdtEventsWindow
+		SccLocalPath12 = Samples\\ToolWindows\\RdtEventsWindow
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +145,10 @@ Global
 		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,6 +166,7 @@ Global
 		{7277A590-9A1E-4A87-8105-88EDA21BAF8B} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
 		{398B3601-9835-4B22-B515-FBE62A2573F2} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
 		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
 		{FAEE43D8-6AD9-4068-9C4B-A283520BED6E} = {C8E21D29-1530-4627-A682-B9E477C11643}
 		{DA794D49-AFB1-490E-81B9-123DE477FC92} = {C8E21D29-1530-4627-A682-B9E477C11643}
 		{A61F93F5-A428-4624-BAEA-8548AC26CA9E} = {C8E21D29-1530-4627-A682-B9E477C11643}
