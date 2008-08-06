@@ -1,3 +1,8 @@
+// ================================================================================================
+// StringResolver.cs
+//
+// Created: 2008.04.05, by Istvan Novak (DeepDiver)
+// ================================================================================================
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -61,7 +66,7 @@ namespace VSXtra
                  ? toResolve
                  : ResolveInPackageResources(toResolve.Trim());
       }
-      else if (toResolve.StartsWith("$"))
+      if (toResolve.StartsWith("$"))
       {
         toResolve = toResolve.Substring(1);
         return toResolve.StartsWith("$")

@@ -239,7 +239,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     public override void ExecuteAction(MenuCommandHandler command)
     {
-      VsIde.ExecuteMethod(_CommandName, _Args);
+      VsIde.ExecuteCommand(_CommandName, _Args);
     }
   }
 

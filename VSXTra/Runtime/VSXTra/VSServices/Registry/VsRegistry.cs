@@ -74,7 +74,9 @@ namespace VSXtra
     {
       get
       {
-        using (var key = GetRecentProjectsListKey(false))
+        var key = GetRecentProjectsListKey(false);
+        if (key == null) return FileEntry.EmptyList;
+        using (key)
         {
           return GetFileEntryList(key);
         }
@@ -90,7 +92,9 @@ namespace VSXtra
     {
       get
       {
-        using (var key = GetRecentFilesListKey(false))
+        var key = GetRecentFilesListKey(false);
+        if (key == null) return FileEntry.EmptyList;
+        using (key)
         {
           return GetFileEntryList(key);
         }
