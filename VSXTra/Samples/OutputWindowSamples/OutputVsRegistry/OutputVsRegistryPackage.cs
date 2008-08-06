@@ -17,6 +17,5 @@ namespace DeepDiver.OutputVsRegistry
   [Guid(GuidList.guidOutputVsRegistryPkgString)]
   public sealed class OutputVsRegistryPackage : PackageBase
   {
-
   }
 }

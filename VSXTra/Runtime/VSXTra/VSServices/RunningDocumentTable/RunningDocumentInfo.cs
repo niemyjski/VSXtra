@@ -130,7 +130,135 @@ namespace VSXtra
       get { return (Flags & (uint)RdtLocks.RequestUnlock) != 0; }
     }
 
-    // TODO: Go on with the declaration of other flag properties
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the NonCreatable flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool NonCreatableFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.NonCreatable) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the DontSave flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool DontSaveFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.DontSave) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the DontAutoOpen flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool DontAutoOpenFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.DontAutoOpen) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the CaseSensitive flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool CaseSensitiveFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.CaseSensitive) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the CantSave flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool CantSaveFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.CantSave) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the VirtualDocument flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool VirtualDocumentFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.VirtualDocument) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the ProjectOrSolution flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool ProjectOrSolutionFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.ProjectOrSolution) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the PlaceHolderDoc flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool PlaceHolderDocFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.PlaceHolderDoc) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the CanBuildFromMemory flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool CanBuildFromMemoryFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.CanBuildFromMemory) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the DontAddToMRU flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool DontAddToMRUFlag
+    {
+      get { return (Flags & (uint)RdtSaveFlags.DontAddToMRU) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the NoSave flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool NoSaveFlag
+    {
+      get { return (Flags & (uint)RdtUnLockFlags.NoSave) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the SaveIfDirty flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool SaveIfDirtyFlag
+    {
+      get { return (Flags & (uint)RdtUnLockFlags.SaveIfDirty) != 0; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value of the PromptSave flag.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool PromptSaveFlag
+    {
+      get { return (Flags & (uint)RdtUnLockFlags.PromptSave) != 0; }
+    }
 
     #endregion
 

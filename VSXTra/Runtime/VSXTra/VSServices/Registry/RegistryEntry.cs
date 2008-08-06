@@ -3,6 +3,8 @@
 //
 // Created: 2008.07.28, by Istvan Novak (DeepDiver)
 // ================================================================================================
+using System.Collections.Generic;
+
 namespace VSXtra
 {
   #region RegistryEntry class
@@ -75,6 +77,13 @@ namespace VSXtra
       : base(key, value)
     {
     }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Retrieves an empty list of file entries.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static List<FileEntry> EmptyList = new List<FileEntry>();
   }
 
   #endregion

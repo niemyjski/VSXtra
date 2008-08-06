@@ -78,7 +78,7 @@ namespace VSXtra
     /// part of what you are recording.
     /// </remarks>
     // --------------------------------------------------------------------------------------------
-    public static void ExecuteMethod(string commandName, string commandArgs)
+    public static void ExecuteCommand(string commandName, string commandArgs)
     {
       DteInstance.ExecuteCommand(commandName, commandArgs);
     }

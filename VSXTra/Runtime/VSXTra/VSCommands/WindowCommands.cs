@@ -30,7 +30,7 @@ namespace VSXtra
       // --------------------------------------------------------------------------------------------
       public static void CloseAllDocuments()
       {
-        ExecuteMethod(CreateCommandName(Prefix, "CloseAllDocuments"), String.Empty);
+        ExecuteCommand(CreateCommandName(Prefix, "CloseAllDocuments"), String.Empty);
       }
     }
   }

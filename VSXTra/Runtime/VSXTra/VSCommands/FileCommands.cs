@@ -30,7 +30,7 @@ namespace VSXtra
       // --------------------------------------------------------------------------------------------
       public static void SaveAll()
       {
-        ExecuteMethod(CreateCommandName(Prefix, "SaveAll"), String.Empty);
+        ExecuteCommand(CreateCommandName(Prefix, "SaveAll"), String.Empty);
       }
     }
   }

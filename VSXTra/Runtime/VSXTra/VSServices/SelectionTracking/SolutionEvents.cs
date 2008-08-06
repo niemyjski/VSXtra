@@ -5,6 +5,7 @@
 // ================================================================================================
 
 using System;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace VSXtra
@@ -19,7 +20,7 @@ namespace VSXtra
     #region Private fields
 
     private static readonly IVsSolution _Solution;
-    private static SolutionEventHooker _EventHook;
+    private static readonly SolutionEventHooker _EventHook;
 
     #endregion
 
@@ -44,6 +45,369 @@ namespace VSXtra
 
     #region Public event properties
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raised before the solution's subprojects are opened.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionNodeEventArgs> OnBeforeOpeningChildren
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.BeforeOpeningChildren += value;
+      }
+      remove
+      {
+        _EventHook.Events.BeforeOpeningChildren -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raised after opening all nested projects.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionNodeEventArgs> OnAfterOpeningChildren
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterOpeningChildren += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterOpeningChildren -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raised before the solution's subprojects are closed.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionNodeEventArgs> OnBeforeClosingChildren
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.BeforeClosingChildren += value;
+      }
+      remove
+      {
+        _EventHook.Events.BeforeClosingChildren -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raised after closing all the nested projects owned by a parent hierarchy.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionNodeEventArgs> OnAfterClosingChildren
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterClosingChildren += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterClosingChildren -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raised to drop and re-add the renamed project.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionNodeEventArgs> OnAfterRenameProject
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterRenameProject += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterRenameProject -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raised after a project has been moved.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionNodeEventArgs> OnAfterChangeProjectParent
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterChangeProjectParent += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterChangeProjectParent -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Queries listening clients as to whether the project can be unloaded.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionNodeCancelEventArgs> OnQueryUnloadProject
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.QueryUnloadProject += value;
+      }
+      remove
+      {
+        _EventHook.Events.QueryUnloadProject -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Queries listening clients as to whether the project can be closed.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<CloseProjectEventArgs> OnQueryCloseProject
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.QueryCloseProject += value;
+      }
+      remove
+      {
+        _EventHook.Events.QueryCloseProject -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Notifies listening clients that the project is about to be closed.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<CloseProjectEventArgs> OnBeforeCloseProject
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.BeforeCloseProject += value;
+      }
+      remove
+      {
+        _EventHook.Events.BeforeCloseProject -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Notifies listening clients that the project has opened.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<OpenProjectEventArgs> OnAfterOpenProject
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterOpenProject += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterOpenProject -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raised after a project has been opened asynchronously.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<OpenProjectEventArgs> OnAfterAsynchOpenProject
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterAsynchOpenProject += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterAsynchOpenProject -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Notifies listening clients that the project has loaded.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<LoadProjectEventArgs> OnAfterLoadProject
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterLoadProject += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterLoadProject -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Notifies listening clients that the project is about to be unloaded.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<LoadProjectEventArgs> BeforeUnloadProject
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.BeforeUnloadProject += value;
+      }
+      remove
+      {
+        _EventHook.Events.BeforeUnloadProject -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Notifies listening clients that the solution is about to be closed.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionEventArgs> OnBeforeCloseSolution
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.BeforeCloseSolution += value;
+      }
+      remove
+      {
+        _EventHook.Events.BeforeCloseSolution -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Notifies listening clients that the solution has closed.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionEventArgs> OnAfterCloseSolution
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterCloseSolution += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterCloseSolution -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raised after all projects have been merged into the open solution.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<SolutionEventArgs> OnAfterMergeSolution
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterMergeSolution += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterMergeSolution -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Notifies listening clients that the solution has been opened.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<OpenSolutionEventArgs> OnAfterOpenSolution
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.AfterOpenSolution += value;
+      }
+      remove
+      {
+        _EventHook.Events.AfterOpenSolution -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Notifies listening clients that the solution has closed.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<CloseSolutionEventArgs> OnQueryCloseSolution
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.QueryCloseSolution += value;
+      }
+      remove
+      {
+        _EventHook.Events.QueryCloseSolution -= value;
+        EnsureUnadvise();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raised to ask listening clients whether a project can be moved from one parent to another 
+    /// in the solution explorer.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static event EventHandler<ChangeProjectParentEventArgs> QueryChangeProjectParent
+    {
+      add
+      {
+        EnsureAdvise();
+        _EventHook.Events.QueryChangeProjectParent += value;
+      }
+      remove
+      {
+        _EventHook.Events.QueryChangeProjectParent -= value;
+        EnsureUnadvise();
+      }
+    }
+
+
     #endregion
 
     #region SolutionEventHandler class
@@ -57,130 +421,377 @@ namespace VSXtra
       IVsSolutionEvents3,
       IVsSolutionEvents4
     {
+      #region Public events
+
+      public EventHandler<SolutionNodeEventArgs> BeforeOpeningChildren;
+      public EventHandler<SolutionNodeEventArgs> AfterOpeningChildren;
+      public EventHandler<SolutionNodeEventArgs> BeforeClosingChildren;
+      public EventHandler<SolutionNodeEventArgs> AfterClosingChildren;
+      public EventHandler<SolutionNodeEventArgs> AfterRenameProject;
+      public EventHandler<SolutionNodeEventArgs> AfterChangeProjectParent;
+      public EventHandler<SolutionNodeCancelEventArgs> QueryUnloadProject;
+      public EventHandler<CloseProjectEventArgs> QueryCloseProject;
+      public EventHandler<CloseProjectEventArgs> BeforeCloseProject;
+      public EventHandler<OpenProjectEventArgs> AfterOpenProject;
+      public EventHandler<OpenProjectEventArgs> AfterAsynchOpenProject;
+      public EventHandler<LoadProjectEventArgs> AfterLoadProject;
+      public EventHandler<LoadProjectEventArgs> BeforeUnloadProject;
+      public EventHandler<SolutionEventArgs> BeforeCloseSolution;
+      public EventHandler<SolutionEventArgs> AfterCloseSolution;
+      public EventHandler<SolutionEventArgs> AfterMergeSolution;
+      public EventHandler<OpenSolutionEventArgs> AfterOpenSolution;
+      public EventHandler<CloseSolutionEventArgs> QueryCloseSolution;
+      public EventHandler<ChangeProjectParentEventArgs> QueryChangeProjectParent;
+
+      #endregion
+
+      #region IVsSolutionEvents implementation
+
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Notifies listening clients that the project has opened.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
       {
-        throw new System.NotImplementedException();
+        if (AfterOpenProject != null)
+        {
+          var e = new OpenProjectEventArgs(SolutionEventType.AfterOpenProject)
+          {
+            Hierarchy = pHierarchy,
+            Added = fAdded != 0
+          };
+          AfterOpenProject(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Queries listening clients as to whether the project can be closed.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnQueryCloseProject(IVsHierarchy pHierarchy, int fRemoving, ref int pfCancel)
       {
-        throw new System.NotImplementedException();
+        if (QueryCloseProject != null)
+        {
+          var e = new CloseProjectEventArgs(SolutionEventType.QueryCloseProject)
+                    {
+                      Hierarchy = pHierarchy,
+                      Cancel = pfCancel != 0
+                    };
+          QueryCloseProject(this, e);
+          pfCancel = e.Cancel ? 1 : 0;
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Notifies listening clients that the project is about to be closed.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnBeforeCloseProject(IVsHierarchy pHierarchy, int fRemoved)
       {
-        throw new System.NotImplementedException();
+        if (QueryCloseProject != null)
+        {
+          var e = new CloseProjectEventArgs(SolutionEventType.BeforeCloseProject)
+                    {
+                      Hierarchy = pHierarchy,
+                      Cancel = false
+                    };
+          QueryCloseProject(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Notifies listening clients that the project has loaded.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterLoadProject(IVsHierarchy pStubHierarchy, IVsHierarchy pRealHierarchy)
       {
-        throw new System.NotImplementedException();
+        if (AfterLoadProject != null)
+        {
+          var e = new LoadProjectEventArgs(SolutionEventType.AfterLoadProject)
+                    {
+                      Hierarchy = pRealHierarchy,
+                      PlaceHolder = pStubHierarchy
+                    };
+          AfterLoadProject(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Queries listening clients as to whether the project can be unloaded.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnQueryUnloadProject(IVsHierarchy pRealHierarchy, ref int pfCancel)
       {
-        throw new System.NotImplementedException();
+        if (QueryUnloadProject != null)
+        {
+          var e = new SolutionNodeCancelEventArgs(SolutionEventType.QueryUnloadProject)
+                    {
+                      Hierarchy = pRealHierarchy,
+                      Cancel = pfCancel != 0
+                    };
+          QueryUnloadProject(this, e);
+          pfCancel = e.Cancel ? 1 : 0;
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Notifies listening clients that the project is about to be unloaded.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnBeforeUnloadProject(IVsHierarchy pRealHierarchy, IVsHierarchy pStubHierarchy)
       {
-        throw new System.NotImplementedException();
+        if (BeforeUnloadProject != null)
+        {
+          var e = new LoadProjectEventArgs(SolutionEventType.BeforeUnloadProject)
+          {
+            Hierarchy = pRealHierarchy,
+            PlaceHolder = pStubHierarchy
+          };
+          BeforeUnloadProject(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Notifies listening clients that the solution has been opened.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
       {
-        throw new System.NotImplementedException();
+        if (AfterOpenSolution != null)
+        {
+          var e = new OpenSolutionEventArgs(SolutionEventType.AfterOpenSolution)
+                    {
+                      NewSolution = fNewSolution != 0
+                    };
+          AfterOpenSolution(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Notifies listening clients that the solution has closed.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnQueryCloseSolution(object pUnkReserved, ref int pfCancel)
       {
-        throw new System.NotImplementedException();
+        if (QueryCloseSolution != null)
+        {
+          var e = new CloseSolutionEventArgs(SolutionEventType.QueryCloseSolution)
+          {
+            Cancel = pfCancel != 0
+          };
+          QueryCloseSolution(this, e);
+          pfCancel = e.Cancel ? 1 : 0;
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Notifies listening clients that the solution is about to be closed.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnBeforeCloseSolution(object pUnkReserved)
       {
-        throw new System.NotImplementedException();
+        if (BeforeCloseSolution != null)
+        {
+          BeforeCloseSolution(this, new SolutionEventArgs(SolutionEventType.BeforeCloseSolution));
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Notifies listening clients that the solution has closed.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterCloseSolution(object pUnkReserved)
       {
-        throw new System.NotImplementedException();
+        if (AfterCloseSolution != null)
+        {
+          AfterCloseSolution(this, new SolutionEventArgs(SolutionEventType.AfterCloseSolution));
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Raised after all projects have been merged into the open solution.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterMergeSolution(object pUnkReserved)
       {
-        throw new System.NotImplementedException();
+        if (AfterMergeSolution != null)
+        {
+          AfterMergeSolution(this, new SolutionEventArgs(SolutionEventType.AfterMergeSolution));
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Raised before the solution's subprojects are opened.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnBeforeOpeningChildren(IVsHierarchy pHierarchy)
       {
-        throw new System.NotImplementedException();
+        if (BeforeOpeningChildren != null)
+        {
+          var e = new SolutionNodeEventArgs(SolutionEventType.BeforeOpeningChildren)
+                    {
+                      Hierarchy = pHierarchy
+                    };
+          BeforeOpeningChildren(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Raised after opening all nested projects.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterOpeningChildren(IVsHierarchy pHierarchy)
       {
-        throw new System.NotImplementedException();
+        if (AfterOpeningChildren != null)
+        {
+          var e = new SolutionNodeEventArgs(SolutionEventType.AfterOpeningChildren)
+          {
+            Hierarchy = pHierarchy
+          };
+          AfterOpeningChildren(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Raised before the solution's subprojects are closed.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnBeforeClosingChildren(IVsHierarchy pHierarchy)
       {
-        throw new System.NotImplementedException();
+        if (BeforeClosingChildren != null)
+        {
+          var e = new SolutionNodeEventArgs(SolutionEventType.BeforeClosingChildren)
+          {
+            Hierarchy = pHierarchy
+          };
+          BeforeClosingChildren(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Raised after closing all the nested projects owned by a parent hierarchy.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterClosingChildren(IVsHierarchy pHierarchy)
       {
-        throw new System.NotImplementedException();
+        if (AfterClosingChildren != null)
+        {
+          var e = new SolutionNodeEventArgs(SolutionEventType.AfterClosingChildren)
+          {
+            Hierarchy = pHierarchy
+          };
+          AfterClosingChildren(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
       /// <summary>
-      /// Notifies listening clients that a project has been renamed.
+      /// Raised to drop and re-add the renamed project.
       /// </summary>
-      /// <returns>
-      /// If the method succeeds, it returns <see cref="F:Microsoft.VisualStudio.VSConstants.S_OK" />. If it fails, it returns an error code.
-      /// </returns>
-      /// <param name="pHierarchy">[in] Pointer to the <see cref="T:Microsoft.VisualStudio.Shell.Interop.IVsHierarchy" /> interface of the renamed project.</param>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterRenameProject(IVsHierarchy pHierarchy)
       {
-        throw new System.NotImplementedException();
+        if (AfterRenameProject != null)
+        {
+          var e = new SolutionNodeEventArgs(SolutionEventType.AfterRenameProject)
+          {
+            Hierarchy = pHierarchy
+          };
+          AfterRenameProject(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
       /// <summary>
-      /// Queries listening clients as to whether a parent project has changed.
+      /// Raised to ask listening clients whether a project can be moved from one parent to another 
+      /// in the solution explorer.
       /// </summary>
-      /// <returns>
-      /// </returns>
-      /// <param name="pHierarchy">[in] Pointer to the <see cref="T:Microsoft.VisualStudio.Shell.Interop.IVsHierarchy" /> interface of the project parent.</param>
-      /// <param name="pNewParentHier">[in] Pointer to the <see cref="T:Microsoft.VisualStudio.Shell.Interop.IVsHierarchy" /> interface of the changed project parent.</param>
-      /// <param name="pfCancel">[in, out] true if the client vetoed the closing of the project. false if the client approved the closing of the project.</param>
-      public int OnQueryChangeProjectParent(IVsHierarchy pHierarchy, IVsHierarchy pNewParentHier, ref int pfCancel)
+      // --------------------------------------------------------------------------------------------
+      public int OnQueryChangeProjectParent(IVsHierarchy pHierarchy, IVsHierarchy pNewParentHier, 
+        ref int pfCancel)
       {
-        throw new System.NotImplementedException();
+        if (QueryChangeProjectParent != null)
+        {
+          var e = new ChangeProjectParentEventArgs(SolutionEventType.QueryChangeProjectParent)
+                    {
+                      NewHierarchy = pNewParentHier,
+                      Cancel = pfCancel != 0
+                    };
+          QueryChangeProjectParent(this, e);
+          pfCancel = e.Cancel ? 1 : 0;
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
       /// <summary>
-      /// Notifies listening clients that a project parent has changed.
+      /// Raised after a project has been moved.
       /// </summary>
-      /// <returns>
-      /// If the method succeeds, it returns <see cref="F:Microsoft.VisualStudio.VSConstants.S_OK" />. If it fails, it returns an error code.
-      /// </returns>
-      /// <param name="pHierarchy">[in] Pointer to the <see cref="T:Microsoft.VisualStudio.Shell.Interop.IVsHierarchy" /> interface of the changed project parent.</param>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterChangeProjectParent(IVsHierarchy pHierarchy)
       {
-        throw new System.NotImplementedException();
+        if (AfterChangeProjectParent != null)
+        {
+          var e = new SolutionNodeEventArgs(SolutionEventType.AfterChangeProjectParent)
+          {
+            Hierarchy = pHierarchy
+          };
+          AfterChangeProjectParent(this, e);
+        }
+        return VSConstants.S_OK;
       }
 
+      // --------------------------------------------------------------------------------------------
       /// <summary>
-      /// Notifies listening clients that a project has been opened asynchronously.
+      /// Raised after a project has been opened asynchronously.
       /// </summary>
-      /// <returns>
-      /// If the method succeeds, it returns <see cref="F:Microsoft.VisualStudio.VSConstants.S_OK" />. If it fails, it returns an error code.
-      /// </returns>
-      /// <param name="pHierarchy">[in] Pointer to the <see cref="T:Microsoft.VisualStudio.Shell.Interop.IVsHierarchy" /> interface of the project being loaded.</param>
-      /// <param name="fAdded">[in] true if the project is added to the solution after the solution is opened. false if the project is added to the solution while the solution is being opened.</param>
+      // --------------------------------------------------------------------------------------------
       public int OnAfterAsynchOpenProject(IVsHierarchy pHierarchy, int fAdded)
       {
-        throw new System.NotImplementedException();
+        if (AfterAsynchOpenProject != null)
+        {
+          var e = new OpenProjectEventArgs(SolutionEventType.AfterAsynchOpenProject)
+          {
+            Hierarchy = pHierarchy,
+            Added = fAdded != 0
+          };
+          AfterAsynchOpenProject(this, e);
+        }
+        return VSConstants.S_OK;
       }
+
+      #endregion
     }
 
     #endregion
@@ -218,5 +829,30 @@ namespace VSXtra
     }
 
     #endregion
+
+    #region Private methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Ensures that IVsRunningDocTableEvents is advised when required.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private static void EnsureAdvise()
+    {
+      _EventHook.EnsureAdvise();
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Ensures that IVsRunningDocTableEvents is unadvised when required.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private static void EnsureUnadvise()
+    {
+      _EventHook.EnsureUnadvise();
+    }
+
+    #endregion
+
   }
 }
