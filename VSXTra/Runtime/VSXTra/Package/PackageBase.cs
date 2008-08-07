@@ -122,6 +122,11 @@ namespace VSXtra
     /// <summary>Container of oages and profiles used by this package</summary>
     private Container _PagesAndProfiles;
 
+    /// <summary>
+    /// Object responsible to translate command methods to OleMenuCommand instances
+    /// </summary>
+    private CommandDispatcher<PackageBase> _CommandDispatcher;
+
     #endregion
 
     #region Private enums
@@ -1027,6 +1032,70 @@ namespace VSXtra
         : null;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Proffers the marked services of this package
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void ProfferServices()
+    {
+      // --- If we have services to proffer, do that now.
+      if (_Services != null)
+      {
+        var ps = this.GetService<SProfferService, IProfferService>();
+        VsDebug.Assert(ps != null,
+                       "We have services to proffer but IProfferService is not available.");
+        if (ps != null)
+        {
+          foreach (var de in _Services)
+          {
+            var service = de.Value as ProfferedService;
+            if (service != null)
+            {
+              var serviceType = de.Key;
+              uint cookie;
+              var serviceGuid = serviceType.GUID;
+              NativeMethods.ThrowOnFailure(
+                ps.ProfferService(ref serviceGuid, this, out cookie)
+                );
+              service.Cookie = cookie;
+            }
+          }
+        }
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Loads package options
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void LoadPackageOptions()
+    {
+      // --- Be sure to load the package user options from the solution in case
+      // --- the package was not already loaded when the solution was opened.
+      if (null != _OptionKeys)
+      {
+        try
+        {
+          var pPersistance = this.GetService<SVsSolutionPersistence, IVsSolutionPersistence>();
+          if (pPersistance != null)
+          {
+            foreach (string key in _OptionKeys)
+            {
+              // --- Don't check for the error code because a failure here is
+              // --- expected and not a problem.
+              pPersistance.LoadPackageUserOpts(this, key);
+            }
+          }
+        }
+        catch (SystemException)
+        {
+          // --- no settings found, no problem.
+        }
+      }
+    }
+
     #endregion
 
     #region IVsPackage Members
@@ -1100,33 +1169,10 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     private void InternalInitialize()
     {
+      // --- First service types has to be registered
       BindServiceTypes(GetType().Assembly);
       RegisterServices();
-
-      // --- If we have services to proffer, do that now.
-      if (_Services != null)
-      {
-        var ps = this.GetService<SProfferService, IProfferService>();
-        VsDebug.Assert(ps != null, 
-          "We have services to proffer but IProfferService is not available.");
-        if (ps != null)
-        {
-          foreach (var de in _Services)
-          {
-            var service = de.Value as ProfferedService;
-            if (service != null)
-            {
-              var serviceType = de.Key;
-              uint cookie;
-              var serviceGuid = serviceType.GUID;
-              NativeMethods.ThrowOnFailure(
-                  ps.ProfferService(ref serviceGuid, this, out cookie)
-              );
-              service.Cookie = cookie;
-            }
-          }
-        }
-      }
+      ProfferServices();
 
       // --- Initialize this thread's culture info with that of the shell's LCID
       int locale = GetProviderLocale();
@@ -1135,29 +1181,15 @@ namespace VSXtra
       // --- Begin listening to user preference change events
       SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
 
-      // --- Be sure to load the package user options from the solution in case
-      // --- the package was not already loaded when the solution was opened.
-      if (null != _OptionKeys)
-      {
-        try
-        {
-          var pPersistance = this.GetService<SVsSolutionPersistence, IVsSolutionPersistence>();
-          if (pPersistance != null)
-          {
-            foreach (string key in _OptionKeys)
-            {
-              // --- Don't check for the error code because a failure here is
-              // --- expected and not a problem.
-              pPersistance.LoadPackageUserOpts(this, key);
-            }
-          }
-        }
-        catch (SystemException)
-        {
-          // --- no settings found, no problem.
-        }
-      }
+      LoadPackageOptions();
 
+      // --- Set up command handler methods
+      _CommandDispatcher = new CommandDispatcher<PackageBase>(this);
+      var parentService = _GlobalServiceProvider.GetService<IMenuCommandService, OleMenuCommandService>();
+      var localService = this.GetService<IMenuCommandService, OleMenuCommandService>();
+      _CommandDispatcher.RegisterCommandHandlers(localService, parentService);
+
+      // --- Set up command handler classes
       BindCommandHandlers(GetType().Assembly);
       Console.SetOut(OutputWindow.General);
     }

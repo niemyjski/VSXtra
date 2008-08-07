@@ -4,6 +4,7 @@
 // Created: 2008.07.01, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using System.ComponentModel.Design;
 using System.Windows.Forms;
 
 namespace VSXtra
@@ -26,11 +27,12 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Puts the message to the current pane of the output window.
+    /// Carries out the actions expected.
     /// </summary>
-    /// <param name="command">Menu command handler instance.</param>
+    /// <param name="package">Package the action is used from</param>
+    /// <param name="id">Command ID activating the action.</param>
     // --------------------------------------------------------------------------------------------
-    public override void ExecuteAction(MenuCommandHandler command)
+    public override void ExecuteAction(PackageBase package, CommandID id)
     {
       Console.WriteLine(_Message);
     }
@@ -133,9 +135,10 @@ namespace VSXtra
     /// <summary>
     /// Displays the message in a Visual Studio message box.
     /// </summary>
-    /// <param name="command">Menu command instance.</param>
+    /// <param name="package">Package the action is used from</param>
+    /// <param name="id">Command ID activating the action.</param>
     // --------------------------------------------------------------------------------------------
-    public override void ExecuteAction(MenuCommandHandler command)
+    public override void ExecuteAction(PackageBase package, CommandID id)
     {
       VsMessageBox.Show(_Text, _Title, _Buttons, _Icon, _DefaultButton);
     }
@@ -184,11 +187,12 @@ namespace VSXtra
     /// <summary>
     /// Puts the message to the current pane of the output window.
     /// </summary>
-    /// <param name="command">Menu command handler instance.</param>
+    /// <param name="package">Package the action is used from</param>
+    /// <param name="id">Command ID activating the action.</param>
     // --------------------------------------------------------------------------------------------
-    public override void ExecuteAction(MenuCommandHandler command)
+    public override void ExecuteAction(PackageBase package, CommandID id)
     {
-      command.Package.ShowToolWindow(_Type, _InstanceId);
+      package.ShowToolWindow(_Type, _InstanceId);
     }
   }
 
@@ -233,11 +237,12 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Puts the message to the current pane of the output window.
+    /// Executes the specified Visual Studio command.
     /// </summary>
-    /// <param name="command">Menu command handler instance.</param>
+    /// <param name="package">Package the action is used from</param>
+    /// <param name="id">Command ID activating the action.</param>
     // --------------------------------------------------------------------------------------------
-    public override void ExecuteAction(MenuCommandHandler command)
+    public override void ExecuteAction(PackageBase package, CommandID id)
     {
       VsIde.ExecuteCommand(_CommandName, _Args);
     }

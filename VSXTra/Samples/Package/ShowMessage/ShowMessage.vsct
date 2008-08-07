@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidShowMessagePkg">
+    <Groups>
+      <Group guid="guidShowMessageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidShowMessageCmdSet" id="cmdidDisplayMyMessage" priority="0x0100" type="Button">
+        <Parent guid="guidShowMessageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <CommandName>cmdidDisplayMyMessage</CommandName>
+          <ButtonText>Display My Message</ButtonText>
+        </Strings>
+      </Button>
+
+    </Buttons>
+   
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
+    </Bitmaps>
+ 
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidShowMessagePkg" value="{64583587-6991-4f95-997e-61e9e8a7d106}" />
+    <GuidSymbol name="guidShowMessageCmdSet" value="{e2f637cd-9143-4a14-9be4-7e902c471f81}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidDisplayMyMessage" value="0x0100" />
+    </GuidSymbol>
+    
+    <GuidSymbol name="guidImages" value="{f0c7a05c-abe0-4ec5-a980-d2ee132139cc}" >
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

@@ -5,6 +5,8 @@
 // ================================================================================================
 using System;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
+using System.ComponentModel.Design;
 
 namespace VSXtra
 {
@@ -34,7 +36,20 @@ namespace VSXtra
     /// <summary>
     /// Creates a new instance of the attribute with the specified initial value.
     /// </summary>
-    /// <param name="guid">Command Guid</param>
+    /// <param name="guidString">Command Guid string</param>
+    /// <param name="id">Command identifier.</param>
+    // --------------------------------------------------------------------------------------------
+    public CommandIdAttribute(string guidString, uint id)
+    {
+      Id = id;
+      Guid = new Guid(guidString);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new instance of the attribute with the specified initial value.
+    /// </summary>
+    /// <param name="guid">Command Guid string</param>
     /// <param name="id">Command identifier.</param>
     // --------------------------------------------------------------------------------------------
     public CommandIdAttribute(Guid guid, uint id)
@@ -143,10 +158,17 @@ namespace VSXtra
   /// Action attributes provide a default action for a command handler.
   /// </remarks>
   // ================================================================================================
-  [AttributeUsage(AttributeTargets.Class)]
+  [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method)]
   public abstract class ActionAttribute : Attribute
   {
-    public abstract void ExecuteAction(MenuCommandHandler handler);
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Carries out the actions expected.
+    /// </summary>
+    /// <param name="package">Package the action is used from</param>
+    /// <param name="id">Command ID activating the action.</param>
+    // --------------------------------------------------------------------------------------------
+    public abstract void ExecuteAction(PackageBase package, CommandID id);
   }
 
   #endregion

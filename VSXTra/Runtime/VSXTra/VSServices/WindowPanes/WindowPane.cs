@@ -113,6 +113,11 @@ namespace VSXtra
     /// <summary>User control representing the UI of the window pane.</summary>
     private readonly TUIControl _UIControl;
 
+    /// <summary>
+    /// Object responsible to translate command methods to OleMenuCommand instances
+    /// </summary>
+    private CommandDispatcher<TPackage> _CommandDispatcher;
+
     /// <summary>Object responsible for the selection tracking.</summary>
     private SelectionTracker _SelectionTracker;
 
@@ -387,6 +392,15 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     private void InternalInit()
     {
+      // --- Set up command dispatching
+      _CommandDispatcher = new CommandDispatcher<TPackage>(this);
+
+      // --- Register command handlers
+      var parentService = Package.GetService<IMenuCommandService, OleMenuCommandService>();
+      var localService = GetService<IMenuCommandService, OleMenuCommandService>();
+      _CommandDispatcher.RegisterCommandHandlers(localService, parentService);
+      
+      // --- Create the selection tracker for the window
       _SelectionTracker = new SelectionTracker(this);
       var container = CreateSelectionContainer();
       if (container != null)
