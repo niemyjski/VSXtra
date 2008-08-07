@@ -12,7 +12,6 @@ using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra.Properties;
 
@@ -123,11 +122,6 @@ namespace VSXtra
 
     /// <summary>Index of the bitmap</summary>
     private int _BitmapIndex;
-
-    /// <summary>
-    /// Object responsible to translate command methods to OleMenuCommand instances
-    /// </summary>
-    private CommandDispatcher _CommandDispatcher;
 
     private Guid _ToolClsid;
 
@@ -407,14 +401,6 @@ namespace VSXtra
       Caption = _Caption;
       BitmapResourceID = _BitmapResourceID;
       BitmapIndex = _BitmapIndex;
-
-      // --- Set up command dispatching
-      _CommandDispatcher = new CommandDispatcher(this);
-
-      // --- Register command handlers
-      var parentService = Package.GetService<IMenuCommandService, OleMenuCommandService>();
-      var localService = GetService<IMenuCommandService, OleMenuCommandService>();
-      _CommandDispatcher.RegisterCommandHandlers(localService, parentService);
     }
 
     #endregion

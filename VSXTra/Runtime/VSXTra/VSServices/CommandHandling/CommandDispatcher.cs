@@ -41,12 +41,14 @@ namespace VSXtra
   /// This class is responsible to dispatch events received by IOleCommandTarget objects.
   /// </summary>
   // ================================================================================================
-  public sealed class CommandDispatcher
+  public sealed class CommandDispatcher<TPackage>
+    where TPackage: PackageBase
   {
     #region Private fields
 
     private static readonly Dictionary<Type, CommandTargetInfo> _Targets =
       new Dictionary<Type, CommandTargetInfo>();
+    private readonly TPackage _Package;
 
     #endregion
 
@@ -66,6 +68,7 @@ namespace VSXtra
         throw new ArgumentNullException("eventTarget");
       EventTarget = eventTarget;
       GuidProvider = guidProvider;
+      _Package = PackageBase.GetPackageInstance<TPackage>();
       ScanDispatchInfo();
     }
 
@@ -177,7 +180,8 @@ namespace VSXtra
 
         // --- Obtain all methods that can be used as command methods
         var commandMethods =
-          from method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+          from method in targetType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | 
+            BindingFlags.Instance | BindingFlags.Static)
           where method.ReturnType == typeof (void) &&
                 (
                   method.GetParameters().Count() == 0 &&
@@ -257,7 +261,10 @@ namespace VSXtra
       if (info.ExecMethod != null)
       {
         if (mergedInfo.ExecMethod == null)
+        {
           mergedInfo.ExecMethod = info.ExecMethod;
+          mergedInfo.Action = info.Action;
+        }
         else
           throw new InvalidOperationException(Resources.CommandDispatcher_DuplicateExec);
       }
@@ -306,6 +313,13 @@ namespace VSXtra
             menuInfo.ChangeMethod = method;
         }
 
+        // --- Check command action
+        var actionAttr = attr as ActionAttribute;
+        if (actionAttr != null)
+        {
+          menuInfo.Action = actionAttr;  
+        }
+
         // --- Check promote flag
         var promoteAttr = attr as PromoteAttribute;
         if (promoteAttr != null)
@@ -336,7 +350,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     private void ChangeEventHandler(object sender, EventArgs e)
     {
-      HandleMenuCommandEvent(sender, info => info.ChangeMethod);
+      HandleMenuCommandEvent(sender, info => info.ChangeMethod, false);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -346,7 +360,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     private void QueryStatusEventHandler(object sender, EventArgs e)
     {
-      HandleMenuCommandEvent(sender, info => info.QueryStatusMethod);
+      HandleMenuCommandEvent(sender, info => info.QueryStatusMethod, false);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -356,7 +370,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     private void ExecEventHandler(object sender, EventArgs e)
     {
-      HandleMenuCommandEvent(sender, info => info.ExecMethod);
+      HandleMenuCommandEvent(sender, info => info.ExecMethod, true);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -365,8 +379,9 @@ namespace VSXtra
     /// </summary>
     /// <param name="sender">Object initiating the event.</param>
     /// <param name="mapper">Mapper to define the method to execute</param>
+    /// <param name="useAction">Allows using the menu command action</param>
     // --------------------------------------------------------------------------------------------
-    private void HandleMenuCommandEvent(object sender, MethodMapper mapper)
+    private void HandleMenuCommandEvent(object sender, MethodMapper mapper, bool useAction)
     {
       // --- Check for command
       var command = sender as OleMenuCommand;
@@ -380,6 +395,12 @@ namespace VSXtra
       // --- Get the apropriate commmand method
       MethodInfo commandMethod = mapper(menuInfo);
       if (commandMethod == null) return;
+
+      // --- Execute the default command action
+      if (useAction && menuInfo.Action != null)
+      {
+        menuInfo.Action.ExecuteAction(_Package, command.CommandID);
+      }
 
       // --- Execute the command
       var parameters = 
@@ -421,6 +442,7 @@ namespace VSXtra
       public MethodInfo QueryStatusMethod;
       public MethodInfo ExecMethod;
       public MethodInfo ChangeMethod;
+      public ActionAttribute Action;
       public bool Promote;
     }
 

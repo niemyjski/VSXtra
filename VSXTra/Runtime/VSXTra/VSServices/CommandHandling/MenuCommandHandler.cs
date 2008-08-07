@@ -273,7 +273,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     protected virtual void OnExecute(OleMenuCommand command)
     {
-      if (_CommandAction != null) _CommandAction.ExecuteAction(this);
+      if (_CommandAction != null) _CommandAction.ExecuteAction(Package, command.CommandID);
     }
 
     // --------------------------------------------------------------------------------------------
