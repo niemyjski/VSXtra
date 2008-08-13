@@ -85,7 +85,7 @@ namespace VSXtra
 
   #endregion
 
-  #region ToolbarLoacationAttribute
+  #region ToolbarLocationAttribute
 
   // ================================================================================================
   /// <summary>

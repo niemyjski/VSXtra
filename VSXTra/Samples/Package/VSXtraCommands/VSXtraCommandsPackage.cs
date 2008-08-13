@@ -28,7 +28,31 @@ namespace DeepDiver.VSXtraCommands
     protected override void Initialize()
     {
       RegisterCommands();
+      SolutionEvents.OnAfterOpenSolution += OnAfterOpenSolution;
+      SolutionEvents.OnAfterCloseSolution += OnAfterCloseSolution;
     }
+
+    #endregion
+
+    #region Private event handler methods
+
+    void OnAfterOpenSolution(object sender, OpenSolutionEventArgs e)
+    {
+      VsDocumentEvents.OnDocumentClosing += OnDocumentClosing;
+    }
+
+    void OnAfterCloseSolution(object sender, SolutionEventArgs e)
+    {
+      VsDocumentEvents.OnDocumentClosing -= OnDocumentClosing;
+    }
+
+    void OnDocumentClosing(object sender, DocumentEventArgs e)
+    {
+    }
+
+    #endregion
+
+    #region Private methods
 
     private void RegisterCommands()
     {

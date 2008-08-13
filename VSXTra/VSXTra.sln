@@ -45,9 +45,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMessage", "Samples\Pack
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomOutputWindowPane", "Samples\OutputWindowSamples\CustomOutputWindowPane\CustomOutputWindowPane.csproj", "{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityLog", "Samples\Package\ActivityLog\ActivityLog.csproj", "{8309E293-E726-4A5D-B33B-24552E2C4910}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 15
+		SccNumberOfProjects = 16
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs02.codeplex.com/
 		SccLocalPath0 = .
@@ -107,6 +109,10 @@ Global
 		SccProjectTopLevelParentUniqueName14 = VSXTra.sln
 		SccProjectName14 = Samples/OutputWindowSamples/CustomOutputWindowPane
 		SccLocalPath14 = Samples\\OutputWindowSamples\\CustomOutputWindowPane
+		SccProjectUniqueName15 = Samples\\Package\\ActivityLog\\ActivityLog.csproj
+		SccProjectTopLevelParentUniqueName15 = VSXTra.sln
+		SccProjectName15 = Samples/Package/ActivityLog
+		SccLocalPath15 = Samples\\Package\\ActivityLog
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +175,10 @@ Global
 		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8309E293-E726-4A5D-B33B-24552E2C4910}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8309E293-E726-4A5D-B33B-24552E2C4910}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8309E293-E726-4A5D-B33B-24552E2C4910}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8309E293-E726-4A5D-B33B-24552E2C4910}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,5 +202,6 @@ Global
 		{DA794D49-AFB1-490E-81B9-123DE477FC92} = {C8E21D29-1530-4627-A682-B9E477C11643}
 		{A61F93F5-A428-4624-BAEA-8548AC26CA9E} = {C8E21D29-1530-4627-A682-B9E477C11643}
 		{32D1D804-9B47-4B4F-9D8D-5BFF71880EBD} = {C8E21D29-1530-4627-A682-B9E477C11643}
+		{8309E293-E726-4A5D-B33B-24552E2C4910} = {C8E21D29-1530-4627-A682-B9E477C11643}
 	EndGlobalSection
 EndGlobal

@@ -57,6 +57,47 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets an interface or object that is late-bound to the DTE object and can be accessed by 
+    /// name at run time.
+    /// </summary>
+    /// <param name="objectType">The name of the object to retrieve.</param>
+    /// <returns>
+    /// An interface or object that is late-bound to the DTE object.
+    /// </returns>
+    /// <remarks>
+    /// GetObject is most useful in languages that do not support early binding. In this case, you 
+    /// can name the specific interface or object you want, for example, DTE.GetObject("VCProjects").
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    public static object GetObject(string objectType)
+    {
+      return DteInstance.GetObject(objectType);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets an interface or object that is late-bound to the DTE object and can be accessed by 
+    /// name at run time.
+    /// </summary>
+    /// <typeparam name="T">Type of object to retrieve.</typeparam>
+    /// <param name="objectType">The name of the object to retrieve.</param>
+    /// <returns>
+    /// An interface or object that is late-bound to the DTE object. Null, if the object does not 
+    /// exists or cannot be converted to the specified type.
+    /// </returns>
+    /// <remarks>
+    /// GetObject is most useful in languages that do not support early binding. In this case, you 
+    /// can name the specific interface or object you want, for example, DTE.GetObject("VCProjects").
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    public static T GetObject<T>(string objectType)
+      where T : class
+    {
+      return GetObject(objectType) as T;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Executes the specified command.
     /// </summary>
     /// <param name="commandName">Required. The name of the command to invoke.</param>
