@@ -1184,7 +1184,7 @@ namespace VSXtra
       LoadPackageOptions();
 
       // --- Set up command handler methods
-      _CommandDispatcher = new CommandDispatcher<PackageBase>(this);
+      _CommandDispatcher = new CommandDispatcher<PackageBase>(this, this);
       var parentService = _GlobalServiceProvider.GetService<IMenuCommandService, OleMenuCommandService>();
       var localService = this.GetService<IMenuCommandService, OleMenuCommandService>();
       _CommandDispatcher.RegisterCommandHandlers(localService, parentService);

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidSimpleToolWindowPkg">
+
+    <Buttons>
+      <Button guid="guidSimpleToolWindowCmdSet" id="cmdidShowToolWindow" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <CommandName>cmdidShowMyToolWindow</CommandName>
+          <ButtonText>VSXtra Simple Tool Window</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+   
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
+    </Bitmaps>
+ 
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidSimpleToolWindowPkg" value="{0f03f8d1-1827-4fc9-8cfc-2f1950e31706}" />
+    <GuidSymbol name="guidSimpleToolWindowCmdSet" value="{033823e8-7739-4df7-9005-a24a7536f121}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidShowToolWindow" value="0x0101" />
+    </GuidSymbol>
+    
+    <GuidSymbol name="guidImages" value="{2245100a-569a-4a12-8cf9-028df3309240}" >
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

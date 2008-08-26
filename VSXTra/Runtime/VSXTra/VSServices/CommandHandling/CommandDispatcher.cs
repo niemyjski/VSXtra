@@ -83,6 +83,20 @@ namespace VSXtra
     {
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new instance of CommandDispatcher using the specified event target and 
+    /// package instance
+    /// </summary>
+    /// <param name="eventTarget">Event target instance.</param>
+    /// <param name="package">Package instance</param>
+    // --------------------------------------------------------------------------------------------
+    internal CommandDispatcher(object eventTarget, TPackage package) :
+      this(eventTarget, eventTarget as ICommandGuidProvider)
+    {
+      _Package = package;
+    }
+
     #endregion
 
     #region Public properties
