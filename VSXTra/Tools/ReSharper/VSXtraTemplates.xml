@@ -1,0 +1,16 @@
+<TemplatesExport family="Live Templates">
+  <Template uid="d6f38628-a44a-45f3-95d4-43888e2d8aa5" text="[CommandExecMethod]&#xD;&#xA;[CommandId($GUID$, $ID$)]&#xD;&#xA;private void $NAME$()&#xD;&#xA;{&#xD;&#xA;}&#xD;&#xA;" shortcut="mhe" description="Execute Menu Command" reformat="true" shortenQualifiedReferences="true">
+    <Context>
+      <CSharpContext context="Everywhere" minimumLanguageVersion="2.0" />
+    </Context>
+    <Categories>
+      <Category name="VSXtra" />
+    </Categories>
+    <Variables>
+      <Variable name="NAME" expression="" initialRange="0" />
+      <Variable name="GUID" expression="" initialRange="0" />
+      <Variable name="ID" expression="" initialRange="0" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+</TemplatesExport>
