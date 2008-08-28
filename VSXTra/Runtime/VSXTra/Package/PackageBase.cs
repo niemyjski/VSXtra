@@ -550,6 +550,16 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the list of VSXtra packages already sited
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static List<PackageBase> SitedVSXtraPackages
+    {
+      get { return new List<PackageBase>(_PackageInstances.Values); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Shows the tool window of the specified type having the given instance ID.
     /// </summary>
     /// <typeparam name="TWindow">Type of tool window to show up.</typeparam>
