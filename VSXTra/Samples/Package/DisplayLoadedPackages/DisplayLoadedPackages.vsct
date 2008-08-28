@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidDisplayLoadedPackagesPkg">
+    <Groups>
+      <Group guid="guidDisplayLoadedPackagesCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      </Group>
+    </Groups>
+    
+    <Buttons>
+      <Button guid="guidDisplayLoadedPackagesCmdSet" id="cmdidDisplayPackages" priority="0x0100" type="Button">
+        <Parent guid="guidDisplayLoadedPackagesCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <CommandName>cmdidDisplayPackages</CommandName>
+          <ButtonText>Display Loaded VSXtra Packages</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+   
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
+    </Bitmaps>
+ 
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidDisplayLoadedPackagesPkg" value="{2fda8c97-4257-4abf-9064-f9d03bb80cc9}" />
+    <GuidSymbol name="guidDisplayLoadedPackagesCmdSet" value="{c0172d3b-a2f1-4761-adcb-922cd934814a}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidDisplayPackages" value="0x0100" />
+    </GuidSymbol>
+    <GuidSymbol name="guidImages" value="{41fbf2d3-bdc4-4a4a-9bf4-03954c1106ae}" >
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

@@ -250,6 +250,21 @@ namespace VSXtra
         select handler;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Retrieves an iterator for the registered command menu handlers.
+    /// </summary>
+    /// <param name="type">Type of the package registrating the command handlers.</param>
+    // --------------------------------------------------------------------------------------------
+    public static IEnumerable<MenuCommandHandler> GetRegisteredHandlerInstances(Type type)
+    {
+      return
+        from handler in _Handlers.Values
+        where handler.GetType().
+        DeclaringType.GenericParameterOfType(typeof(CommandGroup<>), 0) == type
+        select handler;
+    }
+
     #endregion
 
     #region Methods to override
