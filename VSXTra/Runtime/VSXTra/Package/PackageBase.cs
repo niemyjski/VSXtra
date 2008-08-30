@@ -127,6 +127,12 @@ namespace VSXtra
     /// </summary>
     private CommandDispatcher<PackageBase> _CommandDispatcher;
 
+    /// <summary>
+    /// Gets the editor factories registered with this package
+    /// </summary>
+    private Dictionary<Type, EditorFactoryInfo> _EditorFactories =
+      new Dictionary<Type, EditorFactoryInfo>();
+
     #endregion
 
     #region Private enums
@@ -173,6 +179,7 @@ namespace VSXtra
     {
       if (!disposing) return;
 
+      DestroyEditorFactories();
       DestroyPages();
       DestroyComponentToolWindows();
       DestroyServices();
@@ -184,6 +191,43 @@ namespace VSXtra
 
       // --- Disconnect user preference change events
       SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Destroys all editor factories used by this package.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void DestroyEditorFactories()
+    {
+        var editorFactories = _EditorFactories;
+        _EditorFactories = null;
+        try
+        {
+          var registerEditors = GetService<SVsRegisterEditors, IVsRegisterEditors>();
+          foreach (var efInfo in editorFactories.Values)
+          {
+            try
+            {
+              if (registerEditors != null)
+                registerEditors.UnregisterEditor(efInfo.Cookie);
+            }
+            catch (COMException) { /* do nothing */ }
+            finally
+            {
+              var disposable = efInfo.Factory as IDisposable;
+              if (disposable != null)
+              {
+                disposable.Dispose();
+              }
+            }
+          }
+        }
+        catch (Exception e)
+        {
+          VsDebug.Fail(String.Format("Failed to dispose editor factories for package {0}\n{1}", 
+            GetType().FullName, e.Message));
+        }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -243,7 +287,7 @@ namespace VSXtra
       {
         try
         {
-          var ps = this.GetService<SProfferService, IProfferService>();
+          var ps = GetService<SProfferService, IProfferService>();
           var services = _Services;
           _Services = null;
 
@@ -404,6 +448,42 @@ namespace VSXtra
         value = _ServiceProvider.GetService(serviceType);
       }
       return value;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the service described by the <typeparamref name="TService"/>
+    /// type parameter.
+    /// </summary>
+    /// <returns>
+    /// The service instance requested by the <typeparamref name="TService"/> parameter if found; otherwise null.
+    /// </returns>
+    /// <typeparam name="TService">The type of the service requested.</typeparam>
+    // --------------------------------------------------------------------------------------------
+    public TService GetService<TService>()
+    {
+      return (TService)GetService(typeof(TService));
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the service described by the <typeparamref name="SInterface"/>
+    /// type parameter and retrieves it as an interface type specified by the
+    /// <typeparamref name="TInterface"/> type parameter.
+    /// </summary>
+    /// <returns>
+    /// The service instance requested by the <see cref="SInterface"/> parameter if
+    /// found; otherwise null.
+    /// </returns>
+    /// <typeparam name="SInterface">The type of the service requested.</typeparam>
+    /// <typeparam name="TInterface">
+    /// The type of interface retrieved. The object providing <see cref="SInterface"/>
+    /// must implement <see cref="TInterface"/>.
+    /// </typeparam>
+    // --------------------------------------------------------------------------------------------
+    public TInterface GetService<SInterface, TInterface>()
+    {
+      return (TInterface)GetService(typeof(SInterface));
     }
 
     // --------------------------------------------------------------------------------------------
@@ -711,7 +791,7 @@ namespace VSXtra
       Guid persistenceGuid = toolWindowType.GUID;
       IVsWindowFrame windowFrame;
       // Use IVsUIShell to create frame.
-      var vsUiShell = this.GetService<SVsUIShell, IVsUIShell>();
+      var vsUiShell = GetService<SVsUIShell, IVsUIShell>();
       if (vsUiShell == null)
         throw new Exception(string.Format(Resources.Culture, Resources.General_MissingService,
                                           typeof (SVsUIShell).FullName));
@@ -887,7 +967,7 @@ namespace VSXtra
     public int GetProviderLocale()
     {
       int lcid = CultureInfo.CurrentCulture.LCID;
-      var loc = this.GetService<IUIHostLocale>();
+      var loc = GetService<IUIHostLocale>();
       VsDebug.Assert(loc != null, "Unable to get IUIHostLocale, defaulting CLR designer to current thread LCID");
       if (loc != null)
       {
@@ -896,6 +976,34 @@ namespace VSXtra
         lcid = (int)locale;
       }
       return lcid;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Registers an editor factory with this package.
+    /// </summary>
+    /// <remarks>
+    /// Registers this editor factory with Visual Studio. There is no need to register or unregister
+    /// an editor factory as PackageBase will handle this for you. Also, if your editor factory is 
+    /// IDisposable, it will be disposed when it is unregistered.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    protected void RegisterEditorFactory(IVsEditorFactory factory)
+    {
+      var registerEditors = GetService<SVsRegisterEditors, IVsRegisterEditors>();
+      if (registerEditors == null)
+      {
+        throw new InvalidOperationException(string.Format(Resources.Culture, Resources.Package_MissingService, 
+          typeof(SVsRegisterEditors).FullName));
+      }
+      uint cookie;
+      var riid = factory.GetType().GUID;
+      NativeMethods.ThrowOnFailure(registerEditors.RegisterEditor(ref riid, factory, out cookie));
+
+      var factoryType = factory.GetType();
+      if (_EditorFactories.ContainsKey(factoryType)) return;
+      var factoryInfo = new EditorFactoryInfo {Cookie = cookie, Factory = factory};
+      _EditorFactories.Add(factoryType, factoryInfo);
     }
 
     #endregion
@@ -982,7 +1090,7 @@ namespace VSXtra
     /// </summary>
     /// <param name="assembly">Assembly to scan for service types.</param>
     // --------------------------------------------------------------------------------------------
-    protected virtual void BindServiceTypes(Assembly assembly)
+    protected void BindServiceTypes(Assembly assembly)
     {
       var serviceTypes =
         from type in assembly.GetTypes()
@@ -1028,6 +1136,40 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Scans the types of the specified assembly and binds appropriate service types to this 
+    /// package.
+    /// </summary>
+    /// <param name="assembly">Assembly to scan for service types.</param>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void BindEditorFactoryTypes(Assembly assembly)
+    {
+      var serviceTypes =
+        from type in assembly.GetTypes()
+        where type.DerivesFromGenericType(typeof(EditorFactoryBase<,>)) &&
+          type.GenericParameterOfType(typeof (EditorFactoryBase<,>), 0) == GetType() &&
+          !type.IsAbstract &&
+          !Attribute.IsDefined(type, typeof(ManualBindAttribute))
+        select type;
+      serviceTypes.ForEach(
+        t =>
+        {
+          var editorFactory = Activator.CreateInstance(t) as IVsEditorFactory;
+          RegisterEditorFactory(editorFactory);
+        }
+        );
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Override this method to bind services manually.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void RegisterEditorFactories()
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// This method is used for automatically registered service types as ServiceCreationCallback 
     /// method.
     /// </summary>
@@ -1052,7 +1194,7 @@ namespace VSXtra
       // --- If we have services to proffer, do that now.
       if (_Services != null)
       {
-        var ps = this.GetService<SProfferService, IProfferService>();
+        var ps = GetService<SProfferService, IProfferService>();
         VsDebug.Assert(ps != null,
                        "We have services to proffer but IProfferService is not available.");
         if (ps != null)
@@ -1088,7 +1230,7 @@ namespace VSXtra
       {
         try
         {
-          var pPersistance = this.GetService<SVsSolutionPersistence, IVsSolutionPersistence>();
+          var pPersistance = GetService<SVsSolutionPersistence, IVsSolutionPersistence>();
           if (pPersistance != null)
           {
             foreach (string key in _OptionKeys)
@@ -1180,7 +1322,8 @@ namespace VSXtra
     private void InternalInitialize()
     {
       // --- First service types has to be registered
-      BindServiceTypes(GetType().Assembly);
+      var thisAssembly = GetType().Assembly;
+      BindServiceTypes(thisAssembly);
       RegisterServices();
       ProfferServices();
 
@@ -1196,8 +1339,12 @@ namespace VSXtra
       // --- Set up command handler methods
       _CommandDispatcher = new CommandDispatcher<PackageBase>(this, this);
       var parentService = _GlobalServiceProvider.GetService<IMenuCommandService, OleMenuCommandService>();
-      var localService = this.GetService<IMenuCommandService, OleMenuCommandService>();
+      var localService = GetService<IMenuCommandService, OleMenuCommandService>();
       _CommandDispatcher.RegisterCommandHandlers(localService, parentService);
+
+      // --- Set up editor factories
+      BindEditorFactoryTypes(thisAssembly);
+      RegisterEditorFactories();
 
       // --- Set up command handler classes
       BindCommandHandlers(GetType().Assembly);
@@ -1534,7 +1681,7 @@ namespace VSXtra
     int IOleCommandTarget.Exec(ref Guid guidGroup, uint nCmdId, uint nCmdExcept, IntPtr pIn, 
       IntPtr vOut)
     {
-      var target = this.GetService<IOleCommandTarget>();
+      var target = GetService<IOleCommandTarget>();
       return target != null 
         ? target.Exec(ref guidGroup, nCmdId, nCmdExcept, pIn, vOut) 
         : NativeMethods.OLECMDERR_E_NOTSUPPORTED;
@@ -1572,7 +1719,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     int IOleCommandTarget.QueryStatus(ref Guid guidGroup, uint nCmdId, OLECMD[] oleCmd, IntPtr oleText)
     {
-      var target = this.GetService<IOleCommandTarget>();
+      var target = GetService<IOleCommandTarget>();
       return target != null 
         ? target.QueryStatus(ref guidGroup, nCmdId, oleCmd, oleText) 
         : (NativeMethods.OLECMDERR_E_NOTSUPPORTED);
@@ -1643,7 +1790,7 @@ namespace VSXtra
         var service = new ProfferedService {Instance = serviceInstance};
         if (_ServiceProvider != null)
         {
-          var ps = this.GetService<SProfferService, IProfferService>();
+          var ps = GetService<SProfferService, IProfferService>();
           if (ps != null)
           {
             uint cookie;
@@ -1720,7 +1867,7 @@ namespace VSXtra
 
         if (_ServiceProvider != null)
         {
-          var ps = this.GetService<SProfferService, IProfferService>();
+          var ps = GetService<SProfferService, IProfferService>();
           if (ps != null)
           {
             uint cookie;
@@ -1779,7 +1926,7 @@ namespace VSXtra
               value = service.Instance;
               if (service.Cookie != 0)
               {
-                var ps = this.GetService<SProfferService, IProfferService>();
+                var ps = GetService<SProfferService, IProfferService>();
                 if (ps != null)
                 {
                   NativeMethods.ThrowOnFailure(ps.RevokeService(service.Cookie));
@@ -1948,7 +2095,7 @@ namespace VSXtra
       VsDebug.Assert(!string.IsNullOrEmpty(strPageGuid), "Passed page guid cannot be null");
       VsDebug.Assert(writer != null, "IVsSettingsWriter cannot be null");
 
-      var requestPageGuid = new Guid(strPageGuid);
+      var requestPageGuid = new Guid(strPageGuid ?? String.Empty);
       var profileManager = GetProfileManager(requestPageGuid, ProfileManagerLoadAction.LoadPropsFromRegistry);
       if (profileManager != null)
       {
@@ -1975,7 +2122,7 @@ namespace VSXtra
       VsDebug.Assert(reader != null, "IVsSettingsReader cannot be null");
 
       var loadPropsFromRegistry = (flags & (uint)__UserSettingsFlags.USF_ResetOnImport) == 0;
-      var requestPageGuid = new Guid(strPageGuid);
+      var requestPageGuid = new Guid(strPageGuid ?? String.Empty);
       var profileManager = GetProfileManager(requestPageGuid, 
         loadPropsFromRegistry 
           ? ProfileManagerLoadAction.LoadPropsFromRegistry 
@@ -2009,7 +2156,7 @@ namespace VSXtra
 
       try
       {
-        requestPageGuid = new Guid(strPageGuid);
+        requestPageGuid = new Guid(strPageGuid ?? String.Empty);
       }
       catch (FormatException)
       {
@@ -2102,7 +2249,7 @@ namespace VSXtra
         Marshal.ThrowExceptionForHR(NativeMethods.E_UNEXPECTED);
 
       if (name == null) return null;
-      string[] nameParts = name.Split(new char[] { '.' });
+      var nameParts = name.Split(new[] { '.' });
       if (nameParts.Length != 2)
       {
         return null;
@@ -2222,6 +2369,19 @@ namespace VSXtra
       }
     }
 
+    // ================================================================================================
+    /// <summary>
+    /// This class describes a registered editor factory
+    /// </summary>
+    // ================================================================================================
+    private sealed class EditorFactoryInfo
+    {
+      /// <summary>Cookie adressing the registered editor factory</summary>
+      public uint Cookie;
+      /// <summary>Editor factory instance</summary>
+      public IVsEditorFactory Factory;
+    }
+
     #endregion
 
     #region Private methods
@@ -2263,80 +2423,65 @@ namespace VSXtra
       return null;
     }
 
-    /// <include file='doc\Package.uex' path='docs/doc[@for="Package.GetProfileManager"]' />
-    /// <devdoc>
-    ///     This method returns the requested profile manager based on its guid.
-    ///     Profile managers are cached so they can keep a single instance
-    ///     of their state.  This method allows a deriving class
-    ///     to get a cached profile manager.  The object will be 
-    ///     dynamically created if it is not in the cache.
-    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the specified profile manager.
+    /// </summary>
+    /// <remarks>
+    /// This method returns the requested profile manager based on its guid. Profile managers are 
+    /// cached so they can keep a single instance of their state. This method allows a deriving 
+    /// class to get a cached profile manager. The object will be dynamically created if it is not 
+    /// in the cache.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     private IProfileManager GetProfileManager(Guid objectGuid, ProfileManagerLoadAction loadAction)
     {
-
       IProfileManager result = null;
-
       if (objectGuid == Guid.Empty)
-      {
         throw new ArgumentNullException("objectGuid");
-      }
       if (_PagesAndProfiles != null)
       {
-        foreach (object profileManager in _PagesAndProfiles.Components)
+        foreach (var profileManager in _PagesAndProfiles.Components)
         {
-          if (profileManager.GetType().GUID.Equals(objectGuid))
+          if (!profileManager.GetType().GUID.Equals(objectGuid)) continue;
+          result = profileManager as IProfileManager;
+          if (result != null)
           {
-            if (profileManager is IProfileManager)
+            switch (loadAction)
             {
-              result = profileManager as IProfileManager;
-              if (result != null)
-              {
-                switch (loadAction)
-                {
-                  case ProfileManagerLoadAction.LoadPropsFromRegistry:
-                    result.LoadSettingsFromStorage();
-                    break;
-                  case ProfileManagerLoadAction.ResetSettings:
-                    result.ResetSettings();
-                    break;
-                }
-              }
+              case ProfileManagerLoadAction.LoadPropsFromRegistry:
+                result.LoadSettingsFromStorage();
+                break;
+              case ProfileManagerLoadAction.ResetSettings:
+                result.ResetSettings();
+                break;
             }
-
-            // No need to keep on looking in the attributes since
-            // we've found the one we were looking for.
-
-            break;
           }
+          break;
         }
       }
-
       if (result == null)
       {
-
-        // Didn't find it in our cache.  Now look in the metadata attributes
-        // for the class.  Look at all types at the same time.
-        //
-        AttributeCollection attributes = TypeDescriptor.GetAttributes(this);
+        // --- Didn't find it in our cache.  Now look in the metadata attributes for the 
+        // --- class. Look at all types at the same time.
+        var attributes = TypeDescriptor.GetAttributes(this);
         foreach (Attribute attr in attributes)
         {
           if (attr is ProvideProfileAttribute)
           {
-            Type objectType = ((ProvideProfileAttribute)attr).ObjectType;
+            var objectType = ((ProvideProfileAttribute)attr).ObjectType;
             if (objectType.GUID.Equals(objectGuid))
             {
-
-              // found it... now instanciate since it was not in the cache
-              // if not build a constructor for it
-
-              ConstructorInfo ctor = objectType.GetConstructor(new Type[] { });
+              // --- Found it... Now instanciate since it was not in the cache
+              // --- If not build a constructor for it
+              var ctor = objectType.GetConstructor(new Type[] { });
               if (ctor == null)
               {
                 throw new ArgumentException(string.Format(Resources.Culture, Resources.Package_PageCtorMissing, objectType.FullName));
               }
               result = (IProfileManager)ctor.Invoke(new object[] { });
 
-              // if it's a DialogPage cache it
+              // --- If it's a DialogPage cache it
               if (result != null)
               {
                 if (_PagesAndProfiles == null)
@@ -2345,10 +2490,6 @@ namespace VSXtra
                 }
                 _PagesAndProfiles.Add((IComponent)result);
               }
-
-              // No need to load settings from storage on first creation
-              // since that happens because of the Add above.
-
               break;
             }
           }

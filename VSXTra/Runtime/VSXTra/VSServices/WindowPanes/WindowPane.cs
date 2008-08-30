@@ -82,7 +82,7 @@ namespace VSXtra
     // --- must implement this interface.
     IDisposable
     where TPackage: PackageBase
-    where TUIControl: UserControl, new()
+    where TUIControl: Control, new()
   {
     #region Private fields
 

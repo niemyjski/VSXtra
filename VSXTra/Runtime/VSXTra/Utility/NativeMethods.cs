@@ -11,10 +11,10 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
 using IServiceProvider=System.IServiceProvider;
@@ -26,7 +26,7 @@ namespace VSXtra
   /// Static class for native P/Invoke methods and types
   /// </summary>
   // ================================================================================================
-  internal static class NativeMethods
+  public static class NativeMethods
   {
     #region ExtendedSpecialFolder enum
 
@@ -89,6 +89,44 @@ namespace VSXtra
       BMP_SHORTCUT = -4,
       BMP_USER = -5
     } ;
+
+    #endregion
+
+    #region SHFILEINFO Struct
+
+    /// <summary>
+    /// SHFILEINFO Struct
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SHFILEINFO
+    {
+      /// <summary>
+      /// 
+      /// </summary>
+      public IntPtr hIcon;
+      /// <summary>
+      /// 
+      /// </summary>
+      public IntPtr iIcon;
+      /// <summary>
+      /// 
+      /// </summary>
+      public uint dwAttributes;
+      /// <summary>
+      /// 
+      /// </summary>
+      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+      public string szDisplayName;
+      /// <summary>
+      /// 
+      /// </summary>
+      [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+      public string szTypeName;
+    };
+
+    public const uint SHGFI_ICON = 0x100;
+    public const uint SHGFI_LARGEICON = 0x0;
+    public const uint SHGFI_SMALLICON = 0x1;
 
     #endregion
 
@@ -628,6 +666,31 @@ namespace VSXtra
       return uri.LocalPath + uri.Fragment;
     }
 
+    /// <summary>
+    /// Gets the icon.
+    /// </summary>
+    /// <param name="pszPath">The PSZ path.</param>
+    /// <returns></returns>
+    public static Icon GetIcon(string pszPath)
+    {
+      var shinfo = new SHFILEINFO();
+
+      SHGetFileInfo(pszPath, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_SMALLICON);
+
+      if ((int)shinfo.hIcon == 0)
+        return null;
+
+      try
+      {
+        Icon myIcon = Icon.FromHandle(shinfo.hIcon);
+        return myIcon;
+      }
+      catch (ArgumentException)
+      {
+        return null;
+      }
+    }
+
     /// <devdoc>
     /// Please use this "approved" method to compare file names.
     /// </devdoc>
@@ -716,6 +779,36 @@ namespace VSXtra
       }
       return hr;
     }
+
+    /// <summary>
+    /// Get file info.
+    /// </summary>
+    /// <param name="pszPath">The PSZ path.</param>
+    /// <param name="dwFileAttributes">The dw file attributes.</param>
+    /// <param name="psfi">The psfi.</param>
+    /// <param name="cbSizeFileInfo">The cb size file info.</param>
+    /// <param name="uFlags">The u flags.</param>
+    /// <returns></returns>
+    [DllImport("shell32.dll")]
+    public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
+
+    /// <summary>
+    /// Get image count.
+    /// </summary>
+    /// <param name="HIMAGELIST">The HIMAGELIST.</param>
+    /// <returns></returns>
+    [DllImport("COMCTL32")]
+    public static extern int ImageList_GetImageCount(int HIMAGELIST);
+
+    /// <summary>
+    /// Get icon.
+    /// </summary>
+    /// <param name="HIMAGELIST">The HIMAGELIST.</param>
+    /// <param name="ImgIndex">Index of the img.</param>
+    /// <param name="hbmMask">The HBM mask.</param>
+    /// <returns></returns>
+    [DllImport("COMCTL32")]
+    public static extern int ImageList_GetIcon(int HIMAGELIST, int ImgIndex, int hbmMask);
 
     #region Nested type: ConnectionPointCookie
 
@@ -863,7 +956,7 @@ namespace VSXtra
     /// This class implements a managed Stream object on top
     /// of a COM IStream
     /// </devdoc>
-    internal sealed class DataStreamFromComStream : Stream, IDisposable
+    internal sealed class DataStreamFromComStream : Stream
     {
 #if DEBUG
       private readonly string creatingStack;
@@ -910,12 +1003,6 @@ namespace VSXtra
           Position = curPos;
           return endPos - curPos;
         }
-      }
-
-      private void _NotImpl(string message)
-      {
-        var ex = new NotSupportedException(message, new ExternalException(String.Empty, VSConstants.E_NOTIMPL));
-        throw ex;
       }
 
       protected override void Dispose(bool disposing)
@@ -975,8 +1062,7 @@ namespace VSXtra
 
       public override void SetLength(long value)
       {
-        var ul = new ULARGE_INTEGER();
-        ul.QuadPart = (ulong) value;
+        var ul = new ULARGE_INTEGER {QuadPart = ((ulong) value)};
         comStream.SetSize(ul);
       }
 
@@ -992,8 +1078,6 @@ namespace VSXtra
 
       public override void Write(byte[] buffer, int index, int count)
       {
-        uint bytesWritten;
-
         if (count > 0)
         {
           byte[] b = buffer;
@@ -1004,6 +1088,7 @@ namespace VSXtra
             buffer.CopyTo(b, 0);
           }
 
+          uint bytesWritten;
           comStream.Write(b, (uint) count, out bytesWritten);
           if (bytesWritten != count)
             // Didn't write enough bytes to IStream!

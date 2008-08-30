@@ -243,4 +243,7 @@
   <data name="Package_BadDialogPageType" xml:space="preserve">
     <value>The dialog page type {0} does not derive from DialogPage.</value>
   </data>
+  <data name="Package_MissingService" xml:space="preserve">
+    <value>The package requires that service '{0}' be installed.  Ensure that this service is available.</value>
+  </data>
 </root>

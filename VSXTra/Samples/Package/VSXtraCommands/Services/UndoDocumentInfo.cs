@@ -7,6 +7,10 @@
 // Created: 2008, by Pablo Galiano
 // Revised: 2008.08.12, by Istvan Novak (DeepDiver)
 // ================================================================================================
+using System.IO;
+using EnvDTE;
+using VSXtra;
+
 namespace DeepDiver.VSXtraCommands
 {
   // ================================================================================================
@@ -69,6 +73,41 @@ namespace DeepDiver.VSXtraCommands
       CursorLine = cursorLine;
       CursorColumn = cursorColumn;
       DocumentViewKind = viewKind;
+    }
+
+    #endregion
+
+    #region Public methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Opens the document covered by this instance.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public void OpenDocument()
+    {
+      if (File.Exists(DocumentPath))
+      {
+        var window = VsIde.DteInstance.OpenFile(DocumentViewKind, DocumentPath);
+        if (window != null)
+        {
+          window.Visible = true;
+          window.Activate();
+
+          if (CursorLine > 1 || CursorColumn > 1)
+          {
+            var selection = window.Document.Selection as TextSelection;
+
+            if (selection != null)
+            {
+              //Move cursor
+              selection.MoveTo(CursorLine, CursorColumn, true);
+              //Clear selection
+              selection.Cancel();
+            }
+          }
+        }
+      }
     }
 
     #endregion
