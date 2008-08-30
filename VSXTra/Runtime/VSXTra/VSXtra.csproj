@@ -90,6 +90,7 @@
     <Compile Include="Utility\ComHelper.cs" />
     <Compile Include="Utility\Diagnostics\VsDebug.cs" />
     <Compile Include="Utility\EventHooker.cs" />
+    <Compile Include="Utility\GuidTypes\LogicalView.cs" />
     <Compile Include="Utility\GuidTypes\UIContext.cs" />
     <Compile Include="Utility\GuidTypes\WindowKind.cs" />
     <Compile Include="Utility\CommonExtensions.cs" />
@@ -113,6 +114,9 @@
     <Compile Include="VSServices\DialogPages\DialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="VSServices\Editors\ICommonEditorCommand.cs" />
+    <Compile Include="VSServices\Editors\EditorFactoryBase.cs" />
+    <Compile Include="VSServices\Editors\EditorPaneBase.cs" />
     <Compile Include="VSServices\OutputWindow\MissingOutputPaneHandling.cs" />
     <Compile Include="VSServices\OutputWindow\OutputPaneAttributes.cs" />
     <Compile Include="VSServices\OutputWindow\OutputPaneDefinition.cs" />

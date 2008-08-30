@@ -117,22 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CapacityShouldBeGreaterThanZero" xml:space="preserve">
-    <value>Capacity should be &gt; 0</value>
+  <data name="110" xml:space="preserve">
+    <value>BlogItemEditor</value>
   </data>
-  <data name="EmptyStack" xml:space="preserve">
-    <value>Empty stack</value>
+  <data name="112" xml:space="preserve">
+    <value>This package demonstrates how to create a simple custom editor with VSXtra.</value>
   </data>
-  <data name="EnumEnded" xml:space="preserve">
-    <value>Enumeration ended</value>
+  <data name="200" xml:space="preserve">
+    <value>Blog Item File</value>
   </data>
-  <data name="EnumNotStarted" xml:space="preserve">
-    <value>Enumeration not started</value>
+  <data name="201" xml:space="preserve">
+    <value>DeepDiver</value>
   </data>
-  <data name="RecentlyClosedDocuments" xml:space="preserve">
-    <value>Recently closed documents</value>
+  <data name="202" xml:space="preserve">
+    <value>This sample demonstrates a custom editor for a blog item</value>
   </data>
-  <data name="UndoCloseCaption" xml:space="preserve">
-    <value>Undo Close</value>
+  <data name="203" xml:space="preserve">
+    <value>BlogItem.blit</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Package.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

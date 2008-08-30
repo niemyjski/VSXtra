@@ -36,6 +36,14 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PublicAssemblies\EnvDTE.dll</HintPath>
+    </Reference>
+    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\PublicAssemblies\EnvDTE80.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
@@ -68,6 +76,8 @@
     <Compile Include="Commands\CommandGroup.cs" />
     <Compile Include="Commands\CommandHandlerBase.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="Linq\HierarchyNode.cs" />
+    <Compile Include="Linq\HierarchyNodeIterator.cs" />
     <Compile Include="OptionsPages\CommandsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -102,6 +112,13 @@
     <Compile Include="Services\SCommandManagerService.cs" />
     <Compile Include="Services\SUndoCloseManagerService.cs" />
     <Compile Include="Services\UndoCloseManagerService.cs" />
+    <Compile Include="ToolWindows\UndoCloseControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ToolWindows\UndoCloseControl.designer.cs">
+      <DependentUpon>UndoCloseControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ToolWindows\UndoCloseToolWindow.cs" />
     <Compile Include="UI\ClearListModel.cs" />
     <Compile Include="UI\ClearListView.xaml.cs">
       <DependentUpon>ClearListView.xaml</DependentUpon>
@@ -123,6 +140,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolWindows\UndoCloseControl.resx">
+      <DependentUpon>UndoCloseControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
