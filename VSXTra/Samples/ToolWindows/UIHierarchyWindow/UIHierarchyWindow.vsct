@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidUIHierarchyWindowPkg">
+    <Groups>
+      <Group guid="guidUIHierarchyWindowCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      </Group>
+    </Groups>
+    
+    <Buttons>
+      <Button guid="guidUIHierarchyWindowCmdSet" id="cmdidShowUIHierarchy" priority="0x0100" type="Button">
+        <Parent guid="guidUIHierarchyWindowCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <CommandName>cmdidShowUIHierarchy</CommandName>
+          <ButtonText>Display UI Hierarchy Window</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+   
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
+    </Bitmaps>
+ 
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidUIHierarchyWindowPkg" value="{9176a015-55e8-4bfe-afe0-f48a81f81570}" />
+    <GuidSymbol name="guidUIHierarchyWindowCmdSet" value="{0a41bc9f-53cd-4299-8d23-123721a25093}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="HierWindowToolbar" value="0x1021" />
+      <IDSymbol name="cmdidShowUIHierarchy" value="0x0100" />
+    </GuidSymbol>
+    <GuidSymbol name="guidImages" value="{8463a7c5-8896-4ea5-bac2-ca4350c693d3}" >
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

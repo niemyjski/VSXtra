@@ -246,4 +246,13 @@
   <data name="Package_MissingService" xml:space="preserve">
     <value>The package requires that service '{0}' be installed.  Ensure that this service is available.</value>
   </data>
+  <data name="Attributes_InvalidFactoryType" xml:space="preserve">
+    <value>The factoryType must be of one of those type: Type, Guid, string (representing a Guid).</value>
+  </data>
+  <data name="Reg_NotifyEditorView" xml:space="preserve">
+    <value>Logical View:     {0}</value>
+  </data>
+  <data name="ILogicalViewGuidType_Expected" xml:space="preserve">
+    <value>Only types implementing ILogicalViewGuidType are accepted in XtraProvideEditorLogicalView.</value>
+  </data>
 </root>

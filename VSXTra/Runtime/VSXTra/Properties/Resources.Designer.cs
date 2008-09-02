@@ -61,6 +61,15 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The factoryType must be of one of those type: Type, Guid, string (representing a Guid)..
+        /// </summary>
+        internal static string Attributes_InvalidFactoryType {
+            get {
+                return ResourceManager.GetString("Attributes_InvalidFactoryType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown docking style: {0}..
         /// </summary>
         internal static string Attributes_UnknownDockingStyle {
@@ -210,6 +219,15 @@ namespace VSXtra.Properties {
         internal static string ICommandGroupProvider_Expected {
             get {
                 return ResourceManager.GetString("ICommandGroupProvider_Expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only types implementing ILogicalViewGuidType are accepted in XtraProvideEditorLogicalView..
+        /// </summary>
+        internal static string ILogicalViewGuidType_Expected {
+            get {
+                return ResourceManager.GetString("ILogicalViewGuidType_Expected", resourceCulture);
             }
         }
         
@@ -390,6 +408,15 @@ namespace VSXtra.Properties {
         internal static string Reg_NotifyAutoLoad {
             get {
                 return ResourceManager.GetString("Reg_NotifyAutoLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logical View:     {0}.
+        /// </summary>
+        internal static string Reg_NotifyEditorView {
+            get {
+                return ResourceManager.GetString("Reg_NotifyEditorView", resourceCulture);
             }
         }
         

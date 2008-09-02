@@ -21,7 +21,6 @@ namespace DeepDiver.BlogItemEditor
     ProjectGuid = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}",
     TemplateDir = @"..\..\Templates",
     NameResourceID = 200)]
-  [ProvideEditorLogicalView(typeof(BlogItemEditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
   [Guid(GuidList.guidBlogItemEditorPkgString)]
   public sealed class BlogItemEditorPackage : PackageBase
   {

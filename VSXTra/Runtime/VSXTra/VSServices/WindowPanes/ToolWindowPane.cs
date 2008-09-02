@@ -39,7 +39,7 @@ namespace VSXtra
     /// This is used to specify the CLSID of a tool that should be used for this toolwindow
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    Guid ToolClsid { get; set; }
+    Guid ToolClsid { get; }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -309,15 +309,9 @@ namespace VSXtra
     /// <value>The tool CLSID.</value>
     // --------------------------------------------------------------------------------------------
     // TODO: Think it over if we need this propertyat all
-    public Guid ToolClsid
+    public virtual Guid ToolClsid
     {
-      get { return _ToolClsid; }
-      set
-      {
-        if (_Frame != null)
-          throw new Exception(Resources.ToolWindow_TooLateToAddTool);
-        _ToolClsid = value;
-      }
+      get { return Guid.Empty; }
     }
 
     // --------------------------------------------------------------------------------------------

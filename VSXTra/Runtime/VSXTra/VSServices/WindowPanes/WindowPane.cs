@@ -169,7 +169,12 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     public IWin32Window Window
     {
-      get { return _UIControl; }
+      get
+      {
+        return typeof(TUIControl) == typeof(WindowPanePlaceHolderControl)
+          ? null 
+          : _UIControl;
+      }
     }
 
     public SelectionTracker SelectionTracker
