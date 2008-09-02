@@ -19,11 +19,22 @@ namespace VSXtra
     ClsIdToolWindowPane<TPackage>
     where TPackage: PackageBase
   {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Retrieves the CLSID_VsUIHierarchyWindow class ID.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     protected override Guid ToolWindowClassGuid 
     {
       get { return VSConstants.CLSID_VsUIHierarchyWindow; }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Retrieves the IVsUIHierarchyWindow instance representing the native hierarchy window 
+    /// behind this tool window instance.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     public IVsUIHierarchyWindow HierarchyWindow
     {
       get
