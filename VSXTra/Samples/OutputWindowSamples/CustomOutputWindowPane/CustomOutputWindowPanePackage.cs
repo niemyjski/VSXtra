@@ -6,7 +6,9 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.TextManager.Interop;
 using VSXtra;
 
 namespace DeepDiver.CustomOutputWindowPane

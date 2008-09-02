@@ -16,14 +16,6 @@ namespace DeepDiver.BlogItemEditor
   // ==================================================================================
   public sealed class BlogItemEditorData : IXmlPersistable
   {
-    #region Private fields
-
-    private string _Title;
-    private string _Categories;
-    private string _Body;
-
-    #endregion
-
     #region Constant values
 
     public const string BlogItemNamespace = "http://www.codeplex.com/VSXtra/BlogItemv1.0";
@@ -66,9 +58,9 @@ namespace DeepDiver.BlogItemEditor
     // --------------------------------------------------------------------------------
     public BlogItemEditorData(string title, string categories, string body)
     {
-      _Title = title;
-      _Categories = categories;
-      _Body = body;
+      Title = title;
+      Categories = categories;
+      Body = body;
     }
 
     #endregion
@@ -80,33 +72,21 @@ namespace DeepDiver.BlogItemEditor
     /// Gets the title of the blog post.
     /// </summary>
     // --------------------------------------------------------------------------------
-    public string Title
-    {
-      get { return _Title; }
-      set { _Title = value; }
-    }
+    public string Title { get; set; }
 
     // --------------------------------------------------------------------------------
     /// <summary>
     /// Gets the categories string of the blog post.
     /// </summary>
     // --------------------------------------------------------------------------------
-    public string Categories
-    {
-      get { return _Categories; }
-      set { _Categories = value; }
-    }
+    public string Categories { get; set; }
 
     // --------------------------------------------------------------------------------
     /// <summary>
     /// Gets the body text of the blog post.
     /// </summary>
     // --------------------------------------------------------------------------------
-    public string Body
-    {
-      get { return _Body; }
-      set { _Body = value; }
-    }
+    public string Body { get; set; }
 
     #endregion
 
@@ -163,12 +143,12 @@ namespace DeepDiver.BlogItemEditor
     public void SaveTo(XElement targetElement)
     {
       // --- Create title
-      targetElement.Add(new XElement(TitleXName, _Title));
+      targetElement.Add(new XElement(TitleXName, Title));
       
       // --- Create category hierarchy
       var categories = new XElement(CategoriesXName);
       targetElement.Add(categories);
-      string[] categoryList = _Categories.Split(';');
+      string[] categoryList = Categories.Split(';');
       foreach (string category in categoryList)
       {
         string trimmed = category.Trim();
@@ -181,7 +161,7 @@ namespace DeepDiver.BlogItemEditor
       // --- Create the body
       targetElement.Add(
         new XElement(BodyXName,
-                     new XCData(_Body))
+                     new XCData(Body))
         );
     }
 
@@ -197,17 +177,17 @@ namespace DeepDiver.BlogItemEditor
       XElement titleElement = sourceElement.Element(TitleXName);
       if (titleElement == null)
         throw new InvalidOperationException("'Title' element is missing");
-      _Title = titleElement.Value;
+      Title = titleElement.Value;
 
       // --- Obtain categories
-      _Categories = string.Empty;
+      Categories = string.Empty;
       XElement categoriesElement = sourceElement.Element(CategoriesXName);
       if (categoriesElement != null)
       {
         foreach(XElement categoryElement in categoriesElement.Elements(CategoryXName))
         {
-          if (_Categories.Length > 0) _Categories += "; ";
-          _Categories += categoryElement.Value;
+          if (Categories.Length > 0) Categories += "; ";
+          Categories += categoryElement.Value;
         }
       }
 
@@ -215,8 +195,8 @@ namespace DeepDiver.BlogItemEditor
       XElement bodyElement = sourceElement.Element(BodyXName);
       if (bodyElement == null)
         throw new InvalidOperationException("'Body' element is missing");
-      _Body = bodyElement.Value;
-      _Body = _Body.Replace("\n", "\r\n");
+      Body = bodyElement.Value;
+      Body = Body.Replace("\n", "\r\n");
     }
 
     #endregion
