@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Xml;
 using EnvDTE;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -22,7 +23,7 @@ using OleConstants = Microsoft.VisualStudio.OLE.Interop.Constants;
 using VsCommands = Microsoft.VisualStudio.VSConstants.VSStd97CmdID;
 using VsCommands2K = Microsoft.VisualStudio.VSConstants.VSStd2KCmdID;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// Manages the persistent state of the project (References, options, files, etc.) and deals with user interaction via a GUI in the form a hierarchy.
@@ -304,7 +305,7 @@ namespace Microsoft.VisualStudio.Project
 		/// <summary>
 		/// The internal package implementation.
 		/// </summary>
-		private ProjectPackage package;
+		private ProjectPackageBase package;
 
 		// Has the object been disposed.
 		private bool isDisposed;
@@ -928,7 +929,7 @@ namespace Microsoft.VisualStudio.Project
 		/// The internal package implementation.
 		/// </summary>
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		internal ProjectPackage Package
+		internal ProjectPackageBase Package
 		{
 			get
 			{
@@ -2873,7 +2874,7 @@ namespace Microsoft.VisualStudio.Project
 			}
 
 			// Do some name validation
-			if(Microsoft.VisualStudio.Project.Utilities.ContainsInvalidFileNameChars(newFile))
+			if(Utilities.ContainsInvalidFileNameChars(newFile))
 			{
 				throw new InvalidOperationException(SR.GetString(SR.ErrorInvalidProjectName, CultureInfo.CurrentUICulture));
 			}

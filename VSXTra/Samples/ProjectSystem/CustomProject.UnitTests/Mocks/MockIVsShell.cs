@@ -8,7 +8,7 @@ using Microsoft.VsSDK.UnitTestLibrary;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
+namespace VSXtra.ProjectSystem.Samples.CustomProject.UnitTests
 {
 	public static class MockIVsShell
 	{

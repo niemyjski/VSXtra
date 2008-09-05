@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using VSLangProj;
 using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 
-namespace Microsoft.VisualStudio.Project.Automation
+namespace VSXtra.ProjectSystem.Automation
 {
 	/// <summary>
 	/// Represents the automation object for the equivalent ReferenceContainerNode object

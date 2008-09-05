@@ -4,12 +4,12 @@ using System;
 using System.IO;
 using Microsoft.Build.BuildEngine;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Project;
-using Microsoft.VisualStudio.Project.Samples.CustomProject;
+using VSXtra.ProjectSystem;
+using VSXtra.ProjectSystem.Samples.CustomProject;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
+namespace VSXtra.ProjectSystem.Samples.CustomProject.UnitTests
 {
 	[TestClass]
 	public class MyCustomProjectNodeTest : BaseTest
@@ -35,7 +35,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
 			customProjectPackage = new CustomProjectPackage();
 			((IVsPackage)customProjectPackage).SetSite(serviceProvider);
 
-			customProjectFactory = new MyCustomProjectFactory(customProjectPackage);
+			customProjectFactory = new MyCustomProjectFactory();
 
 			base.SetMsbuildEngine(customProjectFactory);
 

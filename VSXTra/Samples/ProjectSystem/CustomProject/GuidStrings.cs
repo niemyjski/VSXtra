@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace VSXtra.ProjectSystem.Samples.CustomProject
 {
 	/// <summary>
 	/// This class contains the package GUID for this sample

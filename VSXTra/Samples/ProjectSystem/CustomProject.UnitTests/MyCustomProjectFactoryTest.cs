@@ -2,11 +2,11 @@
 
 using System;
 using System.IO;
-using Microsoft.VisualStudio.Project.Samples.CustomProject;
+using VSXtra.ProjectSystem.Samples.CustomProject;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
+namespace VSXtra.ProjectSystem.Samples.CustomProject.UnitTests
 {
 	[TestClass]
 	public class MyCustomProjectFactoryTest : BaseTest
@@ -30,7 +30,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
 		[TestMethod()]
 		public void ConstructorTest()
 		{
-			MyCustomProjectFactory myCustomProjectFactory = new MyCustomProjectFactory(customProjectPackage);
+			MyCustomProjectFactory myCustomProjectFactory = new MyCustomProjectFactory();
 			Assert.IsNotNull(myCustomProjectFactory, "Constructor failed");
 		}
 
@@ -40,7 +40,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
 			int actual;
 			int expected = 1;
 
-			MyCustomProjectFactory customProjectFactory = new MyCustomProjectFactory(customProjectPackage);
+			MyCustomProjectFactory customProjectFactory = new MyCustomProjectFactory();
 
 			base.SetMsbuildEngine(customProjectFactory);
 

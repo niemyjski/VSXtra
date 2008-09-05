@@ -5,7 +5,7 @@ using System.Globalization;
 using System.IO;
 using Microsoft.VisualStudio.Build.ComInteropWrapper;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// Does security validation of a user project before loading the project.

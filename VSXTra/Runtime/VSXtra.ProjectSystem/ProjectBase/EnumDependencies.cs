@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	[CLSCompliant(false)]
 	public class EnumDependencies : IVsEnumDependencies

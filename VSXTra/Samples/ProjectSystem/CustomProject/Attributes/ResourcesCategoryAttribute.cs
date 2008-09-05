@@ -3,7 +3,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace VSXtra.ProjectSystem.Samples.CustomProject
 {
 	/// <summary>
 	/// Indicates the category to associate the associated property or event with, 

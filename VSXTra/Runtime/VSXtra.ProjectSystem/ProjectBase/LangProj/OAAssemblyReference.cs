@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using VSLangProj;
 
-namespace Microsoft.VisualStudio.Project.Automation
+namespace VSXtra.ProjectSystem.Automation
 {
 	[SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
 	[ComVisible(true)]

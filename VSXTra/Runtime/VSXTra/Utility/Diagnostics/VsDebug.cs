@@ -22,7 +22,13 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     static VsDebug()
     {
-      OutputPane = OutputWindow.Debug;
+      try
+      {
+        OutputPane = OutputWindow.Debug;
+      }
+      catch (SystemException)
+      {
+      }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -43,12 +49,18 @@ namespace VSXtra
     [Conditional("DEBUG")]
     public static void Assert(bool condition)
     {
-      if (!condition)
+      try
       {
-        DisplayIndent();
-        OutputPane.WriteLine("Assertion failed");
-        DisplayIndent();
-        OutputPane.WriteLine(Environment.StackTrace);
+        if (!condition)
+        {
+          DisplayIndent();
+          OutputPane.WriteLine("Assertion failed");
+          DisplayIndent();
+          OutputPane.WriteLine(Environment.StackTrace);
+        }
+      }
+      catch (SystemException)
+      {
       }
     }
 
@@ -64,11 +76,17 @@ namespace VSXtra
     [Conditional("DEBUG")]
     public static void Assert(bool condition, string message)
     {
-      if (!condition)
+      try
       {
-        DisplayIndent();
-        OutputPane.Write("Assertion failed: ");
-        OutputPane.WriteLine(message);
+        if (!condition)
+        {
+          DisplayIndent();
+          OutputPane.Write("Assertion failed: ");
+          OutputPane.WriteLine(message);
+        }
+      }
+      catch (SystemException)
+      {
       }
     }
 
@@ -85,13 +103,19 @@ namespace VSXtra
     [Conditional("DEBUG")]
     public static void Assert(bool condition, string message, string details)
     {
-      if (!condition)
+      try
       {
-        DisplayIndent();
-        OutputPane.Write("Assertion failed: ");
-        OutputPane.WriteLine(message);
-        DisplayIndent();
-        OutputPane.WriteLine(details);
+        if (!condition)
+        {
+          DisplayIndent();
+          OutputPane.Write("Assertion failed: ");
+          OutputPane.WriteLine(message);
+          DisplayIndent();
+          OutputPane.WriteLine(details);
+        }
+      }
+      catch (SystemException)
+      {
       }
     }
 
@@ -104,8 +128,14 @@ namespace VSXtra
     [Conditional("DEBUG")]
     public static void Fail(string message)
     {
-      DisplayIndent();
-      OutputPane.WriteLine(message);
+      try
+      {
+        DisplayIndent();
+        OutputPane.WriteLine(message);
+      }
+      catch (SystemException)
+      {
+      }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -118,10 +148,16 @@ namespace VSXtra
     [Conditional("DEBUG")]
     public static void Fail(string message, string details)
     {
-      DisplayIndent();
-      OutputPane.WriteLine(message);
-      DisplayIndent();
-      OutputPane.WriteLine(details);
+      try
+      {
+        DisplayIndent();
+        OutputPane.WriteLine(message);
+        DisplayIndent();
+        OutputPane.WriteLine(details);
+      }
+      catch (SystemException)
+      {
+      }
     }
 
     // --------------------------------------------------------------------------------------------

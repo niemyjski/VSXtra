@@ -105,6 +105,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Package\ProjectConstants.cs" />
     <Compile Include="ProjectBase\AssemblyReferenceNode.cs" />
     <Compile Include="ProjectBase\Attributes.cs" />
     <Compile Include="ProjectBase\AutomationScope.cs" />
@@ -171,13 +172,13 @@
     <Compile Include="ProjectBase\ProjectDesignerDocumentManager.cs" />
     <Compile Include="ProjectBase\ProjectDocumentsListener.cs" />
     <Compile Include="ProjectBase\ProjectElement.cs" />
-    <Compile Include="ProjectBase\ProjectFactory.cs" />
+    <Compile Include="Package\ProjectFactoryBase.cs" />
     <Compile Include="ProjectBase\ProjectFileConstants.cs" />
     <Compile Include="ProjectBase\ProjectNode.CopyPaste.cs" />
     <Compile Include="ProjectBase\ProjectNode.cs" />
     <Compile Include="ProjectBase\ProjectNode.Events.cs" />
     <Compile Include="ProjectBase\ProjectOptions.cs" />
-    <Compile Include="ProjectBase\ProjectPackage.cs" />
+    <Compile Include="Package\ProjectPackage.cs" />
     <Compile Include="ProjectBase\ProjectReferenceNode.cs" />
     <Compile Include="ProjectBase\ProjectSecurityChecker.cs" />
     <Compile Include="ProjectBase\PropertiesEditorLauncher.cs" />
@@ -212,6 +213,11 @@
     <Compile Include="ProjectBase\VsCommands.cs" />
     <Compile Include="ProjectBase\VSShellUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk.pfx" />
@@ -237,6 +243,16 @@
     <EmbeddedResource Include="ProjectBase\imagelis.bmp" />
     <EmbeddedResource Include="ProjectBase\VisualStudio.Project.resx">
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VSXTra\VSXtra.csproj">
+      <Project>{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}</Project>
+      <Name>VSXtra</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

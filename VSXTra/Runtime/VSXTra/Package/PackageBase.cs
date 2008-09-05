@@ -9,6 +9,7 @@
 // Created: 2008.06.29, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -132,6 +133,8 @@ namespace VSXtra
     /// </summary>
     private Dictionary<Type, EditorFactoryInfo> _EditorFactories =
       new Dictionary<Type, EditorFactoryInfo>();
+
+    private Hashtable _ProjectFactories;
 
     #endregion
 
@@ -1006,6 +1009,39 @@ namespace VSXtra
       _EditorFactories.Add(factoryType, factoryInfo);
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Registers the specified project factory with the package.
+    /// </summary>
+    /// <devdoc>
+    /// Registers this project factory with Visual Studio.
+    /// If you are providing an project factory, you should register
+    /// it by overriding the Initialize method. Call 
+    /// base.Initialize first, and then call RegisterProjectFactory
+    /// for each project factory.  There is no need to unregister
+    /// an project factory as the Package base class will handle this for you.
+    /// Also, if your project factory is IDisposable, it will be
+    /// disposed when it is unregistered.
+    /// </devdoc>
+    // --------------------------------------------------------------------------------------------
+    protected void RegisterProjectFactory(IVsProjectFactory factory)
+    {
+      // TODO: Refactor this method to use dictionaries (like RegisterEditorFactory)
+      var registerProjects = GetService<SVsRegisterProjectTypes, IVsRegisterProjectTypes>();
+      if (registerProjects == null)
+      {
+        throw new InvalidOperationException(string.Format(Resources.Culture, Resources.Package_MissingService, typeof(SVsRegisterProjectTypes).FullName));
+      }
+      uint cookie;
+      var riid = factory.GetType().GUID;
+      NativeMethods.ThrowOnFailure(registerProjects.RegisterProjectType(ref riid, factory, out cookie));
+      if (_ProjectFactories == null)
+      {
+        _ProjectFactories = new Hashtable();
+      }
+      _ProjectFactories[factory] = cookie;
+    }
+
     #endregion
 
     #region Protected methods
@@ -1281,7 +1317,10 @@ namespace VSXtra
         
         // --- Create the service provider and administer siting
         _ServiceProvider = new ServiceProvider(serviceProvider);
-        _PackageInstances.Add(GetType(), this);
+        if (!_PackageInstances.ContainsKey(GetType()))
+        {
+          _PackageInstances.Add(GetType(), this);
+        }
         // --- Initialize the global service provider
         if (_GlobalServiceProvider == null)
           _GlobalServiceProvider = _ServiceProvider;

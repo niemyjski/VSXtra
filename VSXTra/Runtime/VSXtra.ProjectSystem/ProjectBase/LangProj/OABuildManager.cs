@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using VSLangProj;
 using Microsoft.VisualStudio;
 
-namespace Microsoft.VisualStudio.Project.Automation
+namespace VSXtra.ProjectSystem.Automation
 {
 	public class OABuildManager : ConnectionPointContainer,
 									IEventSource<_dispBuildManagerEvents>,

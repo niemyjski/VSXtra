@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 
 	/// <summary>
@@ -487,7 +487,7 @@ namespace Microsoft.VisualStudio.Project
 			}
 		}
 
-		[SRCategoryAttribute(VisualStudio.Project.SR.Advanced)]
+		[SRCategoryAttribute(SR.Advanced)]
 		[LocDisplayName(SR.CustomToolNamespace)]
 		[SRDescriptionAttribute(SR.CustomToolNamespaceDescription)]
 		public virtual string CustomToolNamespace

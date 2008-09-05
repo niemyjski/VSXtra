@@ -4,13 +4,14 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 using IServiceProvider = System.IServiceProvider;
 using MSBuild = Microsoft.Build.BuildEngine;
 using VSRegistry = Microsoft.VisualStudio.Shell.VSRegistry;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// This class defines and sets the so called global properties that are needed to be provided
@@ -197,7 +198,7 @@ namespace Microsoft.VisualStudio.Project
 		/// </summary>
 		private void SetSolutionProperties()
 		{
-			IVsSolution solution = Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(IVsSolution)) as IVsSolution;
+			IVsSolution solution = PackageBase.GetGlobalService(typeof(IVsSolution)) as IVsSolution;
 			Debug.Assert(solution != null, "Could not retrieve the solution service from the global service provider");
 
 			string solutionDirectory, solutionFile, userOptionsFile;
@@ -239,7 +240,7 @@ namespace Microsoft.VisualStudio.Project
 		/// </summary>
 		private static string GetEnvironmentDirectoryLocation()
 		{
-			IVsShell shell = Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(IVsShell)) as IVsShell;
+			IVsShell shell = PackageBase.GetGlobalService(typeof(IVsShell)) as IVsShell;
 			Debug.Assert(shell != null, "Could not retrieve the IVsShell service from the global service provider");
 
 			object installDirAsObject;
@@ -269,7 +270,10 @@ namespace Microsoft.VisualStudio.Project
 		/// </summary>
 		private static string GetFxCopDirectoryLocation()
 		{
-			using(RegistryKey root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_Configuration))
+		  RegistryKey root = VsRegistry.GetConfigurationKey();
+      // RegistryRoot(__VsLocalRegistryType.RegType_Configuration);
+      //RegistryKey root = VSRegistry.RegistryRoot(__VsLocalRegistryType.RegType_Configuration);
+			using(root)
 			{
 				if(null == root)
 				{

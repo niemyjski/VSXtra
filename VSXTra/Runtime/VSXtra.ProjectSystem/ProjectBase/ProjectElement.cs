@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using MSBuild = Microsoft.Build.BuildEngine;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 
 	/// <summary>

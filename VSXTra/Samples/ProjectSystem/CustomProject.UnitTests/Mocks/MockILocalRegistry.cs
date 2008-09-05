@@ -8,7 +8,7 @@ using Microsoft.VsSDK.UnitTestLibrary;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
+namespace VSXtra.ProjectSystem.Samples.CustomProject.UnitTests
 {
 	public static class MockILocalRegistry
 	{
@@ -16,7 +16,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
 
 		static MockILocalRegistry()
 		{
-			factory = new GenericMockFactory("MockILocalRegistry", new Type[] { typeof(ILocalRegistry), typeof(ILocalRegistry3) });
+      factory = new GenericMockFactory("MockILocalRegistry", new Type[] { typeof(ILocalRegistry), typeof(ILocalRegistry3), typeof(ILocalRegistry4) });
 		}
 
 		public static BaseMock GetInstance()
@@ -27,7 +27,9 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
 			mock.AddMethodReturnValues(name, new object[] { VSConstants.S_OK });
 
 			name = string.Format("{0}.{1}", typeof(ILocalRegistry3).FullName, "GetLocalRegistryRoot");
-			mock.AddMethodCallback(name, new EventHandler<CallbackArgs>(GetLocalRegistryRoot));
+			mock.AddMethodCallback(name, GetLocalRegistryRoot);
+      name = string.Format("{0}.{1}", typeof(ILocalRegistry4).FullName, "GetLocalRegistryRootEx");
+      mock.AddMethodCallback(name, GetLocalRegistryRootEx);
 
 			return mock;
 		}
@@ -37,5 +39,12 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
 			arguments.SetParameter(0, @"SOFTWARE\Microsoft\VisualStudio\9.0");
 			arguments.ReturnValue = VSConstants.S_OK;
 		}
-	}
+  
+    private static void GetLocalRegistryRootEx(object caller, CallbackArgs arguments)
+    {
+      arguments.SetParameter(1, 0U);
+      arguments.SetParameter(2, @"SOFTWARE\Microsoft\VisualStudio\9.0");
+      arguments.ReturnValue = VSConstants.S_OK;
+    }
+  }
 }

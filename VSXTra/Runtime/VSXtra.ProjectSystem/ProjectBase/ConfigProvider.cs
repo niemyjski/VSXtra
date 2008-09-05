@@ -20,7 +20,7 @@ using MSBuild = Microsoft.Build.BuildEngine;
     a) undocumented
     b) not really wise in the managed world
 */
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	[CLSCompliant(false)]
 	[ComVisible(true)]

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using EnvDTE;
 using VSLangProj;
 
-namespace Microsoft.VisualStudio.Project.Automation
+namespace VSXtra.ProjectSystem.Automation
 {
 	/// <summary>
 	/// Represents an automation friendly version of a language-specific project.

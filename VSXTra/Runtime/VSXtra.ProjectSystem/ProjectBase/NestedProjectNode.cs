@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 using ShellConstants = Microsoft.VisualStudio.Shell.Interop.Constants;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	[CLSCompliant(false), ComVisible(true)]
 	public class NestedProjectNode : HierarchyNode, IPropertyNotifySink
@@ -602,11 +602,11 @@ namespace Microsoft.VisualStudio.Project
 			IntPtr projectPtr = IntPtr.Zero;
 
 			// For a nested project the creation at unsafe location is governed by the parent project since the nested project will end up in the cone of the parent project.
-			bool dontShowAgain = DontShowAgainDialog.ReadDontShowAgainValue(ProjectFactory.DontShowProjectSecurityWarningAgain);
+      bool dontShowAgain = DontShowAgainDialog.ReadDontShowAgainValue(ProjectConstants.DontShowProjectSecurityWarningAgain);
 
 			try
 			{
-				DontShowAgainDialog.WriteDontShowAgainValue(ProjectFactory.DontShowProjectSecurityWarningAgain, 1);
+        DontShowAgainDialog.WriteDontShowAgainValue(ProjectConstants.DontShowProjectSecurityWarningAgain, 1);
 				ErrorHandler.ThrowOnFailure(projectFactory.CreateProject(fileName, destination, projectName, (uint)createFlags, ref refiid, out projectPtr, out cancelled));
 
 				if(projectPtr != IntPtr.Zero)
@@ -628,7 +628,7 @@ namespace Microsoft.VisualStudio.Project
 				// Revert back the old value that security questions about unsafe location are stil asked if that was the value.
 				if(!dontShowAgain)
 				{
-					DontShowAgainDialog.WriteDontShowAgainValue(ProjectFactory.DontShowProjectSecurityWarningAgain, 0);
+          DontShowAgainDialog.WriteDontShowAgainValue(ProjectConstants.DontShowProjectSecurityWarningAgain, 0);
 				}
 			}
 
