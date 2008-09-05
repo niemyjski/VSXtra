@@ -2,12 +2,11 @@
 
 using System.Reflection;
 using Microsoft.Build.BuildEngine;
-using Microsoft.VisualStudio.Project;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VsSDK.UnitTestLibrary;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
+namespace VSXtra.ProjectSystem.Samples.CustomProject.UnitTests
 {
 	public abstract class BaseTest
 	{
@@ -27,7 +26,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
 			}
 		}
 
-		[TestInitialize()]
+		[TestInitialize]
 		public virtual void Initialize()
 		{
 			serviceProvider = Microsoft.VsSDK.UnitTestLibrary.OleServiceProvider.CreateOleServiceProviderWithBasicServices();
@@ -49,13 +48,13 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
 			serviceProvider.AddService(typeof(SVsTaskList), MockIVsTaskList.GetInstance(), false);
 		}
 
-		protected virtual void SetMsbuildEngine(ProjectFactory factory)
+		protected virtual void SetMsbuildEngine(MyCustomProjectFactory factoryBase)
 		{
-			FieldInfo buildEngine = typeof(ProjectFactory).GetField("buildEngine", BindingFlags.Instance | BindingFlags.NonPublic);
-			buildEngine.SetValue(factory, Engine.GlobalEngine);
-			Microsoft.Build.BuildEngine.Project msbuildproject = Engine.GlobalEngine.CreateNewProject();
-			FieldInfo buildProject = typeof(ProjectFactory).GetField("buildProject", BindingFlags.Instance | BindingFlags.NonPublic);
-			buildProject.SetValue(factory, msbuildproject);
+      PropertyInfo buildEngine = typeof(MyCustomProjectFactory).GetProperty("BuildEngine", BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic);
+      buildEngine.SetValue(factoryBase, Engine.GlobalEngine, null);
+      Microsoft.Build.BuildEngine.Project msbuildproject = Engine.GlobalEngine.CreateNewProject();
+      PropertyInfo buildProject = typeof(MyCustomProjectFactory).GetProperty("BuildProject", BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic);
+      buildProject.SetValue(factoryBase, msbuildproject, null);
 		}
 	}
 }

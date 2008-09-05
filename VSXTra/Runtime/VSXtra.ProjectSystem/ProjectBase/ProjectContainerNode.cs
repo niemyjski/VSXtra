@@ -7,12 +7,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Project.Automation;
+using Microsoft.VisualStudio;
+using VSXtra.ProjectSystem.Automation;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.ProjectSystem.Automation;
 using MSBuild = Microsoft.Build.BuildEngine;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	[CLSCompliant(false), ComVisible(true)]
 	public abstract class ProjectContainerNode : ProjectNode,

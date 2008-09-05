@@ -7,8 +7,8 @@
     <ProjectGuid>{07A3CDE4-390B-40B4-A660-8CA586E255CC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests</RootNamespace>
-    <AssemblyName>Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests</AssemblyName>
+    <RootNamespace>VSXtra.ProjectSystem.Samples.CustomProject.UnitTests</RootNamespace>
+    <AssemblyName>VSXtra.ProjectSystem.Samples.CustomProject.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -49,6 +49,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +86,10 @@
     <ProjectReference Include="..\..\..\Runtime\VSXtra.ProjectSystem\VSXtra.ProjectSystem.csproj">
       <Project>{BBB209BC-F584-498E-BE59-CD54F848CF32}</Project>
       <Name>VSXtra.ProjectSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Runtime\VSXTra\VSXtra.csproj">
+      <Project>{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}</Project>
+      <Name>VSXtra</Name>
     </ProjectReference>
     <ProjectReference Include="..\CustomProject\CustomProject.csproj">
       <Project>{F4ADEBDB-CD20-4532-B4E3-FE7424F5369C}</Project>

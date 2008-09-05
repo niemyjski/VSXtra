@@ -2,7 +2,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// Defines the constant strings for various msbuild targets

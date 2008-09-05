@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.VisualStudio.Project.Samples.CustomProject</RootNamespace>
+    <RootNamespace>VSXtra.ProjectSystem.Samples.CustomProject</RootNamespace>
     <AssemblyName>Microsoft.VisualStudio.Project.Samples.CustomProject</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
@@ -145,6 +145,10 @@
     <ProjectReference Include="..\..\..\Runtime\VSXtra.ProjectSystem\VSXtra.ProjectSystem.csproj">
       <Project>{BBB209BC-F584-498E-BE59-CD54F848CF32}</Project>
       <Name>VSXtra.ProjectSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Runtime\VSXTra\VSXtra.csproj">
+      <Project>{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}</Project>
+      <Name>VSXtra</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

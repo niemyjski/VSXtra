@@ -1,11 +1,11 @@
 ﻿/// Copyright (c) Microsoft Corporation.  All rights reserved.
 
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Project.Samples.CustomProject;
+using VSXtra.ProjectSystem.Samples.CustomProject;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject.UnitTests
+namespace VSXtra.ProjectSystem.Samples.CustomProject.UnitTests
 {
 	[TestClass]
 	public class PackageTest

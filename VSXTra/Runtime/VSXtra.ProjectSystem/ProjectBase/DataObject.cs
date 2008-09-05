@@ -11,7 +11,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	internal enum tagDVASPECT
 	{

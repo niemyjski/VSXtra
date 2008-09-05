@@ -1,9 +1,10 @@
 ﻿/// Copyright (c) Microsoft Corporation.  All rights reserved.
 
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Project.Automation;
+using VSXtra.ProjectSystem;
+using VSXtra.ProjectSystem.Automation;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace VSXtra.ProjectSystem.Samples.CustomProject
 {
 	[ComVisible(true)]
 	public class OAMyCustomProject : OAProject

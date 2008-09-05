@@ -4,7 +4,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.VisualStudio.Project.Automation
+namespace VSXtra.ProjectSystem.Automation
 {
 	[CLSCompliant(false), ComVisible(true)]
 	public class OAProperty : EnvDTE.Property

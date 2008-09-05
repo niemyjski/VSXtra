@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace VSXtra.ProjectSystem.Samples.CustomProject
 {
 	/// <summary>
 	/// This class implements general property page for the project type.

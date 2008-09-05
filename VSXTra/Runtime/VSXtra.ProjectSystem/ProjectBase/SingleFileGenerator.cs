@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// Provides support for single file generator.

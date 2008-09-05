@@ -3,7 +3,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace VSXtra.ProjectSystem.Samples.CustomProject
 {
 	[AttributeUsage(AttributeTargets.All)]
 	internal sealed class ResourcesDescriptionAttribute : DescriptionAttribute

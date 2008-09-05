@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Microsoft.VisualStudio.Project.Automation
+namespace VSXtra.ProjectSystem.Automation
 {
 	[ComVisible(true), CLSCompliant(false)]
 	public class OASolutionFolder<T> : EnvDTE80.SolutionFolder

@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using MSBuild = Microsoft.Build.BuildEngine;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	[CLSCompliant(false), ComVisible(true)]
 	public class ProjectConfig :

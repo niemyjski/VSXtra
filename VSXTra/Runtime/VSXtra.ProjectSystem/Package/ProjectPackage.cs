@@ -7,15 +7,16 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// Defines abstract package.
 	/// </summary>
 	[ComVisible(true)]
 	[CLSCompliant(false)]
-	public abstract class ProjectPackage : Microsoft.VisualStudio.Shell.Package
+	public abstract class ProjectPackageBase : PackageBase
 	{
 		#region fields
 		/// <summary>
@@ -64,7 +65,7 @@ namespace Microsoft.VisualStudio.Project
 		#endregion
 
 		#region ctor
-		protected ProjectPackage()
+		protected ProjectPackageBase()
 		{
 			this.AddOptionKey(this.ProjectTrustPersistenceKey);
 		}

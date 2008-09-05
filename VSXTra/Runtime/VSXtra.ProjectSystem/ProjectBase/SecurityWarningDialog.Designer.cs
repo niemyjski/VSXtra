@@ -1,4 +1,4 @@
-﻿namespace Microsoft.VisualStudio.Project
+﻿namespace VSXtra.ProjectSystem
 {
 	partial class SecurityWarningDialog
 	{

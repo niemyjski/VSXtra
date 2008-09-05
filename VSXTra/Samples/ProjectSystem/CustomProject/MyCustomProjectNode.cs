@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
 using VSLangProj;
-using Microsoft.VisualStudio.Project.Automation;
+using VSXtra.ProjectSystem.Automation;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace VSXtra.ProjectSystem.Samples.CustomProject
 {
 	/// <summary>
 	/// This class extends the ProjectNode in order to represent our project 
@@ -42,7 +42,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 		/// </summary>
 		static MyCustomProjectNode()
 		{
-			imageList = Utilities.GetImageList(typeof(MyCustomProjectNode).Assembly.GetManifestResourceStream("Microsoft.VisualStudio.Project.Samples.CustomProject.Resources.MyCustomProjectImageList.bmp"));
+      imageList = Utilities.GetImageList(typeof(MyCustomProjectNode).Assembly.GetManifestResourceStream("VSXtra.ProjectSystem.Samples.CustomProject.Resources.MyCustomProjectImageList.bmp"));
 		}
 
 		/// <summary>

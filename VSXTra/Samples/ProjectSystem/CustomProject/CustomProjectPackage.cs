@@ -6,7 +6,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace VSXtra.ProjectSystem.Samples.CustomProject
 {
 	[PackageRegistration(UseManagedResourcesOnly = true)]
 	[DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0")]
@@ -14,7 +14,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 	[ProvideProjectFactory(typeof(MyCustomProjectFactory), "My Custom Project", "My Custom Project Files (*.myproj);*.myproj", "myproj", "myproj", @"..\..\Templates\Projects\MyCustomProject", LanguageVsTemplate = "MyCustomProject", NewProjectRequireNewFolderVsTemplate = false)]
 	[ProvideProjectItem(typeof(MyCustomProjectFactory), "My Items", @"..\..\Templates\ProjectItems\MyCustomProject", 500)]
 	[Guid(GuidStrings.guidCustomProjectPkgString)]
-	public sealed class CustomProjectPackage : ProjectPackage
+	public sealed class CustomProjectPackage : ProjectPackageBase
 	{
 		#region Overriden Implentation
 		/// <summary>
@@ -24,7 +24,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 		protected override void Initialize()
 		{
 			base.Initialize();
-			this.RegisterProjectFactory(new MyCustomProjectFactory(this));
+			this.RegisterProjectFactory(new MyCustomProjectFactory());
 		}
 		#endregion
 	}

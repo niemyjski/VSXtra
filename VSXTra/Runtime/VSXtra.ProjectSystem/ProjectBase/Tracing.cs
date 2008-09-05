@@ -2,7 +2,7 @@
 
 using System.Diagnostics;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	internal class CCITracing
 	{

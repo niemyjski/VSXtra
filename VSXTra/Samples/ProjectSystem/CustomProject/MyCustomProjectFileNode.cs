@@ -1,9 +1,9 @@
 ﻿/// Copyright (c) Microsoft Corporation.  All rights reserved.
 
 using System;
-using Microsoft.VisualStudio.Project.Automation;
+using VSXtra.ProjectSystem.Automation;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace VSXtra.ProjectSystem.Samples.CustomProject
 {
 	/// <summary>
 	/// This class extends the FileNode in order to represent a file 

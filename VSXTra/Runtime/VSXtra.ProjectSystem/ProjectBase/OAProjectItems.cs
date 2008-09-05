@@ -10,7 +10,7 @@ using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Microsoft.VisualStudio.Project.Automation
+namespace VSXtra.ProjectSystem.Automation
 {
 	/// <summary>
 	/// Contains ProjectItem objects

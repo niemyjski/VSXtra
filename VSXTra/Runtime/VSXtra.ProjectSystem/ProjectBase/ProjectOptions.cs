@@ -3,7 +3,7 @@
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	public class ProjectOptions : System.CodeDom.Compiler.CompilerParameters
 	{

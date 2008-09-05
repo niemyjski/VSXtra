@@ -1,6 +1,6 @@
 /// Copyright (c) Microsoft Corporation.  All rights reserved.
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	internal static class ExternDll
 	{

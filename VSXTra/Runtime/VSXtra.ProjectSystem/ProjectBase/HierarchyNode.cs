@@ -19,7 +19,7 @@ using ShellConstants = Microsoft.VisualStudio.Shell.Interop.Constants;
 using VsCommands = Microsoft.VisualStudio.VSConstants.VSStd97CmdID;
 using VsCommands2K = Microsoft.VisualStudio.VSConstants.VSStd2KCmdID;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// An object that deals with user interaction via a GUI in the form a hierarchy: a parent node with zero or more child nodes, each of which

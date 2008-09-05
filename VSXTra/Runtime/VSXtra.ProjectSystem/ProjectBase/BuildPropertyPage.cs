@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// Enumerated list of the properties shown on the build property page

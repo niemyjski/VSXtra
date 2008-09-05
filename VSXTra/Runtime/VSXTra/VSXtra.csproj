@@ -131,6 +131,7 @@
     <Compile Include="VSServices\RunningDocumentTable\RunningDocumentInfo.cs" />
     <Compile Include="VSServices\RunningDocumentTable\RunningDocumentTable.cs" />
     <Compile Include="VSServices\SelectionTracking\CustomTypeDescriptorBase.cs" />
+    <Compile Include="VSServices\SelectionTracking\MonitorSelection.cs" />
     <Compile Include="VSServices\SelectionTracking\VsDocumentEvents.cs" />
     <Compile Include="VSServices\SelectionTracking\SelectionTracker.cs" />
     <Compile Include="VSServices\SelectionTracking\SolutionEventArgs.cs" />

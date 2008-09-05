@@ -4,7 +4,7 @@ using System;
 using Microsoft.VisualStudio.Shell.Interop;
 using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 
-namespace Microsoft.VisualStudio.Project.Automation
+namespace VSXtra.ProjectSystem.Automation
 {
 	/// <summary>
 	/// Helper class that handle the scope of an automation function.

@@ -9,7 +9,7 @@ using System.Threading;
 using System.ComponentModel;
 using System.Security.Permissions;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	[AttributeUsage(AttributeTargets.All)]
 	internal sealed class SRDescriptionAttribute : DescriptionAttribute

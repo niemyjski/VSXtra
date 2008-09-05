@@ -135,6 +135,16 @@ namespace VSXtra
       return key.OpenSubKey(RecentFilesListKey, writeable);
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the local Visual Studio configuration key.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static RegistryKey GetConfigurationKey()
+    {
+      return GetLocalRegistryRoot(__VsLocalRegistryType.RegType_Configuration, false);
+    }
+
     #endregion
 
     #region Private properties and methods

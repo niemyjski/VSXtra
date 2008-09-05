@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using VSLangProj;
 
-namespace Microsoft.VisualStudio.Project.Automation
+namespace VSXtra.ProjectSystem.Automation
 {
 	/// <summary>
 	/// Represents the automation equivalent of ReferenceNode

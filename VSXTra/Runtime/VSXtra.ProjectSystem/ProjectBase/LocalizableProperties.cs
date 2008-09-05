@@ -5,7 +5,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// Enables a managed object to expose properties and attributes for COM objects.

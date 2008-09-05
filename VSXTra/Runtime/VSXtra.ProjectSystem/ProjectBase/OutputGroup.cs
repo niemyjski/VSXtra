@@ -9,7 +9,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using MSBuild = Microsoft.Build.BuildEngine;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// Allows projects to group outputs according to usage.

@@ -9,7 +9,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	[CLSCompliant(false), ComVisible(true)]
 	public class ProjectReferenceNode : ReferenceNode

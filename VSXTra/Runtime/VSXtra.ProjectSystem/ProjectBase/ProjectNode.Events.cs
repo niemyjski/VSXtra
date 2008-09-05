@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	public partial class ProjectNode
 	{

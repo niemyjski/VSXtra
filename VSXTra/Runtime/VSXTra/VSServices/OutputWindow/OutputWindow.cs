@@ -23,7 +23,7 @@ namespace VSXtra
     #region Private fields
 
     private static MissingOutputPaneHandling _MissingOutputPaneHandling = 
-      MissingOutputPaneHandling.RedirectToDebug;
+      MissingOutputPaneHandling.Silent;
 
     #endregion
 
@@ -311,11 +311,18 @@ namespace VSXtra
     private static int CreateWindowPane(OutputPaneDefinition paneDef)
     {
       Guid paneGuid = paneDef.GUID;
-      return OutputWindowInstance.CreatePane(
-        ref paneGuid,
-        paneDef.Name,
-        paneDef.InitiallyVisible ? -1 : 0,
-        paneDef.ClearWithSolution ? -1 : 0);
+      return OutputWindowInstance != null
+               ? OutputWindowInstance.CreatePane(
+                   ref paneGuid,
+                   paneDef.Name,
+                   paneDef.InitiallyVisible ? -1 : 0,
+                   paneDef.ClearWithSolution ? -1 : 0)
+               : VSConstants.E_FAIL;
+      //return OutputWindowInstance.CreatePane(
+      //  ref paneGuid,
+      //  paneDef.Name,
+      //  paneDef.InitiallyVisible ? -1 : 0,
+      //  paneDef.ClearWithSolution ? -1 : 0);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -330,7 +337,10 @@ namespace VSXtra
       out IVsOutputWindowPane pane)
     {
       Guid paneGuid = paneDef.GUID;
-      return OutputWindowInstance.GetPane(ref paneGuid, out pane);
+      if (OutputWindowInstance != null)
+        return OutputWindowInstance.GetPane(ref paneGuid, out pane);
+      pane = null;
+      return VSConstants.E_FAIL;
     }
 
     // --------------------------------------------------------------------------------------------

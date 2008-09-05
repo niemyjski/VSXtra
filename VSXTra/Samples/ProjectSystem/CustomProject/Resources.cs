@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Resources;
 using System.Threading;
 
-namespace Microsoft.VisualStudio.Project.Samples.CustomProject
+namespace VSXtra.ProjectSystem.Samples.CustomProject
 {
 	/// <summary>
 	/// This class represent resource storage and management functionality.
@@ -54,7 +54,7 @@ namespace Microsoft.VisualStudio.Project.Samples.CustomProject
 		/// </summary>
 		internal Resources()
 		{
-			resourceManager = new System.Resources.ResourceManager("Microsoft.VisualStudio.Project.Samples.CustomProject.Resources",
+			resourceManager = new System.Resources.ResourceManager("VSXtra.ProjectSystem.Samples.CustomProject.Resources",
 				Assembly.GetExecutingAssembly());
 		}
 		#endregion Constructors

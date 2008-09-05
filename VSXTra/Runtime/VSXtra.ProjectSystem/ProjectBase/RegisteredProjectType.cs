@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 using VSRegistry = Microsoft.VisualStudio.Shell.VSRegistry;
 
-namespace Microsoft.VisualStudio.Project
+namespace VSXtra.ProjectSystem
 {
 	/// <summary>
 	/// Gets registry settings from for a project.
@@ -88,7 +88,7 @@ namespace Microsoft.VisualStudio.Project
 			// First see if this use the vstemplate model
 			if(!String.IsNullOrEmpty(DefaultProjectExtensionValue))
 			{
-				EnvDTE80.DTE2 dte = Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
+        EnvDTE80.DTE2 dte = PackageBase.GetGlobalService(typeof(EnvDTE.DTE)) as EnvDTE80.DTE2;
 				if(dte != null)
 				{
 					EnvDTE80.Solution2 solution = dte.Solution as EnvDTE80.Solution2;
