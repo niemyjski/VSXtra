@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidVSXtraMenuPlaceHolderPkg">
+    <Menus>
+      <!-- Top level "VSXtra" menu placed after the "Build, Debug and Run" group -->
+      <Menu guid="guidVSXtraCmdSet" id="VSXtraMainMenu" priority="0x800"  type="Menu">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_BUILDDEBUGRUN" />
+        <CommandFlag>AlwaysCreate</CommandFlag>
+        <Strings>
+          <ButtonText>VSXtra</ButtonText>
+          <CommandName>VSXtra</CommandName>
+        </Strings>
+      </Menu>
+
+      <!-- "Package Samples" submenu placed into the "VSXtra" menu -->
+      <Menu guid="guidVSXtraCmdSet" id="PackageSubMenu" priority="0x100" type="Menu">
+        <Parent guid="guidVSXtraCmdSet" id="TopLevelMenuGroup" />
+        <Strings>
+          <ButtonText>Package Samples</ButtonText>
+          <CommandName>Package Samples</CommandName>
+        </Strings>
+      </Menu>
+
+      <!-- "Menu Samples" submenu placed into the "VSXtra" menu -->
+      <Menu guid="guidVSXtraCmdSet" id="MenusSubMenu" priority="0x200" type="Menu">
+        <Parent guid="guidVSXtraCmdSet" id="TopLevelMenuGroup" />
+        <Strings>
+          <ButtonText>Menu Samples</ButtonText>
+          <CommandName>Menu Samples</CommandName>
+        </Strings>
+      </Menu>
+
+      <!-- "Output Window Samples" submenu placed into the "VSXtra" menu -->
+      <Menu guid="guidVSXtraCmdSet" id="OutputWindowSubMenu" priority="0x200" type="Menu">
+        <Parent guid="guidVSXtraCmdSet" id="TopLevelMenuGroup" />
+        <Strings>
+          <ButtonText>Output Window Samples</ButtonText>
+          <CommandName>Output Window Samples</CommandName>
+        </Strings>
+      </Menu>
+
+      <!-- "Tool Window Samples" submenu placed into the "VSXtra" menu -->
+      <Menu guid="guidVSXtraCmdSet" id="ToolWindowSubMenu" priority="0x200" type="Menu">
+        <Parent guid="guidVSXtraCmdSet" id="TopLevelMenuGroup" />
+        <Strings>
+          <ButtonText>Tool Window Samples</ButtonText>
+          <CommandName>Tool Window Samples</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+    
+    <Groups>
+      <!-- Logical group for holding the submenus of the "VSXtra" top level menu -->
+      <Group guid="guidVSXtraCmdSet" id="TopLevelMenuGroup" priority="0x0100">
+        <Parent guid="guidVSXtraCmdSet" id="VSXtraMainMenu"/>
+      </Group>
+
+      <!-- Logical group for holding items in the "Package Samples" submenus -->
+      <Group guid="guidVSXtraCmdSet" id="PackageMenuGroup" priority="0x0100">
+        <Parent guid="guidVSXtraCmdSet" id="PackageSubMenu"/>
+      </Group>
+
+      <!-- Logical group for holding items in the "Menu Samples" submenus -->
+      <Group guid="guidVSXtraCmdSet" id="MenusMenuGroup" priority="0x0200">
+        <Parent guid="guidVSXtraCmdSet" id="MenusSubMenu"/>
+      </Group>
+
+      <!-- Logical group for holding items in the "Output Window Samples" submenus -->
+      <Group guid="guidVSXtraCmdSet" id="OutputWindowMenuGroup" priority="0x0200">
+        <Parent guid="guidVSXtraCmdSet" id="OutputWindowSubMenu"/>
+      </Group>
+
+      <!-- Logical group for holding items in the "Tool Window Samples" submenus -->
+      <Group guid="guidVSXtraCmdSet" id="ToolWindowMenuGroup" priority="0x0200">
+        <Parent guid="guidVSXtraCmdSet" id="ToolWindowSubMenu"/>
+      </Group>
+    </Groups>
+    
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidVSXtraMenuPlaceHolderPkg" value="{6cac7830-b897-47a5-9fb0-146b6a74c351}" />
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="VSXtraMainMenu" value="0x1000" />
+      <IDSymbol name="TopLevelMenuGroup" value="0x1001" />
+      <IDSymbol name="PackageSubMenu" value="0x1002" />
+      <IDSymbol name="MenusSubMenu" value="0x1003" />
+      <IDSymbol name="OutputWindowSubMenu" value="0x1004" />
+      <IDSymbol name="ToolWindowSubMenu" value="0x1005" />
+      <IDSymbol name="PackageMenuGroup" value="0x1102" />
+      <IDSymbol name="MenusMenuGroup" value="0x1103" />
+      <IDSymbol name="OutputWindowMenuGroup" value="0x1104" />
+      <IDSymbol name="ToolWindowMenuGroup" value="0x1105" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

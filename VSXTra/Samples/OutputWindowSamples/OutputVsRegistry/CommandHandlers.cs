@@ -35,6 +35,7 @@ namespace DeepDiver.OutputVsRegistry
         {
           Console.WriteLine("    {0}", item.Value);
         }
+        OutputWindow.General.Activate();
       }
     }
   }

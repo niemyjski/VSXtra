@@ -14,8 +14,8 @@
     </Menus>
 
     <Groups>
-      <Group guid="guidDynamicCommandsCmdSet" id="MyMenuGroup" priority="0x600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      <Group guid="guidDynamicCommandsCmdSet" id="MyMenuGroup" priority="0x100">
+        <Parent guid="guidVSXtraCmdSet" id="MenusSubMenu"/>
       </Group>
       <Group guid="guidDynamicCommandsCmdSet" id="MyMainToolbarGroup" priority="0x100">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_STANDARD"/>
@@ -79,7 +79,6 @@
     </Bitmaps>
   </Commands>
 
-
   <CommandPlacements>
     <CommandPlacement guid="guidDynamicCommandsCmdSet" id="cmdidMyCommand" priority="0x100">
       <Parent guid="guidDynamicCommandsCmdSet" id="MyEditorCtxGroup"/>
@@ -120,5 +119,11 @@
     <GuidSymbol name="guidGenericCmdBmp" value="{ADC60CB4-8D67-4a08-B411-8E7304974546}">
       <IDSymbol name="bmpArrow" value="1" />
     </GuidSymbol>
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="MenusSubMenu" value="0x1003" />
+    </GuidSymbol>
+
   </Symbols>
 </CommandTable>

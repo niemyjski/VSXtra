@@ -5,10 +5,15 @@
   <Extern href="msobtnid.h"/>
 
   <Commands package="guidDynamicToolWindowPkg">
+    <Groups>
+      <Group guid="guidDynamicToolWindowCmdSet" id="MyMenuGroup" priority="0x0100">
+        <Parent guid="guidVSXtraCmdSet" id="ToolWindowSubMenu"/>
+      </Group>
+    </Groups>
     <Buttons>
       <Button guid="guidDynamicToolWindowCmdSet" id="cmdidMyTool" priority="0x0100" type="Button">
-        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
-        <Icon guid="guidImages" id="bmpPicArrows" />
+        <Parent guid="guidDynamicToolWindowCmdSet" id="MyMenuGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidNewForm" />
         <Strings>
           <CommandName>cmdidMyTool</CommandName>
           <ButtonText>Dynamic Tool Window</ButtonText>
@@ -16,10 +21,6 @@
       </Button>
     </Buttons>
 
-    <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
-    </Bitmaps>
- 
   </Commands>
 
   <Symbols>
@@ -29,12 +30,9 @@
       <IDSymbol name="cmdidMyTool" value="0x0101" />
     </GuidSymbol>
 
-    <GuidSymbol name="guidImages" value="{a8d506c6-39f8-4480-989e-a97658987ef6}" >
-      <IDSymbol name="bmpPic1" value="1" />
-      <IDSymbol name="bmpPic2" value="2" />
-      <IDSymbol name="bmpPicSearch" value="3" />
-      <IDSymbol name="bmpPicX" value="4" />
-      <IDSymbol name="bmpPicArrows" value="5" />
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="ToolWindowSubMenu" value="0x1005" />
     </GuidSymbol>
   </Symbols>
 

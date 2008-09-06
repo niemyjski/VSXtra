@@ -6,8 +6,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeepDiver.CustomOutputWindowPane</RootNamespace>
-    <AssemblyName>CustomOutputWindowPane</AssemblyName>
+    <RootNamespace>DeepDiver.VSXtraMenuPlaceHolder</RootNamespace>
+    <AssemblyName>VSXtraMenuPlaceHolder</AssemblyName>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -15,7 +15,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <ProjectGuid>{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}</ProjectGuid>
+    <ProjectGuid>{E9BC0BC9-B898-4961-BAE4-BC541C92092F}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,13 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Guids.cs" />
-    <Compile Include="PkgCmdID.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="CustomOutputWindowPanePackage.cs" />
+    <Compile Include="VSXtraMenuPlaceHolderPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,8 +70,16 @@
     </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <VSCTCompile Include="VSXtraMenuPlaceHolder.vsct">
+      <ResourceName>1000</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Key.snk" />
+    <None Include="Resources\Images_32bit.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Package.ico" />
@@ -82,11 +89,6 @@
       <Project>{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}</Project>
       <Name>VSXtra</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <VSCTCompile Include="CustomOutputWindowPane.vsct">
-      <ResourceName>1000</ResourceName>
-    </VSCTCompile>
   </ItemGroup>
   <PropertyGroup>
     <!--

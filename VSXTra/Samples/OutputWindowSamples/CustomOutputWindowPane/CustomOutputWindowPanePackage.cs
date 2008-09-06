@@ -6,9 +6,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.TextManager.Interop;
 using VSXtra;
 
 namespace DeepDiver.CustomOutputWindowPane
@@ -17,11 +15,13 @@ namespace DeepDiver.CustomOutputWindowPane
   [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0")]
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideLoadKey("Standard", "1.0", "CustomOutputWindowPane", "DeepDiver", 1)]
-  [XtraProvideAutoLoad(typeof(UIContext.NoSolution))]
+  [ProvideMenuResource(1000, 1)]
   [Guid(GuidList.guidCustomOutputWindowPanePkgString)]
   public sealed class CustomOutputWindowPanePackage : PackageBase
   {
-    protected override void Initialize()
+    [CommandExecMethod]
+    [CommandId(GuidList.guidCustomOutputWindowPaneCmdSetString, CmdIDs.cmdidCreateOutput)]
+    private static void CreateOutput()
     {
       Console.WriteLine("*** Turn to the CutomPane1 and CustomePane2 output panes!");
       var pane1 = OutputWindow.GetPane<CustomPane1>();
