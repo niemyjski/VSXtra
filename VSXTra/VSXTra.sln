@@ -64,9 +64,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIHierarchyWindow", "Sample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra.ProjectSystem", "Runtime\VSXtra.ProjectSystem\VSXtra.ProjectSystem.csproj", "{BBB209BC-F584-498E-BE59-CD54F848CF32}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PlaceHolder", "PlaceHolder", "{1E641972-38FC-45F0-8BB9-A0D9E98DAD13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtraMenuPlaceHolder", "Samples\PlaceHolder\VSXtraMenuPlaceHolder\VSXtraMenuPlaceHolder.csproj", "{E9BC0BC9-B898-4961-BAE4-BC541C92092F}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 21
+		SccNumberOfProjects = 22
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs02.codeplex.com/
 		SccLocalPath0 = .
@@ -150,6 +154,10 @@ Global
 		SccProjectTopLevelParentUniqueName20 = VSXTra.sln
 		SccProjectName20 = Runtime/VSXtra.ProjectSystem
 		SccLocalPath20 = Runtime\\VSXtra.ProjectSystem
+		SccProjectUniqueName21 = Samples\\PlaceHolder\\VSXtraMenuPlaceHolder\\VSXtraMenuPlaceHolder.csproj
+		SccProjectTopLevelParentUniqueName21 = VSXTra.sln
+		SccProjectName21 = Samples/PlaceHolder/VSXtraMenuPlaceHolder
+		SccLocalPath21 = Samples\\PlaceHolder\\VSXtraMenuPlaceHolder
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -236,6 +244,10 @@ Global
 		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -249,6 +261,7 @@ Global
 		{6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
 		{C8E21D29-1530-4627-A682-B9E477C11643} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
 		{38ACB0C3-2640-417A-941C-6CBCBBD64C17} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{1E641972-38FC-45F0-8BB9-A0D9E98DAD13} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
 		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
 		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
 		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
@@ -267,5 +280,6 @@ Global
 		{8309E293-E726-4A5D-B33B-24552E2C4910} = {C8E21D29-1530-4627-A682-B9E477C11643}
 		{9B8BDDEF-B5DA-461F-8177-5DCC4DDE4081} = {C8E21D29-1530-4627-A682-B9E477C11643}
 		{F81AB5EB-B21C-4AAD-98BB-48BC15B50596} = {38ACB0C3-2640-417A-941C-6CBCBBD64C17}
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F} = {1E641972-38FC-45F0-8BB9-A0D9E98DAD13}
 	EndGlobalSection
 EndGlobal

@@ -10,21 +10,15 @@ namespace DeepDiver.UIHierarchyWindow
 {
   [InitialCaption("Simple UI Hierarchy window")]
   [BitmapResourceId(301)]
+  [DoNotSortRootNodes]
+  [LinesAtRoot]
+  [RouteCmdidDelete]
+  [ActAsProjectTypeWindow]
   public class SimpleUIHierarchyToolWindow : UIHierarchyToolWindow<UIHierarchyWindowPackage>
   {
-    public override void OnToolWindowCreated()
+    protected override IVsUIHierarchy InitialHierarchy
     {
-      // Initialize the hierarchy window with desired styles...
-      object unkObj;
-      uint grfUIHWF = (uint) __UIHWINFLAGS.UIHWF_DoNotSortRootNodes |
-                      //(uint) __UIHWINFLAGS.UIHWF_SupportToolWindowToolbars |
-                      (uint)__UIHWINFLAGS.UIHWF_LinesAtRoot |
-                      (uint)__UIHWINFLAGS.UIHWF_RouteCmdidDelete |
-                      (uint) __UIHWINFLAGS.UIHWF_ActAsProjectTypeWin;
-
-      // Initialize with custom hierarchy
-      var hierarchy = new SimpleHierarchy(HierarchyWindow) as IVsUIHierarchy;
-      HierarchyWindow.Init(hierarchy, grfUIHWF, out unkObj);
+      get { return new SimpleHierarchy(HierarchyWindow); }
     }
   }
 }

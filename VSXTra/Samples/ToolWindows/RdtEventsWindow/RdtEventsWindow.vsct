@@ -16,6 +16,9 @@
 
     </Menus>
     <Groups>
+      <Group guid="guidRdtEventsWindowCmdSet" id="MyMenuGroup" priority="0x0400">
+        <Parent guid="guidVSXtraCmdSet" id="ToolWindowSubMenu"/>
+      </Group>
       <Group guid="guidRdtEventsWindowCmdSet" id="RdtEventsToolbarGroup" priority="0x0500">
         <Parent guid="guidRdtEventsWindowCmdSet" id="RdtEventsToolbar"/>
       </Group>
@@ -23,8 +26,8 @@
     
     <Buttons>
       <Button guid="guidRdtEventsWindowCmdSet" id="cmdidShowRdtEventWindow" priority="0x0100" type="Button">
-        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
-        <Icon guid="guidImages" id="bmpPic1" />
+        <Parent guid="guidRdtEventsWindowCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidOfficeIcon" id="msotcidTable"/>
         <Strings>
           <CommandName>cmdidShowRdtEventWindow</CommandName>
           <ButtonText>Show RDT Events</ButtonText>
@@ -46,9 +49,6 @@
       </Button>
     </Buttons>
    
-    <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
-    </Bitmaps>
   </Commands>
 
   <Symbols>
@@ -59,14 +59,12 @@
       <IDSymbol name="cmdidShowRdtEventWindow" value="0x0100" />
       <IDSymbol name="cmdidRefreshList" value="0x0101" />
       <IDSymbol name="cmdidClearList" value="0x0102" />
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
     </GuidSymbol>
     
-    <GuidSymbol name="guidImages" value="{32336a58-5b50-4632-9231-06522c3131e1}" >
-      <IDSymbol name="bmpPic1" value="1" />
-      <IDSymbol name="bmpPic2" value="2" />
-      <IDSymbol name="bmpPicSearch" value="3" />
-      <IDSymbol name="bmpPicX" value="4" />
-      <IDSymbol name="bmpPicArrows" value="5" />
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="ToolWindowSubMenu" value="0x1005" />
     </GuidSymbol>
   </Symbols>
 

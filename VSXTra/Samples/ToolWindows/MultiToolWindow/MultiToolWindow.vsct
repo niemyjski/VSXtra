@@ -23,8 +23,8 @@
     </Menus>
 
     <Groups>
-      <Group guid="guidMultiToolWindowCmdSet" id="MultiWindowGroup" priority="0x0200">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_WINDOWS"/>
+      <Group guid="guidMultiToolWindowCmdSet" id="MultiWindowGroup" priority="0x0300">
+        <Parent guid="guidVSXtraCmdSet" id="ToolWindowSubMenu"/>
       </Group>
       <Group guid="guidMultiToolWindowCmdSet" id="StackWindowToolbarGroup1" priority="0x0500">
         <Parent guid="guidMultiToolWindowCmdSet" id="StackWindowToolbar1"/>
@@ -37,7 +37,7 @@
     <Buttons>
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidShowFirstWindow" priority="0x0100" type="Button">
         <Parent guid="guidMultiToolWindowCmdSet" id="MultiWindowGroup" />
-        <Icon guid="guidImages" id="bmpPic1" />
+        <Icon guid="guidOfficeIcon" id="msotcid1"/>
         <Strings>
           <CommandName>ShowFirstStackWindow</CommandName>
           <ButtonText>Stack Window #1</ButtonText>
@@ -45,7 +45,7 @@
       </Button>
       <Button guid="guidMultiToolWindowCmdSet" id="cmdidShowSecondWindow" priority="0x0101" type="Button">
         <Parent guid="guidMultiToolWindowCmdSet" id="MultiWindowGroup"/>
-        <Icon guid="guidImages" id="bmpPic2" />
+        <Icon guid="guidOfficeIcon" id="msotcid2"/>
         <Strings>
           <CommandName>ShowSecondStackWindow</CommandName>
           <ButtonText>Stack Window #2</ButtonText>
@@ -121,10 +121,6 @@
       </Button>
     </Buttons>
    
-    <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\Images_32bit.bmp" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
-    </Bitmaps>
- 
   </Commands>
 
   <Symbols>
@@ -148,12 +144,9 @@
       <IDSymbol name="cmdidDivide2" value="0x0115" />
     </GuidSymbol>
     
-    <GuidSymbol name="guidImages" value="{8612e1c0-661d-46de-9534-3fc24f38b6d7}" >
-      <IDSymbol name="bmpPic1" value="1" />
-      <IDSymbol name="bmpPic2" value="2" />
-      <IDSymbol name="bmpPicSearch" value="3" />
-      <IDSymbol name="bmpPicX" value="4" />
-      <IDSymbol name="bmpPicArrows" value="5" />
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="ToolWindowSubMenu" value="0x1005" />
     </GuidSymbol>
   </Symbols>
 

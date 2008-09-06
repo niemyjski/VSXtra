@@ -20,7 +20,6 @@ namespace DeepDiver.UIHierarchyWindow
     internal static ImageList _imageList;
     internal static ServiceProvider _serviceProvider;
     internal static SimpleHierarchy Hierarchy;
-    private IVsUIHierarchyWindow _vsHierarchyWindow;
 
     internal SimpleItem childItem1 = new SimpleItem("MSDN", 1, VSConstants.VSITEMID_ROOT);
     internal SimpleItem childItem2 = new SimpleItem("MSNBC", 2, VSConstants.VSITEMID_ROOT);
@@ -28,7 +27,6 @@ namespace DeepDiver.UIHierarchyWindow
 
     public SimpleHierarchy(IVsUIHierarchyWindow hierWin)
     {
-      _vsHierarchyWindow = hierWin;
       Hierarchy = this;
 
       if (_imageList == null)
