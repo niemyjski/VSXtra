@@ -643,6 +643,31 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the command handler instances registered by the specified package type.
+    /// </summary>
+    /// <param name="type">Type of package to serach for registered command handlers.</param>
+    /// <returns>An enumerable collection of registered command handler instances.</returns>
+    // --------------------------------------------------------------------------------------------
+    public static IEnumerable<MenuCommandHandler> GetCommandHandlerInstances(Type type)
+    {
+      return MenuCommandHandler.GetRegisteredHandlerInstances(type); 
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the command handler instances registered by the specified package type.
+    /// </summary>
+    /// <typeparam name="TPackage">Type of package to serach for registered command handlers.</typeparam>
+    /// <returns>An enumerable collection of registered command handler instances.</returns>
+    // --------------------------------------------------------------------------------------------
+    public static IEnumerable<MenuCommandHandler> GetCommandHandlerInstances<TPackage>()
+      where TPackage: PackageBase
+    {
+      return MenuCommandHandler.GetRegisteredHandlerInstances<TPackage>();
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Shows the tool window of the specified type having the given instance ID.
     /// </summary>
     /// <typeparam name="TWindow">Type of tool window to show up.</typeparam>

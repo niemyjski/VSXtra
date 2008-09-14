@@ -138,9 +138,9 @@ namespace VSXtra.ProjectSystem.Samples.CustomProject
 		{
 			MyCustomProjectFileNode node = new MyCustomProjectFileNode(this, item);
 
-			node.OleServiceProvider.AddService(typeof(EnvDTE.Project), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
+			node.OleServiceProvider.AddService(typeof(EnvDTE.Project), new SimpleOleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
 			node.OleServiceProvider.AddService(typeof(ProjectItem), node.ServiceCreator, false);
-			node.OleServiceProvider.AddService(typeof(VSProject), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
+			node.OleServiceProvider.AddService(typeof(VSProject), new SimpleOleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
 
 			return node;
 		}
