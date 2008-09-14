@@ -87,7 +87,7 @@ namespace VSXtra.ProjectSystem
 		private IVsHierarchy parentHierarchy;
 		private int parentHierarchyItemId;
 		private NodeProperties nodeProperties;
-		private OleServiceProvider oleServiceProvider = new OleServiceProvider();
+		private SimpleOleServiceProvider oleServiceProvider = new SimpleOleServiceProvider();
 		private bool excludeNodeFromScc;
 		private EventHandler<HierarchyNodeEventArgs> onChildAdded;
 		private EventHandler<HierarchyNodeEventArgs> onChildRemoved;
@@ -242,7 +242,7 @@ namespace VSXtra.ProjectSystem
 
 		#region properties
 
-		public OleServiceProvider OleServiceProvider
+		public SimpleOleServiceProvider OleServiceProvider
 		{
 			get
 			{

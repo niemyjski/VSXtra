@@ -44,9 +44,9 @@ namespace VSXtra.ProjectSystem.Samples.CustomProject
 		#endregion
 
 		#region Private implementation
-		internal OleServiceProvider.ServiceCreatorCallback ServiceCreator
+		internal SimpleOleServiceProvider.ServiceCreatorCallback ServiceCreator
 		{
-			get { return new OleServiceProvider.ServiceCreatorCallback(this.CreateServices); }
+			get { return CreateServices; }
 		}
 
 		private object CreateServices(Type serviceType)

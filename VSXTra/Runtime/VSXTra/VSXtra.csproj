@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Key.snk.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -73,8 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\WindowPaneNotFoundException.cs" />
+    <Compile Include="Hierarchy\ItemMap.cs" />
     <Compile Include="Hierarchy\HierarchyBase.cs" />
-    <Compile Include="Hierarchy\UIHierarchyBase.cs" />
+    <Compile Include="Hierarchy\HierarchyNodeEventArgs.cs" />
+    <Compile Include="Hierarchy\HierarchyRootBase.cs" />
+    <Compile Include="Hierarchy\SimpleHierarchyItem.cs" />
+    <Compile Include="Hierarchy\SimpleOleServiceProvider.cs" />
     <Compile Include="Package\PackageBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -162,7 +166,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Key.snk.pfx" />
+    <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="VSServices\CustomEditors\" />
