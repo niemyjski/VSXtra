@@ -22,6 +22,7 @@ namespace DeepDiver.PersistedToolWindow
   {
     private List<WindowFrame> _ToolWindowList;
     private bool _IgnoreSelectedObjectsChanges;
+    private SelectionTracker _SelectionTracker;
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -38,7 +39,19 @@ namespace DeepDiver.PersistedToolWindow
     /// Gets or sets the selection tracker object.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public SelectionTracker SelectionTracker { get; set; }
+    public SelectionTracker SelectionTracker
+    {
+      get { return _SelectionTracker; }
+      set
+      {
+        if (_SelectionTracker == value) return;
+        if (_SelectionTracker != null)
+          _SelectionTracker.SelectionChanged -= OnSelectionChanged;
+        _SelectionTracker = value;
+        if (_SelectionTracker != null)
+          _SelectionTracker.SelectionChanged += OnSelectionChanged;
+      }
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -85,25 +98,32 @@ namespace DeepDiver.PersistedToolWindow
     private void listView1_SelectedIndexChanged(object sender, EventArgs e)
     {
       if (_IgnoreSelectedObjectsChanges) return;
-      var selectedObjects = new List<SelectionProperties>();
-      if (listView1.SelectedItems.Count > 0)
-      {
-        int index = listView1.SelectedItems[0].Index;
-        var frame = _ToolWindowList[index];
-        var properties = new SelectionProperties(frame.Caption, frame.Guid) { Index = index };
-        selectedObjects.Add(properties);
-      }
-      SelectionTracker.SelectObjects(selectedObjects, WindowsProperties);
+      if (listView1.SelectedItems.Count <= 0) return;
+
+      int index = listView1.SelectedItems[0].Index;
+      var frame = _ToolWindowList[index];
+      var properties = new SelectionProperties(frame.Caption, frame.Guid) { Index = index };
+      SelectionTracker.SelectObject(properties, WindowsProperties);
     }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// This event method is called when the selection has been changed in the Properties window.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private void OnSelectionChanged(object sender, EventArgs e)
+    {
+      ChangeSelection();
+    }
+    
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Changes the current selection to the specified object.
     /// </summary>
-    /// <param name="selection">Current selection.</param>
     // --------------------------------------------------------------------------------------------
-    public void ChangeSelection(SelectionProperties selection)
+    public void ChangeSelection()
     {
+      var selection = SelectionTracker.GetSelectedObject<SelectionProperties>();
       _IgnoreSelectedObjectsChanges = true;
       try
       {

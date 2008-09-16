@@ -28,7 +28,7 @@ namespace DeepDiver.DisplayLoadedPackages
       foreach (var package in sitedPackages)
       {
         Console.WriteLine("  {0}", package.GetType().FullName);
-        var registeredHandlers = MenuCommandHandler.GetRegisteredHandlerInstances(package.GetType());
+        var registeredHandlers = GetCommandHandlerInstances(package.GetType());
         if (registeredHandlers.Count() > 0)
         {
           Console.WriteLine("    Registered command handlers:");

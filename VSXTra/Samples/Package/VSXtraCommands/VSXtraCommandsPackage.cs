@@ -27,7 +27,7 @@ namespace DeepDiver.VSXtraCommands
 
     protected override void Initialize()
     {
-      RegisterCommands();
+      RegisterCommandsWithManager();
       SolutionEvents.OnAfterOpenSolution += OnAfterOpenSolution;
       SolutionEvents.OnAfterCloseSolution += OnAfterCloseSolution;
     }
@@ -54,13 +54,12 @@ namespace DeepDiver.VSXtraCommands
 
     #region Private methods
 
-    private void RegisterCommands()
+    private void RegisterCommandsWithManager()
     {
-      var commandService = this.GetService<SCommandManagerService, ICommandManagerService>();
+      var commandService = GetService<SCommandManagerService, ICommandManagerService>();
       if (commandService != null)
       {
-        foreach (var handler in MenuCommandHandler.
-          GetRegisteredHandlerInstances<VSXtraCommandsPackage>())
+        foreach (var handler in GetCommandHandlerInstances<VSXtraCommandsPackage>())
         {
           commandService.RegisterCommand(handler);
         }
