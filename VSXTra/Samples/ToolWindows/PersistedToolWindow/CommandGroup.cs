@@ -14,7 +14,7 @@ namespace DeepDiver.PersistedToolWindow
   /// </summary>
   // ================================================================================================
   [Guid(GuidList.guidPersistedToolWindowCmdSetString)]
-  public sealed class DynamicToolWindowCommandGroup : CommandGroup<PersistedToolWindowPackage>
+  public sealed class PersistedToolWindowCommandGroup : CommandGroup<PersistedToolWindowPackage>
   {
     // ================================================================================================
     /// <summary>
