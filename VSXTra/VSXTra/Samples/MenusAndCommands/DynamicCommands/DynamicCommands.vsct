@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+  <Commands package="guidDynamicCommandsPkg">
+    <Menus>
+      <Menu guid="guidDynamicCommandsCmdSet" id="MyToolbar" priority="0x100" type="Toolbar">
+        <Parent guid="guidDynamicCommandsCmdSet" id="MyToolbar" />
+        <Strings>
+          <ButtonText>VSXtra Sample Toolbar</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Groups>
+      <Group guid="guidDynamicCommandsCmdSet" id="MyMenuGroup" priority="0x100">
+        <Parent guid="guidVSXtraCmdSet" id="MenusSubMenu"/>
+      </Group>
+      <Group guid="guidDynamicCommandsCmdSet" id="MyMainToolbarGroup" priority="0x100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_STANDARD"/>
+      </Group>
+      <Group guid="guidDynamicCommandsCmdSet" id="MyToolbarGroup" priority="0x100">
+        <Parent guid="guidDynamicCommandsCmdSet" id="MyToolbar"/>
+      </Group>
+      <Group guid="guidDynamicCommandsCmdSet" id="MyEditorCtxGroup" priority="0x600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidDynamicCommandsCmdSet" id="cmdidMyCommand" priority="0x100" type="Button">
+        <Parent guid="guidDynamicCommandsCmdSet" id="MyMenuGroup"/>
+        <Icon guid="guidGenericCmdBmp" id="bmpArrow"/>
+        <Strings>
+          <ButtonText>VSXtra Command Sample</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidDynamicCommandsCmdSet" id="cmdidMyGraph" priority="0x100" type="Button">
+        <Parent guid="guidDynamicCommandsCmdSet" id="MyMainToolbarGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidGraph"/>
+        <Strings>
+          <ButtonText>VSXTra Sample Graph Command</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidDynamicCommandsCmdSet" id="cmdidMyZoom" priority="0x100" type="Button">
+        <Parent guid="guidDynamicCommandsCmdSet" id="MyToolbarGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidZoom"/>
+        <Strings>
+          <ButtonText>VSXtra Sample Zoom Command</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidDynamicCommandsCmdSet" id="cmdidDynamicTxt" priority="0x200" type="Button">
+        <Parent guid="guidDynamicCommandsCmdSet" id="MyMenuGroup"/>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>VSXtra Text Changes</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidDynamicCommandsCmdSet" id="cmdidDynVisibility1" priority="0x300" type="Button">
+        <Parent guid="guidDynamicCommandsCmdSet" id="MyMenuGroup"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>VSXtra Dynamic Visibility 1</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidDynamicCommandsCmdSet" id="cmdidDynVisibility2" priority="0x300" type="Button">
+        <Parent guid="guidDynamicCommandsCmdSet" id="MyMenuGroup"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>VSXtra Dynamic Visibility 2</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="guidGenericCmdBmp" href="GenericCmd.bmp" usedList="bmpArrow"/>
+    </Bitmaps>
+  </Commands>
+
+  <CommandPlacements>
+    <CommandPlacement guid="guidDynamicCommandsCmdSet" id="cmdidMyCommand" priority="0x100">
+      <Parent guid="guidDynamicCommandsCmdSet" id="MyEditorCtxGroup"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidDynamicCommandsCmdSet" id="cmdidMyZoom" priority="0x200">
+      <Parent guid="guidDynamicCommandsCmdSet" id="MyEditorCtxGroup"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidDynamicCommandsCmdSet" id="MyToolbarGroup" priority="0x600">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_TOOL_PROJWIN"/>
+    </CommandPlacement>
+  </CommandPlacements>
+
+
+  <KeyBindings>
+    <KeyBinding guid="guidDynamicCommandsCmdSet" id="cmdidMyCommand" editor="guidVSStd97" key1="1" mod1="Control" />
+  </KeyBindings>
+
+  <Symbols>
+    <GuidSymbol name="guidDynamicCommandsPkg" value="{958692d7-8846-4754-b721-170860696341}" />
+    <GuidSymbol name="guidDynamicCommandsCmdSet" value="{167aa10e-db32-449c-ab8a-09239a0cb36a}">
+      <!--Menus-->
+      <IDSymbol name="MyToolbar" value="0x101" />
+      <!--Groups-->
+      <IDSymbol name="MyMenuGroup" value="0x1010" />
+      <IDSymbol name="MyToolbarGroup" value="0x1011" />
+      <IDSymbol name="MyMainToolbarGroup" value="0x1012" />
+      <IDSymbol name="MyEditorCtxGroup" value="0x1013" />
+      <!--Commands-->
+      <IDSymbol name="cmdidMyCommand" value="0x2001" />
+      <IDSymbol name="cmdidMyGraph" value="0x2002" />
+      <IDSymbol name="cmdidMyZoom" value="0x2003" />
+      <IDSymbol name="cmdidDynamicTxt" value="0x2004" />
+      <IDSymbol name="cmdidDynVisibility1" value="0x2005" />
+      <IDSymbol name="cmdidDynVisibility2" value="0x2006" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidGenericCmdBmp" value="{ADC60CB4-8D67-4a08-B411-8E7304974546}">
+      <IDSymbol name="bmpArrow" value="1" />
+    </GuidSymbol>
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="MenusSubMenu" value="0x1003" />
+    </GuidSymbol>
+
+  </Symbols>
+</CommandTable>

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+  <Commands package="guidActivityLogPkg">
+    <Groups>
+      <Group guid="guidActivityLogCmdSet" id="MyMenuGroup" priority="0x0800">
+        <Parent guid="guidVSXtraCmdSet" id="PackageSubMenu"/>
+      </Group>
+    </Groups>
+    <Buttons>
+      <Button guid="guidActivityLogCmdSet" id="cmdidWriteEntry" priority="0x0100" type="Button">
+        <Parent guid="guidActivityLogCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidOfficeIcon" id="msotcidAddRecord" />
+        <Strings>
+          <CommandName>cmdidWriteEntry</CommandName>
+          <ButtonText>Write Entry to Activity Log</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidActivityLogPkg" value="{2143af3f-3a53-4ac2-b9e2-467a39ff1482}" />
+    
+    <GuidSymbol name="guidActivityLogCmdSet" value="{a65dbb90-8170-41e9-9d61-f83473318792}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidWriteEntry" value="0x0100" />
+    </GuidSymbol>
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="PackageSubMenu" value="0x1002" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

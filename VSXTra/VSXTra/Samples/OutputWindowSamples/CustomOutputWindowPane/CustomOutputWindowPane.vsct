@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+  
+  <Commands package="guidCustomOutputWindowPanePkg">
+    <Groups>
+      <Group guid="guidCustomOutputWindowPaneCmdSet" id="MyMenuGroup" priority="0x100">
+        <Parent guid="guidVSXtraCmdSet" id="OutputWindowSubMenu"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidCustomOutputWindowPaneCmdSet" id="cmdidCreateOutput" priority="0x0100" type="Button">
+        <Parent guid="guidCustomOutputWindowPaneCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidOfficeIcon" id="msotcidNewTable" />
+        <Strings>
+          <CommandName>Create Output for Custom Panes</CommandName>
+          <ButtonText>Create Output for Custom Panes</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidCustomOutputWindowPanePkg" value="{8c851aaf-b78b-43d2-8e72-62983a84d42f}" />
+
+    <GuidSymbol name="guidCustomOutputWindowPaneCmdSet" value="{991FFFD7-FA79-4de4-A084-31BD68938D15}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidCreateOutput" value="0x0100" />
+    </GuidSymbol>
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="OutputWindowSubMenu" value="0x1004" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

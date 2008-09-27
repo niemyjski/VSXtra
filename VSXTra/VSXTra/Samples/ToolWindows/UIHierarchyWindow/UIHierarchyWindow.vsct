@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidUIHierarchyWindowPkg">
+    <Groups>
+      <Group guid="guidUIHierarchyWindowCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidVSXtraCmdSet" id="ToolWindowSubMenu"/>
+      </Group>
+    </Groups>
+    
+    <Buttons>
+      <Button guid="guidUIHierarchyWindowCmdSet" id="cmdidShowUIHierarchy" priority="0x0100" type="Button">
+        <Parent guid="guidUIHierarchyWindowCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidOfficeIcon" id="msotcidOutlineView" />
+        <Strings>
+          <CommandName>cmdidShowUIHierarchy</CommandName>
+          <ButtonText>Display UI Hierarchy Window</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidUIHierarchyWindowPkg" value="{9176a015-55e8-4bfe-afe0-f48a81f81570}" />
+    <GuidSymbol name="guidUIHierarchyWindowCmdSet" value="{0a41bc9f-53cd-4299-8d23-123721a25093}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="HierWindowToolbar" value="0x1021" />
+      <IDSymbol name="cmdidShowUIHierarchy" value="0x0100" />
+    </GuidSymbol>
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="ToolWindowSubMenu" value="0x1005" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

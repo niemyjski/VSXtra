@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidShowMessagePkg">
+    <Groups>
+      <Group guid="guidShowMessageCmdSet" id="MyMenuGroup" priority="0x0100">
+        <Parent guid="guidVSXtraCmdSet" id="PackageSubMenu"/>
+      </Group>
+    </Groups>
+    <Buttons>
+      <Button guid="guidShowMessageCmdSet" id="cmdidDisplayMyMessage" priority="0x0100" type="Button">
+        <Parent guid="guidShowMessageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidOfficeIcon" id="msotcidNewMessage" />
+        <Strings>
+          <CommandName>cmdidDisplayMyMessage</CommandName>
+          <ButtonText>Display My Message</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidShowMessagePkg" value="{64583587-6991-4f95-997e-61e9e8a7d106}" />
+    <GuidSymbol name="guidShowMessageCmdSet" value="{e2f637cd-9143-4a14-9be4-7e902c471f81}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidDisplayMyMessage" value="0x0100" />
+    </GuidSymbol>
+    
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="PackageSubMenu" value="0x1002" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

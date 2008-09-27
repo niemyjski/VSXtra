@@ -1,0 +1,285 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtime", "Runtime", "{7DE710CE-48D1-4EBD-8022-432D8B3F5792}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{0E640953-2F56-45BE-8F1E-C0D319CEA771}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{20E76D0F-5B35-4A91-91DB-5ACD1783E98D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra", "Runtime\VSXTra\VSXtra.csproj", "{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OutputWindowSamples", "OutputWindowSamples", "{1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutputWindowWithAutoLoad", "Samples\OutputWindowSamples\OutputWindowWithAutoLoad\OutputWindowWithAutoLoad.csproj", "{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MenusAndCommands", "MenusAndCommands", "{F990B9E3-95D8-4DFE-B104-83652F77652B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicCommands", "Samples\MenusAndCommands\DynamicCommands\DynamicCommands.csproj", "{79C4E3F7-2E93-4E39-ADD6-013A5D529899}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ToolWindows", "ToolWindows", "{6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicToolWindow", "Samples\ToolWindows\DynamicToolWindow\DynamicToolWindow.csproj", "{7277A590-9A1E-4A87-8105-88EDA21BAF8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistedToolWindow", "Samples\ToolWindows\PersistedToolWindow\PersistedToolWindow.csproj", "{398B3601-9835-4B22-B515-FBE62A2573F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComboboxCommands", "Samples\MenusAndCommands\ComboboxCommands\ComboboxCommands.csproj", "{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiToolWindow", "Samples\ToolWindows\MultiToolWindow\MultiToolWindow.csproj", "{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Package", "Package", "{C8E21D29-1530-4627-A682-B9E477C11643}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionsPage", "Samples\Package\OptionsPage\OptionsPage.csproj", "{FAEE43D8-6AD9-4068-9C4B-A283520BED6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtraCommands", "Samples\Package\VSXtraCommands\VSXtraCommands.csproj", "{DA794D49-AFB1-490E-81B9-123DE477FC92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicesReference", "Samples\Package\ServicesReference\ServicesReference.csproj", "{A61F93F5-A428-4624-BAEA-8548AC26CA9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutputVsRegistry", "Samples\OutputWindowSamples\OutputVsRegistry\OutputVsRegistry.csproj", "{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RdtEventsWindow", "Samples\ToolWindows\RdtEventsWindow\RdtEventsWindow.csproj", "{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMessage", "Samples\Package\ShowMessage\ShowMessage.csproj", "{32D1D804-9B47-4B4F-9D8D-5BFF71880EBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomOutputWindowPane", "Samples\OutputWindowSamples\CustomOutputWindowPane\CustomOutputWindowPane.csproj", "{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityLog", "Samples\Package\ActivityLog\ActivityLog.csproj", "{8309E293-E726-4A5D-B33B-24552E2C4910}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReSharper", "ReSharper", "{0FC25268-6CF2-443D-90EE-9F627CE29D30}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\ReSharper\VSXtraTemplates.xml = Tools\ReSharper\VSXtraTemplates.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleToolWindow", "Samples\ToolWindows\SimpleToolWindow\SimpleToolWindow.csproj", "{BA106BB7-BDAA-4713-B0CD-4F23355C8551}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayLoadedPackages", "Samples\Package\DisplayLoadedPackages\DisplayLoadedPackages.csproj", "{9B8BDDEF-B5DA-461F-8177-5DCC4DDE4081}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Editors", "Editors", "{38ACB0C3-2640-417A-941C-6CBCBBD64C17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogItemEditor", "Samples\Editors\BlogItemEditor\BlogItemEditor.csproj", "{F81AB5EB-B21C-4AAD-98BB-48BC15B50596}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIHierarchyWindow", "Samples\ToolWindows\UIHierarchyWindow\UIHierarchyWindow.csproj", "{D75792E7-D0D9-4A65-8833-D9FD464B2A8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra.ProjectSystem", "Runtime\VSXtra.ProjectSystem\VSXtra.ProjectSystem.csproj", "{BBB209BC-F584-498E-BE59-CD54F848CF32}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PlaceHolder", "PlaceHolder", "{1E641972-38FC-45F0-8BB9-A0D9E98DAD13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtraMenuPlaceHolder", "Samples\PlaceHolder\VSXtraMenuPlaceHolder\VSXtraMenuPlaceHolder.csproj", "{E9BC0BC9-B898-4961-BAE4-BC541C92092F}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 22
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs02.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Runtime\\VSXtra.ProjectSystem\\VSXtra.ProjectSystem.csproj
+		SccProjectTopLevelParentUniqueName1 = VSXTra.sln
+		SccProjectName1 = Runtime/VSXtra.ProjectSystem
+		SccLocalPath1 = Runtime\\VSXtra.ProjectSystem
+		SccProjectUniqueName2 = Runtime\\VSXTra\\VSXtra.csproj
+		SccProjectTopLevelParentUniqueName2 = VSXTra.sln
+		SccProjectName2 = Runtime/VSXTra
+		SccLocalPath2 = Runtime\\VSXTra
+		SccProjectUniqueName3 = Samples\\Editors\\BlogItemEditor\\BlogItemEditor.csproj
+		SccProjectTopLevelParentUniqueName3 = VSXTra.sln
+		SccProjectName3 = Samples/Editors/BlogItemEditor
+		SccLocalPath3 = Samples\\Editors\\BlogItemEditor
+		SccProjectUniqueName4 = Samples\\MenusAndCommands\\ComboboxCommands\\ComboboxCommands.csproj
+		SccProjectTopLevelParentUniqueName4 = VSXTra.sln
+		SccProjectName4 = Samples/MenusAndCommands/ComboboxCommands
+		SccLocalPath4 = Samples\\MenusAndCommands\\ComboboxCommands
+		SccProjectUniqueName5 = Samples\\MenusAndCommands\\DynamicCommands\\DynamicCommands.csproj
+		SccProjectTopLevelParentUniqueName5 = VSXTra.sln
+		SccProjectName5 = Samples/MenusAndCommands/DynamicCommands
+		SccLocalPath5 = Samples\\MenusAndCommands\\DynamicCommands
+		SccProjectUniqueName6 = Samples\\OutputWindowSamples\\CustomOutputWindowPane\\CustomOutputWindowPane.csproj
+		SccProjectTopLevelParentUniqueName6 = VSXTra.sln
+		SccProjectName6 = Samples/OutputWindowSamples/CustomOutputWindowPane
+		SccLocalPath6 = Samples\\OutputWindowSamples\\CustomOutputWindowPane
+		SccProjectUniqueName7 = Samples\\OutputWindowSamples\\OutputVsRegistry\\OutputVsRegistry.csproj
+		SccProjectTopLevelParentUniqueName7 = VSXTra.sln
+		SccProjectName7 = Samples/OutputWindowSamples/OutputVsRegistry
+		SccLocalPath7 = Samples\\OutputWindowSamples\\OutputVsRegistry
+		SccProjectUniqueName8 = Samples\\OutputWindowSamples\\OutputWindowWithAutoLoad\\OutputWindowWithAutoLoad.csproj
+		SccProjectTopLevelParentUniqueName8 = VSXTra.sln
+		SccProjectName8 = Samples/OutputWindowSamples/OutputWindowWithAutoLoad
+		SccLocalPath8 = Samples\\OutputWindowSamples\\OutputWindowWithAutoLoad
+		SccProjectUniqueName9 = Samples\\Package\\ActivityLog\\ActivityLog.csproj
+		SccProjectTopLevelParentUniqueName9 = VSXTra.sln
+		SccProjectName9 = Samples/Package/ActivityLog
+		SccLocalPath9 = Samples\\Package\\ActivityLog
+		SccProjectUniqueName10 = Samples\\Package\\DisplayLoadedPackages\\DisplayLoadedPackages.csproj
+		SccProjectTopLevelParentUniqueName10 = VSXTra.sln
+		SccProjectName10 = Samples/Package/DisplayLoadedPackages
+		SccLocalPath10 = Samples\\Package\\DisplayLoadedPackages
+		SccProjectUniqueName11 = Samples\\Package\\OptionsPage\\OptionsPage.csproj
+		SccProjectTopLevelParentUniqueName11 = VSXTra.sln
+		SccProjectName11 = Samples/Package/OptionsPage
+		SccLocalPath11 = Samples\\Package\\OptionsPage
+		SccProjectUniqueName12 = Samples\\Package\\ServicesReference\\ServicesReference.csproj
+		SccProjectTopLevelParentUniqueName12 = VSXTra.sln
+		SccProjectName12 = Samples/Package/ServicesReference
+		SccLocalPath12 = Samples\\Package\\ServicesReference
+		SccProjectUniqueName13 = Samples\\Package\\ShowMessage\\ShowMessage.csproj
+		SccProjectTopLevelParentUniqueName13 = VSXTra.sln
+		SccProjectName13 = Samples/Package/ShowMessage
+		SccLocalPath13 = Samples\\Package\\ShowMessage
+		SccProjectUniqueName14 = Samples\\Package\\VSXtraCommands\\VSXtraCommands.csproj
+		SccProjectTopLevelParentUniqueName14 = VSXTra.sln
+		SccProjectName14 = Samples/Package/VSXtraCommands
+		SccLocalPath14 = Samples\\Package\\VSXtraCommands
+		SccProjectUniqueName15 = Samples\\PlaceHolder\\VSXtraMenuPlaceHolder\\VSXtraMenuPlaceHolder.csproj
+		SccProjectTopLevelParentUniqueName15 = VSXTra.sln
+		SccProjectName15 = Samples/PlaceHolder/VSXtraMenuPlaceHolder
+		SccLocalPath15 = Samples\\PlaceHolder\\VSXtraMenuPlaceHolder
+		SccProjectUniqueName16 = Samples\\ToolWindows\\DynamicToolWindow\\DynamicToolWindow.csproj
+		SccProjectTopLevelParentUniqueName16 = VSXTra.sln
+		SccProjectName16 = Samples/ToolWindows/DynamicToolWindow
+		SccLocalPath16 = Samples\\ToolWindows\\DynamicToolWindow
+		SccProjectUniqueName17 = Samples\\ToolWindows\\MultiToolWindow\\MultiToolWindow.csproj
+		SccProjectTopLevelParentUniqueName17 = VSXTra.sln
+		SccProjectName17 = Samples/ToolWindows/MultiToolWindow
+		SccLocalPath17 = Samples\\ToolWindows\\MultiToolWindow
+		SccProjectUniqueName18 = Samples\\ToolWindows\\PersistedToolWindow\\PersistedToolWindow.csproj
+		SccProjectTopLevelParentUniqueName18 = VSXTra.sln
+		SccProjectName18 = Samples/ToolWindows/PersistedToolWindow
+		SccLocalPath18 = Samples\\ToolWindows\\PersistedToolWindow
+		SccProjectUniqueName19 = Samples\\ToolWindows\\RdtEventsWindow\\RdtEventsWindow.csproj
+		SccProjectTopLevelParentUniqueName19 = VSXTra.sln
+		SccProjectName19 = Samples/ToolWindows/RdtEventsWindow
+		SccLocalPath19 = Samples\\ToolWindows\\RdtEventsWindow
+		SccProjectUniqueName20 = Samples\\ToolWindows\\SimpleToolWindow\\SimpleToolWindow.csproj
+		SccProjectTopLevelParentUniqueName20 = VSXTra.sln
+		SccProjectName20 = Samples/ToolWindows/SimpleToolWindow
+		SccLocalPath20 = Samples\\ToolWindows\\SimpleToolWindow
+		SccProjectUniqueName21 = Samples\\ToolWindows\\UIHierarchyWindow\\UIHierarchyWindow.csproj
+		SccProjectTopLevelParentUniqueName21 = VSXTra.sln
+		SccProjectName21 = Samples/ToolWindows/UIHierarchyWindow
+		SccLocalPath21 = Samples\\ToolWindows\\UIHierarchyWindow
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{398B3601-9835-4B22-B515-FBE62A2573F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{398B3601-9835-4B22-B515-FBE62A2573F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{398B3601-9835-4B22-B515-FBE62A2573F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{398B3601-9835-4B22-B515-FBE62A2573F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAEE43D8-6AD9-4068-9C4B-A283520BED6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAEE43D8-6AD9-4068-9C4B-A283520BED6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAEE43D8-6AD9-4068-9C4B-A283520BED6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAEE43D8-6AD9-4068-9C4B-A283520BED6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA794D49-AFB1-490E-81B9-123DE477FC92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA794D49-AFB1-490E-81B9-123DE477FC92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA794D49-AFB1-490E-81B9-123DE477FC92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA794D49-AFB1-490E-81B9-123DE477FC92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A61F93F5-A428-4624-BAEA-8548AC26CA9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A61F93F5-A428-4624-BAEA-8548AC26CA9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A61F93F5-A428-4624-BAEA-8548AC26CA9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A61F93F5-A428-4624-BAEA-8548AC26CA9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32D1D804-9B47-4B4F-9D8D-5BFF71880EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32D1D804-9B47-4B4F-9D8D-5BFF71880EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32D1D804-9B47-4B4F-9D8D-5BFF71880EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32D1D804-9B47-4B4F-9D8D-5BFF71880EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8309E293-E726-4A5D-B33B-24552E2C4910}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8309E293-E726-4A5D-B33B-24552E2C4910}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8309E293-E726-4A5D-B33B-24552E2C4910}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8309E293-E726-4A5D-B33B-24552E2C4910}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA106BB7-BDAA-4713-B0CD-4F23355C8551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA106BB7-BDAA-4713-B0CD-4F23355C8551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA106BB7-BDAA-4713-B0CD-4F23355C8551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA106BB7-BDAA-4713-B0CD-4F23355C8551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B8BDDEF-B5DA-461F-8177-5DCC4DDE4081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B8BDDEF-B5DA-461F-8177-5DCC4DDE4081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B8BDDEF-B5DA-461F-8177-5DCC4DDE4081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B8BDDEF-B5DA-461F-8177-5DCC4DDE4081}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F81AB5EB-B21C-4AAD-98BB-48BC15B50596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F81AB5EB-B21C-4AAD-98BB-48BC15B50596}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F81AB5EB-B21C-4AAD-98BB-48BC15B50596}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F81AB5EB-B21C-4AAD-98BB-48BC15B50596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D75792E7-D0D9-4A65-8833-D9FD464B2A8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D75792E7-D0D9-4A65-8833-D9FD464B2A8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D75792E7-D0D9-4A65-8833-D9FD464B2A8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D75792E7-D0D9-4A65-8833-D9FD464B2A8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8} = {7DE710CE-48D1-4EBD-8022-432D8B3F5792}
+		{BBB209BC-F584-498E-BE59-CD54F848CF32} = {7DE710CE-48D1-4EBD-8022-432D8B3F5792}
+		{0FC25268-6CF2-443D-90EE-9F627CE29D30} = {20E76D0F-5B35-4A91-91DB-5ACD1783E98D}
+		{1D548488-9D1D-4E72-8FA8-A7C86F98FBBA} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{F990B9E3-95D8-4DFE-B104-83652F77652B} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{C8E21D29-1530-4627-A682-B9E477C11643} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{38ACB0C3-2640-417A-941C-6CBCBBD64C17} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{1E641972-38FC-45F0-8BB9-A0D9E98DAD13} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
+		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
+		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
+		{79C4E3F7-2E93-4E39-ADD6-013A5D529899} = {F990B9E3-95D8-4DFE-B104-83652F77652B}
+		{6574EDC3-EA76-4FE1-A8D8-97E0A76B3B78} = {F990B9E3-95D8-4DFE-B104-83652F77652B}
+		{7277A590-9A1E-4A87-8105-88EDA21BAF8B} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
+		{398B3601-9835-4B22-B515-FBE62A2573F2} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
+		{83E8954E-8DCD-40D0-B8DF-BCD4755DEE36} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
+		{88C65CD1-F73E-4C55-AC0A-7A8E66DF86F1} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
+		{BA106BB7-BDAA-4713-B0CD-4F23355C8551} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
+		{D75792E7-D0D9-4A65-8833-D9FD464B2A8E} = {6F2145A1-F736-4F0D-AAA2-0B3EDFFB07C2}
+		{FAEE43D8-6AD9-4068-9C4B-A283520BED6E} = {C8E21D29-1530-4627-A682-B9E477C11643}
+		{DA794D49-AFB1-490E-81B9-123DE477FC92} = {C8E21D29-1530-4627-A682-B9E477C11643}
+		{A61F93F5-A428-4624-BAEA-8548AC26CA9E} = {C8E21D29-1530-4627-A682-B9E477C11643}
+		{32D1D804-9B47-4B4F-9D8D-5BFF71880EBD} = {C8E21D29-1530-4627-A682-B9E477C11643}
+		{8309E293-E726-4A5D-B33B-24552E2C4910} = {C8E21D29-1530-4627-A682-B9E477C11643}
+		{9B8BDDEF-B5DA-461F-8177-5DCC4DDE4081} = {C8E21D29-1530-4627-A682-B9E477C11643}
+		{F81AB5EB-B21C-4AAD-98BB-48BC15B50596} = {38ACB0C3-2640-417A-941C-6CBCBBD64C17}
+		{E9BC0BC9-B898-4961-BAE4-BC541C92092F} = {1E641972-38FC-45F0-8BB9-A0D9E98DAD13}
+	EndGlobalSection
+EndGlobal
