@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidSimpleToolWindowPkg">
+    <Groups>
+      <Group guid="guidSimpleToolWindowCmdSet" id="MyMenuGroup" priority="0x0080">
+        <Parent guid="guidVSXtraCmdSet" id="ToolWindowSubMenu"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidSimpleToolWindowCmdSet" id="cmdidShowToolWindow" priority="0x0100" type="Button">
+        <Parent guid="guidSimpleToolWindowCmdSet" id="MyMenuGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidFormView" />
+        <Strings>
+          <CommandName>cmdidShowMyToolWindow</CommandName>
+          <ButtonText>VSXtra Simple Tool Window</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidSimpleToolWindowPkg" value="{0f03f8d1-1827-4fc9-8cfc-2f1950e31706}" />
+    <GuidSymbol name="guidSimpleToolWindowCmdSet" value="{033823e8-7739-4df7-9005-a24a7536f121}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidShowToolWindow" value="0x0101" />
+    </GuidSymbol>
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="ToolWindowSubMenu" value="0x1005" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidPersistedToolWindowPkg">
+    <Menus>
+      <Menu guid="guidPersistedToolWindowCmdSet" id="PersistedWindowToolbar" priority="0x0000" type="ToolWindowToolbar">
+        <Parent guid="guidPersistedToolWindowCmdSet" id="PersistedWindowToolbar"/>
+        <Strings>
+          <ButtonText>PersistedWindowToolBar</ButtonText>
+          <CommandName>Persisted Window Toolbar</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+    <Groups>
+      <Group guid="guidPersistedToolWindowCmdSet" id="MyMenuGroup" priority="0x0200">
+        <Parent guid="guidVSXtraCmdSet" id="ToolWindowSubMenu"/>
+      </Group>
+      <Group guid="guidPersistedToolWindowCmdSet" id="PersistedWindowToolbarGroup" priority="0x0500">
+        <Parent guid="guidPersistedToolWindowCmdSet" id="PersistedWindowToolbar"/>
+      </Group>
+    </Groups>
+    <Buttons>
+      <Button guid="guidPersistedToolWindowCmdSet" id="cmdidPersistedWindow" priority="0x100" type="Button">
+        <Parent guid="guidPersistedToolWindowCmdSet" id="MyMenuGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidRefresh"/>
+        <Strings>
+          <ButtonText>Persisted Tool Window</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidPersistedToolWindowCmdSet" id="cmdidRefreshWindowsList" priority="0x100" type="Button">
+        <Parent guid="guidPersistedToolWindowCmdSet" id="PersistedWindowToolbarGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidRefresh"/>
+        <Strings>
+          <ButtonText>Refresh</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidPersistedToolWindowPkg" value="{859dbfb9-90fd-44ed-b018-8e7cc598eaec}" />
+    <GuidSymbol name="guidPersistedToolWindowCmdSet" value="{D394C2A8-C496-404c-9542-2EC31B7F864D}">
+      <IDSymbol name="PersistedWindowToolbar" value="0x101" />
+      <IDSymbol name="PersistedWindowToolbarGroup" value="0x1001" />
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidPersistedWindow" value="0x2001" />
+      <IDSymbol name="cmdidRefreshWindowsList" value="0x2002" />
+    </GuidSymbol>
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="ToolWindowSubMenu" value="0x1005" />
+    </GuidSymbol>
+
+  </Symbols>
+</CommandTable>
