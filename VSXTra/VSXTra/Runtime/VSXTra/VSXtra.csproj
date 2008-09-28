@@ -73,6 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\WindowPaneNotFoundException.cs" />
+    <Compile Include="Hierarchy\HierarchyAttributes.cs" />
+    <Compile Include="Hierarchy\HierarchyPropertyWrapper.cs" />
     <Compile Include="Hierarchy\ItemMap.cs" />
     <Compile Include="Hierarchy\HierarchyBase.cs" />
     <Compile Include="Hierarchy\HierarchyNodeEventArgs.cs" />

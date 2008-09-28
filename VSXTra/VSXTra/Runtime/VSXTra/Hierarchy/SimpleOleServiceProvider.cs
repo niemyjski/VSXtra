@@ -295,6 +295,5 @@ namespace VSXtra
     }
 
     #endregion
-
   }
 }
