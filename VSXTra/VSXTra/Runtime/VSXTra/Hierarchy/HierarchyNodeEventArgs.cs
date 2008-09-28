@@ -33,4 +33,31 @@ namespace VSXtra
       ChildNode = childNode;
     }
   }
+
+  // ================================================================================================
+  /// <summary>
+  /// Cancellable event argument for hierarchy nodes.
+  /// </summary>
+  // ================================================================================================
+  public class HierarchyNodeCancelEventArgs : HierarchyNodeEventArgs
+  {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets or sets a value indicating whether this event is cancelled.
+    /// </summary>
+    /// <value><c>true</c> if cancelled; otherwise, <c>false</c>.</value>
+    // --------------------------------------------------------------------------------------------
+    public bool Cancel { get; set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HierarchyNodeCancelEventArgs"/> class.
+    /// </summary>
+    /// <param name="childNode">The child node.</param>
+    // --------------------------------------------------------------------------------------------
+    public HierarchyNodeCancelEventArgs(IHierarchyBehavior childNode)
+      : base(childNode)
+    {
+    }
+  }
 }
