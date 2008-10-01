@@ -146,6 +146,7 @@
     <Compile Include="VSServices\SelectionTracking\SolutionEvents.cs" />
     <Compile Include="VSServices\ServiceHandling\ServiceAttributes.cs" />
     <Compile Include="VSServices\ServiceHandling\VsxService.cs" />
+    <Compile Include="VSServices\Solution\Solution.cs" />
     <Compile Include="VSServices\VsIde.cs" />
     <Compile Include="VSServices\VsMessageBox.cs" />
     <Compile Include="VSServices\Registry\VsRegistry.cs" />
