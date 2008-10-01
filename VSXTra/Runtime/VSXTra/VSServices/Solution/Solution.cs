@@ -59,7 +59,7 @@ namespace VSXtra
       if (null != solutionHierarchy)
       {
         foreach (var item in TraverseHierarchyItem(solutionHierarchy, 
-          VSConstants.VSITEMID_ROOT, 0, 0, true))
+          VSConstants.VSITEMID_ROOT, 0, true))
         {
           yield return item;
         }
@@ -73,7 +73,6 @@ namespace VSXtra
     /// </summary>
     /// <param name="hierarchy">Hierarchy to enumerate over.</param>
     /// <param name="itemid">Item id of the hierarchy item to start traversal from.</param>
-    /// <param name="idInOwner">The id in the owner hierarchy.</param>
     /// <param name="recursionLevel">Depth of recursion. e.g. if recursion started with the Solution
     /// node, then : Level 0 -- Solution node, Level 1 -- children of Solution, etc.</param>
     /// <param name="hierIsSolution">true if hierarchy is Solution Node. This is needed to special
@@ -84,7 +83,6 @@ namespace VSXtra
     private static IEnumerable<HierarchyTraversalInfo> TraverseHierarchyItem(
       IVsHierarchy hierarchy, 
       uint itemid, 
-      uint idInOwner,
       int recursionLevel, 
       bool hierIsSolution)
     {
@@ -103,7 +101,7 @@ namespace VSXtra
         Marshal.Release(nestedHierarchyObj); // we are responsible to release the refcount on the out IntPtr parameter
         if (nestedHierarchy != null)
         {
-          foreach (var item in TraverseHierarchyItem(nestedHierarchy, nestedItemId, itemid, recursionLevel, false))
+          foreach (var item in TraverseHierarchyItem(nestedHierarchy, nestedItemId, recursionLevel, false))
           {
             yield return item;
           }
@@ -112,7 +110,7 @@ namespace VSXtra
       else
       {
         // --- Return the current hierarchy item
-        yield return new HierarchyTraversalInfo(hierarchy, itemid, idInOwner, recursionLevel);
+        yield return new HierarchyTraversalInfo(hierarchy, itemid, recursionLevel);
         recursionLevel++;
 
         // --- Get the first child node of the current hierarchy being walked.
@@ -138,7 +136,7 @@ namespace VSXtra
           var childId = GetItemId(pVar);
           while (childId != VSConstants.VSITEMID_NIL)
           {
-            foreach (var item in TraverseHierarchyItem(hierarchy, childId, 0, recursionLevel, false))
+            foreach (var item in TraverseHierarchyItem(hierarchy, childId, recursionLevel, false))
             {
               yield return item;
             }
@@ -208,7 +206,7 @@ namespace VSXtra
     /// Hierarchy node information
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public HierarchyPropertyWrapper HierarchyNode { get; private set; }
+    public HierarchyItem HierarchyNode { get; private set; }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -224,7 +222,7 @@ namespace VSXtra
     /// <param name="hierarchyNode">The hierarchy node.</param>
     /// <param name="depth">The depth of the node.</param>
     // --------------------------------------------------------------------------------------------
-    public HierarchyTraversalInfo(HierarchyPropertyWrapper hierarchyNode, int depth)
+    public HierarchyTraversalInfo(HierarchyItem hierarchyNode, int depth)
     {
       HierarchyNode = hierarchyNode;
       Depth = depth;
@@ -240,22 +238,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     public HierarchyTraversalInfo(IVsHierarchy hierarchyNode, uint itemId, int depth)
     {
-      HierarchyNode = new HierarchyPropertyWrapper(hierarchyNode, itemId);
-      Depth = depth;
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HierarchyTraversalInfo"/> class.
-    /// </summary>
-    /// <param name="hierarchyNode">The hierarchy node.</param>
-    /// <param name="itemId">The item id.</param>
-    /// <param name="idInOwner">The id in owner hierarchy.</param>
-    /// <param name="depth">The depth of the node.</param>
-    // --------------------------------------------------------------------------------------------
-    public HierarchyTraversalInfo(IVsHierarchy hierarchyNode, uint itemId, uint idInOwner, int depth)
-    {
-      HierarchyNode = new HierarchyPropertyWrapper(hierarchyNode, itemId, idInOwner);
+      HierarchyNode = new HierarchyItem(hierarchyNode, itemId);
       Depth = depth;
     }
   }

@@ -17,6 +17,7 @@ namespace DeepDiver.SolutionNodeAnalyzer
     public override void OnToolWindowCreated()
     {
       base.OnToolWindowCreated();
+      UIControl.SelectionTracker = SelectionTracker;
       RefreshList();
     }
 
