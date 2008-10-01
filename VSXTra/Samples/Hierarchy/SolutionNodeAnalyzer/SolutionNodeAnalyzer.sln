@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra", "..\..\..\Runtime\VSXTra\VSXtra.csproj", "{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionNodeAnalyzer", "SolutionNodeAnalyzer.csproj", "{1D3EC074-3275-43A9-95C9-F7BD299C61D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra.ProjectSystem", "..\..\..\Runtime\VSXtra.ProjectSystem\VSXtra.ProjectSystem.csproj", "{BBB209BC-F584-498E-BE59-CD54F848CF32}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs02.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ..\\..\\..\\Runtime\\VSXTra\\VSXtra.csproj
+		SccProjectName1 = ../../../Runtime/VSXTra
+		SccLocalPath1 = ..\\..\\..\\Runtime\\VSXTra
+		SccProjectUniqueName2 = SolutionNodeAnalyzer.csproj
+		SccLocalPath2 = .
+		SccProjectUniqueName3 = ..\\..\\..\\Runtime\\VSXtra.ProjectSystem\\VSXtra.ProjectSystem.csproj
+		SccProjectName3 = ../../../Runtime/VSXtra.ProjectSystem
+		SccLocalPath3 = ..\\..\\..\\Runtime\\VSXtra.ProjectSystem
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D3EC074-3275-43A9-95C9-F7BD299C61D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D3EC074-3275-43A9-95C9-F7BD299C61D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D3EC074-3275-43A9-95C9-F7BD299C61D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D3EC074-3275-43A9-95C9-F7BD299C61D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBB209BC-F584-498E-BE59-CD54F848CF32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

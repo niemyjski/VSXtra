@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidSolutionNodeAnalyzerPkg">
+    <Menus>
+      <Menu guid="guidSolutionNodeAnalyzerCmdSet" id="AnalyzerWindowToolbar" priority="0x0000" type="ToolWindowToolbar">
+        <Parent guid="guidSolutionNodeAnalyzerCmdSet" id="AnalyzerWindowToolbar"/>
+        <Strings>
+          <ButtonText>PersistedWindowToolBar</ButtonText>
+          <CommandName>Persisted Window Toolbar</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+    <Groups>
+      <Group guid="guidSolutionNodeAnalyzerCmdSet" id="AnalyzerWindowToolbarGroup" priority="0x0500">
+        <Parent guid="guidSolutionNodeAnalyzerCmdSet" id="AnalyzerWindowToolbar"/>
+      </Group>
+    </Groups>
+    <Buttons>
+      <Button guid="guidSolutionNodeAnalyzerCmdSet" id="cmdidShowNodeAnalyzer" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
+        <Icon guid="guidOfficeIcon" id="msotcidRefresh"/>
+        <Strings>
+          <CommandName>cmdidShowNodeAnalyzer</CommandName>
+          <ButtonText>Solution Node Analyzer</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidSolutionNodeAnalyzerCmdSet" id="cmdidRefreshHierarchy" priority="0x100" type="Button">
+        <Parent guid="guidSolutionNodeAnalyzerCmdSet" id="AnalyzerWindowToolbarGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidRefresh"/>
+        <Strings>
+          <ButtonText>Refresh</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidSolutionNodeAnalyzerPkg" value="{48b57ef4-4f62-4b74-8afb-5508773902b3}" />
+    <GuidSymbol name="guidSolutionNodeAnalyzerCmdSet" value="{3cd1e566-c0a1-48f7-8161-b619fbf75514}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="AnalyzerWindowToolbar" value="0x1021" />
+      <IDSymbol name="AnalyzerWindowToolbarGroup" value="0x1022" />
+      <IDSymbol name="cmdidShowNodeAnalyzer" value="0x0101" />
+      <IDSymbol name="cmdidRefreshHierarchy" value="0x0102" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>
