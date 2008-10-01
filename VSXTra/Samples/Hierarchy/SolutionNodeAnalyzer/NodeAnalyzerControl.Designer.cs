@@ -42,8 +42,8 @@ namespace DeepDiver.SolutionNodeAnalyzer
           this.DepthHeader = new System.Windows.Forms.ColumnHeader();
           this.NameHeader = new System.Windows.Forms.ColumnHeader();
           this.ParentIDHeader = new System.Windows.Forms.ColumnHeader();
-          this.ParentHierHeader = new System.Windows.Forms.ColumnHeader();
           this.NodeImages = new System.Windows.Forms.ImageList(this.components);
+          this.DataHeader = new System.Windows.Forms.ColumnHeader();
           this.SuspendLayout();
           // 
           // NodeListView
@@ -53,7 +53,7 @@ namespace DeepDiver.SolutionNodeAnalyzer
             this.DepthHeader,
             this.NameHeader,
             this.ParentIDHeader,
-            this.ParentHierHeader});
+            this.DataHeader});
           this.NodeListView.Dock = System.Windows.Forms.DockStyle.Fill;
           this.NodeListView.FullRowSelect = true;
           this.NodeListView.Location = new System.Drawing.Point(0, 0);
@@ -63,11 +63,12 @@ namespace DeepDiver.SolutionNodeAnalyzer
           this.NodeListView.TabIndex = 0;
           this.NodeListView.UseCompatibleStateImageBehavior = false;
           this.NodeListView.View = System.Windows.Forms.View.Details;
+          this.NodeListView.SelectedIndexChanged += new System.EventHandler(this.NodeListView_SelectedIndexChanged);
           // 
           // IDHeader
           // 
-          this.IDHeader.Text = "ID";
-          this.IDHeader.Width = 140;
+          this.IDHeader.Text = "ID [/ ID in Owner]";
+          this.IDHeader.Width = 160;
           // 
           // DepthHeader
           // 
@@ -84,17 +85,18 @@ namespace DeepDiver.SolutionNodeAnalyzer
           this.ParentIDHeader.Text = "Parent ID";
           this.ParentIDHeader.Width = 120;
           // 
-          // ParentHierHeader
-          // 
-          this.ParentHierHeader.Text = "Parent Hierarchy";
-          this.ParentHierHeader.Width = 359;
-          // 
           // NodeImages
           // 
           this.NodeImages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("NodeImages.ImageStream")));
           this.NodeImages.TransparentColor = System.Drawing.Color.Transparent;
-          this.NodeImages.Images.SetKeyName(0, "Hierarchy");
-          this.NodeImages.Images.SetKeyName(1, "Item");
+          this.NodeImages.Images.SetKeyName(0, "Root");
+          this.NodeImages.Images.SetKeyName(1, "Folder");
+          this.NodeImages.Images.SetKeyName(2, "Item");
+          // 
+          // DataHeader
+          // 
+          this.DataHeader.Text = "Data";
+          this.DataHeader.Width = 300;
           // 
           // NodeAnalyzerControl
           // 
@@ -113,7 +115,7 @@ namespace DeepDiver.SolutionNodeAnalyzer
         private System.Windows.Forms.ColumnHeader NameHeader;
         private System.Windows.Forms.ColumnHeader ParentIDHeader;
         private System.Windows.Forms.ColumnHeader DepthHeader;
-        private System.Windows.Forms.ColumnHeader ParentHierHeader;
+        private System.Windows.Forms.ColumnHeader DataHeader;
 
     }
 }
