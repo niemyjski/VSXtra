@@ -5,7 +5,6 @@
 // ================================================================================================
 using System;
 using System.ComponentModel;
-using System.Globalization;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -17,12 +16,14 @@ namespace VSXtra
   /// in the Properties window
   /// </summary>
   // ================================================================================================
-  public class HierarchyItem
+  public class HierarchyItem: CustomTypeDescriptorBase
   {
     #region Private fields
 
     private readonly IVsHierarchy _Hierarchy;
     private readonly uint _ItemId;
+    private readonly HandleProperty _IconHandle;
+    private readonly GuidProperty _TypeGuid;
 
     #endregion
 
@@ -39,6 +40,8 @@ namespace VSXtra
     {
       _Hierarchy = hierarchy;
       _ItemId = itemId;
+      _IconHandle = new HandleProperty(this, __VSHPROPID.VSHPROPID_IconHandle);
+      _TypeGuid = new GuidProperty(this, __VSHPROPID.VSHPROPID_TypeGuid);
     }
 
     #endregion
@@ -64,9 +67,9 @@ namespace VSXtra
     /// <value>The item id of this node.</value>
     // --------------------------------------------------------------------------------------------
     [DisplayName("ID")]
-    [TypeConverter(typeof(HierarchyItemIdTypeConverter))]
+    [Category("Identification")]
     [Description("Item ID within the hierarchy.")]
-    public uint ItemId
+    public HierarchyId Id
     {
       get { return _ItemId; }
     }
@@ -78,9 +81,9 @@ namespace VSXtra
     /// <value>The parent id within the hierarchy.</value>
     // --------------------------------------------------------------------------------------------
     [DisplayName("Parent Node ID")]
-    [TypeConverter(typeof(HierarchyItemIdTypeConverter))]
+    [Category("Hierarchy info")]
     [Description("Item ID of the parent node; VSITEMID_NIL, if no parent.")]
-    public int ParentId
+    public HierarchyId ParentId
     {
       get { return GetProperty<int>(__VSHPROPID.VSHPROPID_Parent); }
     }
@@ -92,10 +95,39 @@ namespace VSXtra
     /// <value>The name of this item.</value>
     // --------------------------------------------------------------------------------------------
     [DisplayName("Name")]
+    [Category("Names and Paths")]
     [Description("Name of the item.")]
     public string Name
     {
       get { return GetProperty<string>(__VSHPROPID.VSHPROPID_Name); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the name of this item.
+    /// </summary>
+    /// <value>The name of this item.</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("Save Name")]
+    [Category("Names and Paths")]
+    [Description("File name specified on the File Save menu.")]
+    public string SaveName
+    {
+      get { return GetProperty<string>(__VSHPROPID.VSHPROPID_SaveName); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the name of this item.
+    /// </summary>
+    /// <value>The name of this item.</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("Type Name")]
+    [Category("Names and Paths")]
+    [Description("Displays name to identify type of node.")]
+    public string TypeName
+    {
+      get { return GetProperty<string>(__VSHPROPID.VSHPROPID_TypeName); }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -118,13 +150,97 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the 32-bit signed handle for the Image list holding icons for the hierarchy items.
+    /// </summary>
+    /// <value>Image list handle value.</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("ImageList Handle")]
+    [Category("Appereance")]
+    [Description("Handle of the Image list holding icons for the item.")]
+    public int ImageListHandle
+    {
+      get { return GetProperty<int>(__VSHPROPID.VSHPROPID_IconImgList); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the 32-bit signed handle for the Image list holding icons for the hierarchy items.
+    /// </summary>
+    /// <value>Image list handle value.</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("Icon Index")]
+    [Category("Appereance")]
+    [Description("Index of the icon within the image list.")]
+    public int IconIndex
+    {
+      get { return GetProperty<int>(__VSHPROPID.VSHPROPID_IconIndex); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the 32-bit signed handle for the Image list holding icons for the hierarchy items.
+    /// </summary>
+    /// <value>Image list handle value.</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("Icon Handle")]
+    [Category("Appereance")]
+    [Description("Handle of the icon for the item.")]
+    public HandleProperty IconHandle
+    {
+      get { return _IconHandle; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the 32-bit signed handle for the Image list holding icons for the hierarchy items.
+    /// </summary>
+    /// <value>Image list handle value.</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("Type Guid")]
+    [Description("GUID identifying the type of the hierarchy item.")]
+    public GuidProperty TypeGuid
+    {
+      get { return _TypeGuid; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the flag indicating if the node is expandable or not.
+    /// </summary>
+    /// <value>flag indicating if the node is expandable or not..</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("Expandable")]
+    [Category("Appereance")]
+    [Description("Indicates if the node is expandable or not.")]
+    public bool Expandable
+    {
+      get { return GetProperty<bool>(__VSHPROPID.VSHPROPID_Expandable); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the flag indicating if the node is expandable or not.
+    /// </summary>
+    /// <value>flag indicating if the node is expandable or not..</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("Expand by default")]
+    [Category("Appereance")]
+    [Description("Indicates if the node is expanded by default or not.")]
+    public bool ExpandByDefault
+    {
+      get { return GetProperty<bool>(__VSHPROPID.VSHPROPID_ExpandByDefault); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Gets the parent hierarchy item id.
     /// </summary>
     /// <value>The parent hierarchy item id.</value>
     // --------------------------------------------------------------------------------------------
     [DisplayName("Item ID in Parent Hierarchy")]
+    [Category("Identification")]
     [Description("If the current hierachy is nested into a perant hierarchy, this value tells the ID used in the parent hierarchy.")]
-    public uint ParentHierarchyItemId
+    public HierarchyId ParentHierarchyItemId
     {
       get
       {
@@ -144,18 +260,53 @@ namespace VSXtra
     /// </value>
     // --------------------------------------------------------------------------------------------
     [DisplayName("Is Nested Hierarchy?")]
+    [Category("Hierarchy info")]
     [Description("This flag tells if this hierarchy item is nested into an owner hierarchy or not.")]
     public bool IsNestedHierachy
     {
-      get { return ItemId == VSConstants.VSITEMID_ROOT && ParentHierarchyItemId != 0; }
+      get { return Id.IsRoot && ParentHierarchyItemId.Value != 0; }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the first child of this hierarchy item.
+    /// </summary>
+    /// <value>The first child of this hierarchy item.</value>
+    // --------------------------------------------------------------------------------------------
     [DisplayName("First Child ID")]
-    [TypeConverter(typeof(HierarchyItemIdTypeConverter))]
-    [Description("Item ID of the parent node; VSITEMID_NIL, if no parent.")]
-    public int FirstChild
+    [Category("Hierarchy info")]
+    [Description("Item ID of the first child node; VSITEMID_NIL, if this item has no children.")]
+    public HierarchyId FirstChild
     {
       get { return GetProperty<int>(__VSHPROPID.VSHPROPID_FirstChild); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the first child of this hierarchy item.
+    /// </summary>
+    /// <value>The first child of this hierarchy item.</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("First Visible Child ID")]
+    [Category("Hierarchy info")]
+    [Description("Item ID of the first visible child node; VSITEMID_NIL, if this item has no visible children.")]
+    public HierarchyId FirstVisibleChild
+    {
+      get { return GetProperty<int>(__VSHPROPID.VSHPROPID_FirstVisibleChild); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the first child of this hierarchy item.
+    /// </summary>
+    /// <value>The first child of this hierarchy item.</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("Next Sibling ID")]
+    [Category("Hierarchy info")]
+    [Description("Item ID of the subsquent sibling of this item; VSITEMID_NIL, if this item has no more siblings.")]
+    public HierarchyId NextSibling
+    {
+      get { return GetProperty<int>(__VSHPROPID.VSHPROPID_FirstVisibleChild); }
     }
 
     #endregion
@@ -170,9 +321,9 @@ namespace VSXtra
     /// <param name="propId">Property identifier.</param>
     /// <returns>Property value ofthe specified property.</returns>
     // --------------------------------------------------------------------------------------------
-    private T GetProperty<T>(__VSHPROPID propId)
+    protected T GetProperty<T>(__VSHPROPID propId)
     {
-      return (T) GetProperty(propId);
+      return (T)GetProperty(propId);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -183,9 +334,9 @@ namespace VSXtra
     /// <param name="propId">Property identifier.</param>
     /// <returns>Property value ofthe specified property.</returns>
     // --------------------------------------------------------------------------------------------
-    private T GetProperty<T>(int propId)
+    protected T GetProperty<T>(int propId)
     {
-      return (T) GetProperty(propId);
+      return (T)GetProperty(propId);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -195,7 +346,7 @@ namespace VSXtra
     /// <param name="propId">Property identifier.</param>
     /// <returns>Property value ofthe specified property.</returns>
     // --------------------------------------------------------------------------------------------
-    private object GetProperty(__VSHPROPID propId)
+    protected object GetProperty(__VSHPROPID propId)
     {
       return GetProperty((int) propId);
     }
@@ -207,7 +358,7 @@ namespace VSXtra
     /// <param name="propId">Property identifier.</param>
     /// <returns>Property value ofthe specified property.</returns>
     // --------------------------------------------------------------------------------------------
-    private object GetProperty(int propId)
+    protected object GetProperty(int propId)
     {
       if (propId == (int)__VSHPROPID.VSHPROPID_NIL) return null;
       object propValue;
@@ -215,92 +366,39 @@ namespace VSXtra
       return propValue;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the specified GUID hierarchy property.
+    /// </summary>
+    /// <param name="propId">Property identifier.</param>
+    /// <returns>Property value ofthe specified property.</returns>
+    // --------------------------------------------------------------------------------------------
+    protected object GetGuidProperty(int propId)
+    {
+      if (propId == (int)__VSHPROPID.VSHPROPID_NIL) return null;
+      Guid propValue;
+      _Hierarchy.GetGuidProperty(_ItemId, propId, out propValue);
+      return propValue;
+    }
+
+    #endregion
+
+    #region Overrides of CustomTypeDescriptorBase
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Name of the component.
+    /// </summary>
+    /// <remarks>
+    /// When this class is used to expose property in the Properties window, this should be the 
+    /// name associated with this instance.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    protected override string ComponentName
+    {
+      get { return string.IsNullOrEmpty(Name) ? "<none>" : Name; }
+    }
+
     #endregion
   }
-
-  #region HierarchyItemIdTypeConverter
-
-  // ================================================================================================
-  /// <summary>
-  /// Helper class to convert hierachy item ID information to string.
-  /// </summary>
-  // ================================================================================================
-  public class HierarchyItemIdTypeConverter : TypeConverter
-  {
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Converts the specified id to its string representation.
-    /// </summary>
-    /// <param name="id">The id to convert.</param>
-    /// <returns>String representation of the ID.</returns>
-    // --------------------------------------------------------------------------------------------
-    public static string AsString(uint id)
-    {
-      if (id == VSConstants.VSITEMID_ROOT) return "ROOT";
-      if (id == VSConstants.VSITEMID_NIL) return "NIL";
-      if (id == VSConstants.VSITEMID_NIL) return "SELECTION";
-      return id.ToString();
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Converts the specified id to its string representation.
-    /// </summary>
-    /// <param name="id">The id to convert.</param>
-    /// <returns>String representation of the ID.</returns>
-    // --------------------------------------------------------------------------------------------
-    public static string AsString(int id)
-    {
-      return AsString((uint) id);
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether this converter can convert an object in the given source type to a string using the specified context.
-    /// </summary>
-    /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-    /// <param name="sourceType">A <see cref="T:System.Type"/> that represents the type you wish to convert from.</param>
-    /// <returns>
-    /// true if this converter can perform the conversion; otherwise, false.
-    /// </returns>
-    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-    {
-      if (sourceType == typeof(string)) return true;
-      return base.CanConvertFrom(context, sourceType);
-    }
-
-    public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-    {
-      if (destinationType == typeof(string)) return true;
-      return base.CanConvertTo(context, destinationType);
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Converts the specified value object to a <see cref="T:System.String"/> object.
-    /// </summary>
-    /// <param name="context">
-    /// An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.
-    /// </param>
-    /// <param name="culture">
-    /// The <see cref="T:System.Globalization.CultureInfo"/> to use.
-    /// </param>
-    /// <param name="value">The <see cref="T:System.Object"/> to convert.</param>
-    /// <returns>
-    /// An <see cref="T:System.Object"/> that represents the converted value.
-    /// </returns>
-    /// <exception cref="T:System.NotSupportedException">
-    /// The conversion could not be performed.
-    /// </exception>
-    // --------------------------------------------------------------------------------------------
-    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-    {
-      if (value is int || value is uint)
-      {
-        return AsString((uint) value);
-      }
-      return base.ConvertFrom(context, culture, value);
-    }
-  }
-
-  #endregion
 }
