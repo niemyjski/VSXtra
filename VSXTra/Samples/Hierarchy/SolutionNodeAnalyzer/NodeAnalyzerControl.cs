@@ -50,8 +50,11 @@ namespace DeepDiver.SolutionNodeAnalyzer
         listItem.SubItems.Add(nameItem);
         var parentItem = new ListViewItem.ListViewSubItem { Text = node.ParentId.ToString() };
         listItem.SubItems.Add(parentItem);
-        var fiChildItem = new ListViewItem.ListViewSubItem { Text = node.FirstChild.ToString() };
-        listItem.SubItems.Add(fiChildItem);
+        var parentHItem = new ListViewItem.ListViewSubItem
+                            {
+                              Text = node.ParentHierarchyItemId.ToString()
+                            };
+        listItem.SubItems.Add(parentHItem);
       }
       if (_HierarchyNodes.Count > 0)
         SelectionTracker.SelectObject(_HierarchyNodes[0], _HierarchyNodes);

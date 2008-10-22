@@ -197,6 +197,7 @@ namespace VSXtra
     /// <value>Image list handle value.</value>
     // --------------------------------------------------------------------------------------------
     [DisplayName("Type Guid")]
+    [Category("Type Info")]
     [Description("GUID identifying the type of the hierarchy item.")]
     public GuidProperty TypeGuid
     {
@@ -239,15 +240,15 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     [DisplayName("Item ID in Parent Hierarchy")]
     [Category("Identification")]
-    [Description("If the current hierachy is nested into a perant hierarchy, this value tells the ID used in the parent hierarchy.")]
+    [Description("If the current hierachy is nested into a parent hierarchy, this value tells the ID used in the parent hierarchy.")]
     public HierarchyId ParentHierarchyItemId
     {
       get
       {
-        object id = GetProperty(__VSHPROPID.VSHPROPID_ParentHierarchyItemid);
+        var id = GetProperty(__VSHPROPID.VSHPROPID_ParentHierarchyItemid);
         if (id is int) return (uint) (int) id;
         if (id is uint) return (uint) id;
-        return 0;
+        return HierarchyId.Nil;
       }
     }
 
@@ -264,7 +265,7 @@ namespace VSXtra
     [Description("This flag tells if this hierarchy item is nested into an owner hierarchy or not.")]
     public bool IsNestedHierachy
     {
-      get { return Id.IsRoot && ParentHierarchyItemId.Value != 0; }
+      get { return Id.IsRoot && !ParentHierarchyItemId.IsNil; }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -306,7 +307,21 @@ namespace VSXtra
     [Description("Item ID of the subsquent sibling of this item; VSITEMID_NIL, if this item has no more siblings.")]
     public HierarchyId NextSibling
     {
-      get { return GetProperty<int>(__VSHPROPID.VSHPROPID_FirstVisibleChild); }
+      get { return GetProperty<int>(__VSHPROPID.VSHPROPID_NextSibling); }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the first child of this hierarchy item.
+    /// </summary>
+    /// <value>The first child of this hierarchy item.</value>
+    // --------------------------------------------------------------------------------------------
+    [DisplayName("Next Visible Sibling ID")]
+    [Category("Hierarchy info")]
+    [Description("Item ID of the subsquent visible sibling of this item; VSITEMID_NIL, if this item has no more siblings.")]
+    public HierarchyId NextVisibleSibling
+    {
+      get { return GetProperty<int>(__VSHPROPID.VSHPROPID_NextVisibleSibling); }
     }
 
     #endregion

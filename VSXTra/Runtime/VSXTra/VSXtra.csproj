@@ -72,7 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\WindowPaneNotFoundException.cs" />
+    <Compile Include="Utility\Exceptions\WindowPaneNotFoundException.cs" />
     <Compile Include="Hierarchy\HierarchyId.cs" />
     <Compile Include="Hierarchy\HierarchyItem.cs">
       <SubType>Code</SubType>
@@ -91,16 +91,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RegistrationAttributes\XtraProvideEditorLogicalViewAttribute.cs" />
-    <Compile Include="RegistrationAttributes\XtraProvideOptionDialogPageAttribute.cs" />
-    <Compile Include="RegistrationAttributes\XtraProvideOptionPageAttribute.cs" />
-    <Compile Include="RegistrationAttributes\XtraProvideToolWindowAttribute.cs" />
-    <Compile Include="RegistrationAttributes\XtraProvideAutoLoadAttribute.cs" />
+    <Compile Include="Utility\RegistrationAttributes\XtraProvideEditorLogicalViewAttribute.cs" />
+    <Compile Include="Utility\RegistrationAttributes\XtraProvideOptionDialogPageAttribute.cs" />
+    <Compile Include="Utility\RegistrationAttributes\XtraProvideOptionPageAttribute.cs" />
+    <Compile Include="Utility\RegistrationAttributes\XtraProvideToolWindowAttribute.cs" />
+    <Compile Include="Utility\RegistrationAttributes\XtraProvideAutoLoadAttribute.cs" />
     <Compile Include="Utility\Attributes\BoolAttribute.cs" />
     <Compile Include="Utility\Attributes\StringAttribute.cs" />
     <Compile Include="Utility\Attributes\TypeAttribute.cs" />
     <Compile Include="Utility\ComHelper.cs" />
-    <Compile Include="Utility\Diagnostics\VsDebug.cs" />
+    <Compile Include="Diagnostics\VsDebug.cs" />
     <Compile Include="Utility\EventHooker.cs" />
     <Compile Include="Utility\GuidTypes\LogicalView.cs" />
     <Compile Include="Utility\GuidTypes\UIContext.cs" />
@@ -111,56 +111,56 @@
     <Compile Include="Utility\StringResolver.cs" />
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
-    <Compile Include="VSCommands\FileCommands.cs" />
-    <Compile Include="VSCommands\WindowCommands.cs" />
-    <Compile Include="VSServices\ActivityLog.cs" />
-    <Compile Include="VSServices\CommonAttributes.cs" />
-    <Compile Include="VSServices\CommandHandling\ComboCommandHandler.cs" />
-    <Compile Include="VSServices\CommandHandling\CommandDispatcher.cs" />
-    <Compile Include="VSServices\CommandHandling\CommandDispatcherAttributes.cs" />
-    <Compile Include="VSServices\CommandHandling\CommandGroup.cs" />
-    <Compile Include="VSServices\CommandHandling\CommonActions.cs" />
-    <Compile Include="VSServices\CommandHandling\MenuCommandAttributes.cs" />
-    <Compile Include="VSServices\CommandHandling\MenuCommandHandler.cs" />
-    <Compile Include="VSServices\CommandHandling\Toolbar.cs" />
-    <Compile Include="VSServices\DialogPages\DialogPage.cs">
+    <Compile Include="Commands\VSCommands\FileCommands.cs" />
+    <Compile Include="Commands\VSCommands\WindowCommands.cs" />
+    <Compile Include="Diagnostics\ActivityLog.cs" />
+    <Compile Include="Shell\CommonAttributes.cs" />
+    <Compile Include="Commands\ComboCommandHandler.cs" />
+    <Compile Include="Commands\CommandDispatcher.cs" />
+    <Compile Include="Commands\CommandDispatcherAttributes.cs" />
+    <Compile Include="Commands\CommandGroup.cs" />
+    <Compile Include="Commands\CommonActions.cs" />
+    <Compile Include="Commands\MenuCommandAttributes.cs" />
+    <Compile Include="Commands\MenuCommandHandler.cs" />
+    <Compile Include="Commands\Toolbar.cs" />
+    <Compile Include="Windows\DialogPages\DialogPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="VSServices\Editors\ICommonEditorCommand.cs" />
-    <Compile Include="VSServices\Editors\EditorFactoryBase.cs" />
-    <Compile Include="VSServices\Editors\EditorPaneBase.cs" />
-    <Compile Include="VSServices\HierarchyWindow\HierarchyWindowAttributes.cs" />
-    <Compile Include="VSServices\HierarchyWindow\UIHierarchyToolWindow.cs" />
-    <Compile Include="VSServices\OutputWindow\MissingOutputPaneHandling.cs" />
-    <Compile Include="VSServices\OutputWindow\OutputPaneAttributes.cs" />
-    <Compile Include="VSServices\OutputWindow\OutputPaneDefinition.cs" />
-    <Compile Include="VSServices\OutputWindow\OutputWindow.cs" />
-    <Compile Include="VSServices\OutputWindow\OutputWindowPane.cs" />
-    <Compile Include="VSServices\Registry\PackageEntry.cs" />
-    <Compile Include="VSServices\Registry\RegistryEntry.cs" />
-    <Compile Include="VSServices\RunningDocumentTable\RdtEvents.cs" />
-    <Compile Include="VSServices\RunningDocumentTable\RdtFlags.cs" />
-    <Compile Include="VSServices\RunningDocumentTable\RunningDocumentInfo.cs" />
-    <Compile Include="VSServices\RunningDocumentTable\RunningDocumentTable.cs" />
-    <Compile Include="VSServices\SelectionTracking\CustomTypeDescriptorBase.cs" />
-    <Compile Include="VSServices\SelectionTracking\MonitorSelection.cs" />
-    <Compile Include="VSServices\SelectionTracking\VsDocumentEvents.cs" />
-    <Compile Include="VSServices\SelectionTracking\SelectionTracker.cs" />
-    <Compile Include="VSServices\SelectionTracking\SolutionEventArgs.cs" />
-    <Compile Include="VSServices\SelectionTracking\SolutionEvents.cs" />
-    <Compile Include="VSServices\ServiceHandling\ServiceAttributes.cs" />
-    <Compile Include="VSServices\ServiceHandling\VsxService.cs" />
-    <Compile Include="VSServices\Solution\Solution.cs" />
-    <Compile Include="VSServices\VsIde.cs" />
-    <Compile Include="VSServices\VsMessageBox.cs" />
-    <Compile Include="VSServices\Registry\VsRegistry.cs" />
-    <Compile Include="VSServices\VsUIShell.cs" />
-    <Compile Include="VSServices\WindowPanes\ClsIdToolWindowPane.cs" />
-    <Compile Include="VSServices\WindowPanes\ToolWindowAttributes.cs" />
-    <Compile Include="VSServices\WindowPanes\ToolWindowPane.cs" />
-    <Compile Include="VSServices\WindowPanes\WindowFrame.cs" />
-    <Compile Include="VSServices\WindowPanes\WindowPane.cs" />
-    <Compile Include="VSServices\WindowPanes\WindowPanePlaceHolderControl.cs">
+    <Compile Include="Editors\ICommonEditorCommand.cs" />
+    <Compile Include="Editors\EditorFactoryBase.cs" />
+    <Compile Include="Editors\EditorPaneBase.cs" />
+    <Compile Include="Windows\HierarchyWindow\HierarchyWindowAttributes.cs" />
+    <Compile Include="Windows\HierarchyWindow\UIHierarchyToolWindow.cs" />
+    <Compile Include="Windows\OutputWindow\MissingOutputPaneHandling.cs" />
+    <Compile Include="Windows\OutputWindow\OutputPaneAttributes.cs" />
+    <Compile Include="Windows\OutputWindow\OutputPaneDefinition.cs" />
+    <Compile Include="Windows\OutputWindow\OutputWindow.cs" />
+    <Compile Include="Windows\OutputWindow\OutputWindowPane.cs" />
+    <Compile Include="Package\PackageEntry.cs" />
+    <Compile Include="Package\RegistryEntry.cs" />
+    <Compile Include="Documents\RdtEvents.cs" />
+    <Compile Include="Documents\RdtFlags.cs" />
+    <Compile Include="Documents\RunningDocumentInfo.cs" />
+    <Compile Include="Documents\RunningDocumentTable.cs" />
+    <Compile Include="Selection\CustomTypeDescriptorBase.cs" />
+    <Compile Include="Selection\MonitorSelection.cs" />
+    <Compile Include="Documents\VsDocumentEvents.cs" />
+    <Compile Include="Selection\SelectionTracker.cs" />
+    <Compile Include="Shell\SolutionEventArgs.cs" />
+    <Compile Include="Shell\SolutionEvents.cs" />
+    <Compile Include="Package\ServiceAttributes.cs" />
+    <Compile Include="Package\VsxService.cs" />
+    <Compile Include="Shell\Solution.cs" />
+    <Compile Include="Shell\VsIde.cs" />
+    <Compile Include="Shell\VsMessageBox.cs" />
+    <Compile Include="Package\VsRegistry.cs" />
+    <Compile Include="Shell\VsUIShell.cs" />
+    <Compile Include="Windows\WindowPanes\ClsIdToolWindowPane.cs" />
+    <Compile Include="Windows\WindowPanes\ToolWindowAttributes.cs" />
+    <Compile Include="Windows\WindowPanes\ToolWindowPane.cs" />
+    <Compile Include="Windows\WindowPanes\WindowFrame.cs" />
+    <Compile Include="Windows\WindowPanes\WindowPane.cs" />
+    <Compile Include="Windows\WindowPanes\WindowPanePlaceHolderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
@@ -173,9 +173,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="VSServices\CustomEditors\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
