@@ -63,9 +63,9 @@ namespace DeepDiver.OutputWindowWithAutoLoad
       Console.WriteLine('o');
       
       Console.Write("*** Integral values: ");
-      Console.Write((byte)0xab);
+      Console.Write(0xab);
       Console.Write("|");
-      Console.Write((short)12345);
+      Console.Write(12345);
       Console.Write("|");
       Console.Write(123456789);
       Console.Write("|");
