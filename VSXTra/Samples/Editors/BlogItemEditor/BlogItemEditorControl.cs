@@ -5,8 +5,7 @@
 // ================================================================================================
 using System;
 using System.Windows.Forms;
-using DeepDiver.BlogItemEditor;
-using VSXtra;
+using VSXtra.Editors;
 
 namespace DeepDiver.BlogItemEditor
 {

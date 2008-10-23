@@ -5,7 +5,7 @@
 // ================================================================================================
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using VSXtra;
+using VSXtra.Windows;
 
 namespace DeepDiver.RdtEventsWindow
 {

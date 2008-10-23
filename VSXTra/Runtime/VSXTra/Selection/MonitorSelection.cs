@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace VSXtra
+namespace VSXtra.Selection
 {
   public static class MonitorSelection
   {

@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
-using VSXtra;
+using VSXtra.Windows;
 
 namespace DeepDiver.VSXtraCommands
 {

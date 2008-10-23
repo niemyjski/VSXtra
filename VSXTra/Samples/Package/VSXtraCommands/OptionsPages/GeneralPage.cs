@@ -8,7 +8,7 @@
 // Revised: 2008.07.19, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System.Runtime.InteropServices;
-using VSXtra;
+using VSXtra.Windows;
 
 namespace DeepDiver.VSXtraCommands
 {

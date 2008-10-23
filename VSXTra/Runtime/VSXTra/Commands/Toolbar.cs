@@ -6,7 +6,7 @@
 using System;
 using System.ComponentModel.Design;
 
-namespace VSXtra
+namespace VSXtra.Commands
 {
   // ================================================================================================
   /// <summary>
@@ -44,9 +44,9 @@ namespace VSXtra
 
       // --- Obtain command GUID
       var commandGuid = thisType.DeclaringType != null &&
-        typeof(ICommandGroupProvider).IsAssignableFrom(thisType.DeclaringType)
-        ? thisType.DeclaringType.GUID
-        : thisType.GUID;
+                        typeof(ICommandGroupProvider).IsAssignableFrom(thisType.DeclaringType)
+                          ? thisType.DeclaringType.GUID
+                          : thisType.GUID;
 
       foreach (var attr in GetType().GetCustomAttributes(false))
       {

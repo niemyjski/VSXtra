@@ -9,9 +9,11 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.Shell;
+using VSXtra.Diagnostics;
+using VSXtra.Package;
 using VSXtra.Properties;
 
-namespace VSXtra
+namespace VSXtra.Commands
 {
   // ================================================================================================
   /// <summary>

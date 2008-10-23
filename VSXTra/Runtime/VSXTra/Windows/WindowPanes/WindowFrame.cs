@@ -8,8 +8,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Package;
 
-namespace VSXtra
+namespace VSXtra.Windows
 {
   // ================================================================================================
   /// <summary>
@@ -66,13 +67,13 @@ namespace VSXtra
       {
         object result;
         ErrorHandler.ThrowOnFailure(_Frame.GetProperty(
-          (int)__VSFPROPID.VSFPROPID_Caption, out result));
+                                      (int)__VSFPROPID.VSFPROPID_Caption, out result));
         return result.ToString();
       }
       set
       {
         ErrorHandler.ThrowOnFailure(_Frame.SetProperty(
-          (int) __VSFPROPID.VSFPROPID_Caption, value));
+                                      (int) __VSFPROPID.VSFPROPID_Caption, value));
       }
     }
 
@@ -90,13 +91,13 @@ namespace VSXtra
       {
         object result;
         ErrorHandler.ThrowOnFailure(_Frame.GetProperty(
-          (int)__VSFPROPID.VSFPROPID_BitmapResource, out result));
+                                      (int)__VSFPROPID.VSFPROPID_BitmapResource, out result));
         return (int)result;
       }
       set
       {
         ErrorHandler.ThrowOnFailure(_Frame.SetProperty(
-          (int)__VSFPROPID.VSFPROPID_BitmapResource, value));
+                                      (int)__VSFPROPID.VSFPROPID_BitmapResource, value));
       }
     }
 
@@ -114,13 +115,13 @@ namespace VSXtra
       {
         object result;
         ErrorHandler.ThrowOnFailure(_Frame.GetProperty(
-          (int)__VSFPROPID.VSFPROPID_BitmapIndex, out result));
+                                      (int)__VSFPROPID.VSFPROPID_BitmapIndex, out result));
         return (int)result;
       }
       set
       {
         ErrorHandler.ThrowOnFailure(_Frame.SetProperty(
-          (int)__VSFPROPID.VSFPROPID_BitmapIndex, value));
+                                      (int)__VSFPROPID.VSFPROPID_BitmapIndex, value));
       }
     }
 
@@ -261,7 +262,7 @@ namespace VSXtra
     {
       Guid guid = Guid.Empty;
       ErrorHandler.ThrowOnFailure(((IVsWindowFrame)this).
-        SetFramePos(VSSETFRAMEPOS.SFP_fSize, ref guid, 0, 0, size.Width, size.Height));
+                                    SetFramePos(VSSETFRAMEPOS.SFP_fSize, ref guid, 0, 0, size.Width, size.Height));
     }
 
     // --------------------------------------------------------------------------------------------
@@ -274,8 +275,8 @@ namespace VSXtra
     {
       Guid guid = Guid.Empty;
       ErrorHandler.ThrowOnFailure(((IVsWindowFrame)this).
-        SetFramePos(VSSETFRAMEPOS.SFP_fMove, ref guid, 
-        rec.Left, rec.Top, rec.Width, rec.Height));
+                                    SetFramePos(VSSETFRAMEPOS.SFP_fMove, ref guid, 
+                                                rec.Left, rec.Top, rec.Width, rec.Height));
     }
 
     // --------------------------------------------------------------------------------------------
@@ -296,8 +297,8 @@ namespace VSXtra
       var pdwSFP = new VSSETFRAMEPOS[1];
       Guid guid;
       ErrorHandler.ThrowOnFailure(((IVsWindowFrame)this).
-        GetFramePos(pdwSFP, out guid,
-        out left, out top, out width, out height));
+                                    GetFramePos(pdwSFP, out guid,
+                                                out left, out top, out width, out height));
       position = new Rectangle(left, top, width, height);
       switch (pdwSFP[0])
       {
@@ -463,7 +464,7 @@ namespace VSXtra
     /// </returns>
     // --------------------------------------------------------------------------------------------
     int IVsWindowFrame.GetFramePos(VSSETFRAMEPOS[] pdwSFP, out Guid pguidRelativeTo, out int px, 
-      out int py, out int pcx, out int pcy)
+                                   out int py, out int pcx, out int pcy)
     {
       return _Frame.GetFramePos(pdwSFP, out pguidRelativeTo, out px, out py, out pcx, out pcy);
     }
@@ -716,9 +717,6 @@ namespace VSXtra
     #endregion
   }
 
-  #region FrameCloseOption enum
-
-  // ================================================================================================
   /// <summary>
   /// Specifies close options when closing a window frame.
   /// </summary>
@@ -735,11 +733,6 @@ namespace VSXtra
     PromptSave = __FRAMECLOSE.FRAMECLOSE_PromptSave
   }
 
-  #endregion
-
-  #region FramePosition enum
-
-  // ================================================================================================
   /// <summary>
   /// Specifies the window frame positions.
   /// </summary>
@@ -758,11 +751,6 @@ namespace VSXtra
     MdiChild = VSSETFRAMEPOS.SFP_fMdiChild
   }
 
-  #endregion
-
-  #region FrameShow enumeration
-
-  // ================================================================================================
   /// <summary>
   /// Specifies options when the show state of a window frame changes.
   /// </summary>
@@ -794,11 +782,6 @@ namespace VSXtra
     AutoHideSlideBegin = __FRAMESHOW.FRAMESHOW_AutoHideSlideBegin
   }
 
-  #endregion
-
-  #region WindowFrameShowEventArgs
-
-  // ================================================================================================
   /// <summary>
   /// Event arguments for the event raised when the show state of a window frame changes.
   /// </summary>
@@ -824,11 +807,6 @@ namespace VSXtra
     }
   }
 
-  #endregion
-
-  #region WindowFrameCloseEventArgs
-
-  // ================================================================================================
   /// <summary>
   /// Event arguments for the event raised when the window frame is closed.
   /// </summary>
@@ -854,11 +832,6 @@ namespace VSXtra
     }
   }
 
-  #endregion
-
-  #region WindowFramePositionChangedEventArgs
-
-  // ================================================================================================
   /// <summary>
   /// Event arguments for the events raised when the window frame position is changed.
   /// </summary>
@@ -884,11 +857,6 @@ namespace VSXtra
     }
   }
 
-  #endregion
-
-  #region WindowFrameDockChangedEventArgs
-
-  // ================================================================================================
   /// <summary>
   /// Event arguments for the event raised when the dock state of the window frame is changed.
   /// </summary>
@@ -910,6 +878,4 @@ namespace VSXtra
       Docked = docked;
     }
   }
-
-  #endregion
 }

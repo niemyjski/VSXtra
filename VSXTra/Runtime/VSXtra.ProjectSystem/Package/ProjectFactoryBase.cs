@@ -16,6 +16,8 @@ using Microsoft.Build.BuildEngine;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Flavor;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Diagnostics;
+using VSXtra.Package;
 
 namespace VSXtra.ProjectSystem
 {

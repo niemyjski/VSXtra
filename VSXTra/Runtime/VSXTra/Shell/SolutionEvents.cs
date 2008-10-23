@@ -7,8 +7,9 @@
 using System;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Package;
 
-namespace VSXtra
+namespace VSXtra.Shell
 {
   // ================================================================================================
   /// <summary>
@@ -457,10 +458,10 @@ namespace VSXtra
         if (AfterOpenProject != null)
         {
           var e = new OpenProjectEventArgs(SolutionEventType.AfterOpenProject)
-          {
-            Hierarchy = pHierarchy,
-            Added = fAdded != 0
-          };
+                    {
+                      Hierarchy = pHierarchy,
+                      Added = fAdded != 0
+                    };
           AfterOpenProject(this, e);
         }
         return VSConstants.S_OK;
@@ -554,10 +555,10 @@ namespace VSXtra
         if (BeforeUnloadProject != null)
         {
           var e = new LoadProjectEventArgs(SolutionEventType.BeforeUnloadProject)
-          {
-            Hierarchy = pRealHierarchy,
-            PlaceHolder = pStubHierarchy
-          };
+                    {
+                      Hierarchy = pRealHierarchy,
+                      PlaceHolder = pStubHierarchy
+                    };
           BeforeUnloadProject(this, e);
         }
         return VSConstants.S_OK;
@@ -591,9 +592,9 @@ namespace VSXtra
         if (QueryCloseSolution != null)
         {
           var e = new CloseSolutionEventArgs(SolutionEventType.QueryCloseSolution)
-          {
-            Cancel = pfCancel != 0
-          };
+                    {
+                      Cancel = pfCancel != 0
+                    };
           QueryCloseSolution(this, e);
           pfCancel = e.Cancel ? 1 : 0;
         }
@@ -670,9 +671,9 @@ namespace VSXtra
         if (AfterOpeningChildren != null)
         {
           var e = new SolutionNodeEventArgs(SolutionEventType.AfterOpeningChildren)
-          {
-            Hierarchy = pHierarchy
-          };
+                    {
+                      Hierarchy = pHierarchy
+                    };
           AfterOpeningChildren(this, e);
         }
         return VSConstants.S_OK;
@@ -688,9 +689,9 @@ namespace VSXtra
         if (BeforeClosingChildren != null)
         {
           var e = new SolutionNodeEventArgs(SolutionEventType.BeforeClosingChildren)
-          {
-            Hierarchy = pHierarchy
-          };
+                    {
+                      Hierarchy = pHierarchy
+                    };
           BeforeClosingChildren(this, e);
         }
         return VSConstants.S_OK;
@@ -706,9 +707,9 @@ namespace VSXtra
         if (AfterClosingChildren != null)
         {
           var e = new SolutionNodeEventArgs(SolutionEventType.AfterClosingChildren)
-          {
-            Hierarchy = pHierarchy
-          };
+                    {
+                      Hierarchy = pHierarchy
+                    };
           AfterClosingChildren(this, e);
         }
         return VSConstants.S_OK;
@@ -724,9 +725,9 @@ namespace VSXtra
         if (AfterRenameProject != null)
         {
           var e = new SolutionNodeEventArgs(SolutionEventType.AfterRenameProject)
-          {
-            Hierarchy = pHierarchy
-          };
+                    {
+                      Hierarchy = pHierarchy
+                    };
           AfterRenameProject(this, e);
         }
         return VSConstants.S_OK;
@@ -739,7 +740,7 @@ namespace VSXtra
       /// </summary>
       // --------------------------------------------------------------------------------------------
       public int OnQueryChangeProjectParent(IVsHierarchy pHierarchy, IVsHierarchy pNewParentHier, 
-        ref int pfCancel)
+                                            ref int pfCancel)
       {
         if (QueryChangeProjectParent != null)
         {
@@ -764,9 +765,9 @@ namespace VSXtra
         if (AfterChangeProjectParent != null)
         {
           var e = new SolutionNodeEventArgs(SolutionEventType.AfterChangeProjectParent)
-          {
-            Hierarchy = pHierarchy
-          };
+                    {
+                      Hierarchy = pHierarchy
+                    };
           AfterChangeProjectParent(this, e);
         }
         return VSConstants.S_OK;
@@ -782,10 +783,10 @@ namespace VSXtra
         if (AfterAsynchOpenProject != null)
         {
           var e = new OpenProjectEventArgs(SolutionEventType.AfterAsynchOpenProject)
-          {
-            Hierarchy = pHierarchy,
-            Added = fAdded != 0
-          };
+                    {
+                      Hierarchy = pHierarchy,
+                      Added = fAdded != 0
+                    };
           AfterAsynchOpenProject(this, e);
         }
         return VSConstants.S_OK;

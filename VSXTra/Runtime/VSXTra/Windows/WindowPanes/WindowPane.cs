@@ -15,13 +15,15 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Commands;
+using VSXtra.Diagnostics;
+using VSXtra.Package;
+using VSXtra.Selection;
 using IServiceProvider=System.IServiceProvider;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace VSXtra
+namespace VSXtra.Windows
 {
-  #region IWindowPaneBehavior
-
   // ================================================================================================
   /// <summary>
   /// This interface represents the behavior of a window pane.
@@ -60,8 +62,6 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     PackageBase GetPackageInstance();
   }
-
-  #endregion
 
   // ================================================================================================
   /// <summary>
@@ -172,8 +172,8 @@ namespace VSXtra
       get
       {
         return typeof(TUIControl) == typeof(WindowPanePlaceHolderControl)
-          ? null 
-          : _UIControl;
+                 ? null 
+                 : _UIControl;
       }
     }
 
@@ -276,7 +276,7 @@ namespace VSXtra
       UnsafeNativeMethods.SetWindowLong(hwnd, NativeMethods.GWL_EXSTYLE, (IntPtr)style);
       UnsafeNativeMethods.SetParent(hwnd, hwndParent);
       UnsafeNativeMethods.SetWindowPos(hwnd, IntPtr.Zero, x, y, cx, cy, 
-        NativeMethods.SWP_NOZORDER | NativeMethods.SWP_NOACTIVATE);
+                                       NativeMethods.SWP_NOZORDER | NativeMethods.SWP_NOACTIVATE);
       UnsafeNativeMethods.ShowWindow(hwnd, NativeMethods.SW_SHOWNORMAL);
 
       // --- Sync broadcast events so we update our UI when colors/fonts change.
@@ -286,7 +286,7 @@ namespace VSXtra
         if (_VsShell != null)
         {
           NativeMethods.ThrowOnFailure(_VsShell.AdviseBroadcastMessages(this, 
-            out _BroadcastEventCookie));
+                                                                        out _BroadcastEventCookie));
         }
       }
       pane = hwnd;
@@ -671,8 +671,8 @@ namespace VSXtra
     {
       var cmdTarget = GetService<IOleCommandTarget>();
       return cmdTarget == null 
-        ? NativeMethods.OLECMDERR_E_NOTSUPPORTED 
-        : cmdTarget.Exec(ref guidGroup, nCmdId, nCmdExcept, pIn, vOut);
+               ? NativeMethods.OLECMDERR_E_NOTSUPPORTED 
+               : cmdTarget.Exec(ref guidGroup, nCmdId, nCmdExcept, pIn, vOut);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -711,12 +711,12 @@ namespace VSXtra
     /// </remarks>
     // --------------------------------------------------------------------------------------------
     int IOleCommandTarget.QueryStatus(ref Guid guidGroup, uint nCmdId, OLECMD[] oleCmd, 
-      IntPtr oleText)
+                                      IntPtr oleText)
     {
       var cmdTarget = GetService<IOleCommandTarget>();
       return cmdTarget != null 
-        ? cmdTarget.QueryStatus(ref guidGroup, nCmdId, oleCmd, oleText) 
-        : NativeMethods.OLECMDERR_E_NOTSUPPORTED;
+               ? cmdTarget.QueryStatus(ref guidGroup, nCmdId, oleCmd, oleText) 
+               : NativeMethods.OLECMDERR_E_NOTSUPPORTED;
     }
 
     #endregion
@@ -833,7 +833,7 @@ namespace VSXtra
     {
       var c = Control.FromChildHandle(m.HWnd);
       return c != null && 
-        c.PreProcessControlMessage(ref m) == PreProcessControlState.MessageProcessed;
+             c.PreProcessControlMessage(ref m) == PreProcessControlState.MessageProcessed;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -870,4 +870,3 @@ namespace VSXtra
     #endregion
   }
 }
-

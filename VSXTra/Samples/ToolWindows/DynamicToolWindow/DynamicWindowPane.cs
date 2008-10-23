@@ -6,7 +6,8 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using VSXtra;
+using VSXtra.Diagnostics;
+using VSXtra.Windows;
 
 namespace DeepDiver.DynamicToolWindow
 {

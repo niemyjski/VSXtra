@@ -5,7 +5,7 @@
 // ================================================================================================
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
+using VSXtra.Commands;
 
 namespace DeepDiver.DynamicCommands
 {

@@ -7,8 +7,9 @@ using System;
 using System.IO;
 using EnvDTE;
 using EnvDTE80;
+using VSXtra.Package;
 
-namespace VSXtra
+namespace VSXtra.Shell
 {
   // ================================================================================================
   /// <summary>

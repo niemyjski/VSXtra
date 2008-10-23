@@ -11,8 +11,9 @@
 using System;
 using VSXtra.Properties;
 using Microsoft.VisualStudio.Shell;
+using VSXtra.Windows;
 
-namespace VSXtra
+namespace VSXtra.Package
 {
   // ================================================================================================
   /// <summary>

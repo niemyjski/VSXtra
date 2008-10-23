@@ -6,7 +6,7 @@
 using System;
 using Microsoft.Win32;
 
-namespace VSXtra
+namespace VSXtra.Package
 {
   public class PackageEntry
   {

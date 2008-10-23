@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra;
+using VSXtra.Package;
 
 namespace VSXtra.ProjectSystem
 {

@@ -13,12 +13,13 @@ using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Commands;
+using VSXtra.Diagnostics;
+using VSXtra.Package;
 using VSXtra.Properties;
 
-namespace VSXtra
+namespace VSXtra.Windows
 {
-  #region IToolWindowPaneBehavior
-
   // ================================================================================================
   /// <summary>
   /// This interface represents the behavior of a tool window pane.
@@ -79,8 +80,6 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     void SetInstanceId(int instanceId);
   }
-
-  #endregion
 
   // ================================================================================================
   /// <summary>
@@ -400,8 +399,6 @@ namespace VSXtra
     #endregion
   }
 
-  #region ToolbarLocation enum
-
   // ================================================================================================
   /// <summary>
   /// This enumeration represents the location of the tool bar.
@@ -418,6 +415,4 @@ namespace VSXtra
     /// <summary>Location is the bottom border of the tool window.</summary>
     Bottom = VSTWT_LOCATION.VSTWT_BOTTOM
   }
-
-  #endregion
 }

@@ -6,10 +6,8 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using VSXtra.Properties;
 
-namespace VSXtra
+namespace VSXtra.Commands
 {
-  #region ComboCommandHandler
-
   // ====================================================================================
   /// <summary>
   /// This abstract class is intended to be the base class for combo command handlers.
@@ -36,8 +34,8 @@ namespace VSXtra
     {
       // --- Obtain command GUID
       var commandGuid = Attribute.IsDefined(GetType(), typeof(GuidAttribute))
-        ? GetType().GUID
-        : CommandId.Guid;
+                          ? GetType().GUID
+                          : CommandId.Guid;
 
       // --- Check for attributes
       foreach (object attr in GetType().GetCustomAttributes(false))
@@ -273,7 +271,7 @@ namespace VSXtra
       {
         return IsCaseSensitive
                  ? StringComparison.CurrentCultureIgnoreCase
-                 : System.StringComparison.CurrentCulture;
+                 : StringComparison.CurrentCulture;
       }
     }
 
@@ -293,11 +291,6 @@ namespace VSXtra
     #endregion
   }
 
-  #endregion
-
-  #region DropDownComboCommandHandler
-
-  // ====================================================================================
   /// <summary>
   /// This abstract class implements a Command handler for a DropDownCombo.
   /// </summary>
@@ -329,11 +322,6 @@ namespace VSXtra
     }
   }
 
-  #endregion
-
-  #region IndexComboCommandHandler
-
-  // ====================================================================================
   /// <summary>
   /// This abstract class implements a Command handler for an IndexCombo.
   /// </summary>
@@ -405,11 +393,6 @@ namespace VSXtra
     }
   }
 
-  #endregion
-
-  #region MruComboCommandHandler
-
-  // ====================================================================================
   /// <summary>
   /// This abstract class implements a Command handler for an MRUCombo.
   /// </summary>
@@ -444,11 +427,6 @@ namespace VSXtra
     }
   }
 
-  #endregion
-
-  #region DynamicComboCommandHandler
-
-  // ====================================================================================
   /// <summary>
   /// This abstract class implements a Command handler for an DynamicCombo.
   /// </summary>
@@ -471,6 +449,4 @@ namespace VSXtra
       return true;
     }
   }
-
-  #endregion
 }

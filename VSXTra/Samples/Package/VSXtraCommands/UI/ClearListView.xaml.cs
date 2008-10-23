@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using VSXtra;
+using VSXtra.Package;
 
 namespace DeepDiver.VSXtraCommands
 {

@@ -8,6 +8,9 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using VSXtra;
+using VSXtra.Commands;
+using VSXtra.Package;
+using VSXtra.Windows;
 
 namespace DeepDiver.CustomOutputWindowPane
 {

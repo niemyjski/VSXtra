@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 
-namespace VSXtra
+namespace VSXtra.Package
 {
   // ================================================================================================
   /// <summary>

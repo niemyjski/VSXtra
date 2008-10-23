@@ -6,6 +6,9 @@
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using VSXtra;
+using VSXtra.Documents;
+using VSXtra.Package;
+using VSXtra.Shell;
 
 namespace DeepDiver.VSXtraCommands
 {

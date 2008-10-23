@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra;
+using VSXtra.Package;
 using Constants=Microsoft.VisualStudio.OLE.Interop.Constants;
 using IDataObject=Microsoft.VisualStudio.OLE.Interop.IDataObject;
 using IDropTarget=Microsoft.VisualStudio.OLE.Interop.IDropTarget;

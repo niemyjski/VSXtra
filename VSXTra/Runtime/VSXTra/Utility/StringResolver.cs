@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using VSXtra.Package;
 using VSXtra.Properties;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;

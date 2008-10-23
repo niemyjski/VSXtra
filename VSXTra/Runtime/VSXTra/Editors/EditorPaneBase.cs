@@ -8,9 +8,13 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Commands;
+using VSXtra.Package;
 using VSXtra.Properties;
+using VSXtra.Shell;
+using VSXtra.Windows;
 
-namespace VSXtra
+namespace VSXtra.Editors
 {
   // ==================================================================================
   /// <summary>

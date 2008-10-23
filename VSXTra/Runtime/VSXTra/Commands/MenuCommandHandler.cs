@@ -9,17 +9,18 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using VSXtra.Package;
 using VSXtra.Properties;
 
-namespace VSXtra
+namespace VSXtra.Commands
 {
-  // ====================================================================================
+  // ================================================================================================
   /// <summary>
   /// This interface signs that a class is used as a command group for its nested
   /// menu command handler types. The GUID assigned to the command group type is used
   /// when binding the nested command handler types.
   /// </summary>
-  // ====================================================================================
+  // ================================================================================================
   public interface ICommandGroupProvider
   {
     // --------------------------------------------------------------------------------------------
@@ -33,7 +34,7 @@ namespace VSXtra
     PackageBase GetPackageInstance();
   }
 
-  // ====================================================================================
+  // ================================================================================================
   /// <summary>
   /// This abstract class is intended to be the base class for simple menu command 
   /// handlers.
@@ -42,7 +43,7 @@ namespace VSXtra
   /// A simple menu command handler contains methods to execute the command or respond to
   /// the status query or change events.
   /// </remarks>
-  // ====================================================================================
+  // ================================================================================================
   public abstract class MenuCommandHandler
   {
     #region Private fields
@@ -79,7 +80,7 @@ namespace VSXtra
       // --- Check for command group containment
       Type thisType = GetType();
       if (thisType.DeclaringType == null || 
-        !typeof(ICommandGroupProvider).IsAssignableFrom(thisType.DeclaringType))
+          !typeof(ICommandGroupProvider).IsAssignableFrom(thisType.DeclaringType))
       {
         throw new InvalidOperationException(Resources.CommandHandler_NoGroupType);
       }
@@ -98,8 +99,8 @@ namespace VSXtra
 
       // --- Obtain command GUID
       var commandGuid = Attribute.IsDefined(GetType(), typeof(GuidAttribute))
-        ? thisType.GUID
-        : thisType.DeclaringType.GUID;
+                          ? thisType.GUID
+                          : thisType.DeclaringType.GUID;
 
       // --- Obtain attribute values
       foreach (object attr in GetType().GetCustomAttributes(false))
@@ -231,7 +232,7 @@ namespace VSXtra
       return
         from type in _Handlers.Keys
         where type.BaseType.GenericParameterOfType(typeof (CommandGroup<>), 0) == 
-          typeof (TPackage)
+              typeof (TPackage)
         select type;
     }
 
@@ -246,7 +247,7 @@ namespace VSXtra
       return
         from handler in _Handlers.Values
         where handler.GetType().DeclaringType.GenericParameterOfType(typeof(CommandGroup<>), 0) ==
-          typeof(TPackage)
+              typeof(TPackage)
         select handler;
     }
 
@@ -261,7 +262,7 @@ namespace VSXtra
       return
         from handler in _Handlers.Values
         where handler.GetType().
-        DeclaringType.GenericParameterOfType(typeof(CommandGroup<>), 0) == type
+                DeclaringType.GenericParameterOfType(typeof(CommandGroup<>), 0) == type
         select handler;
     }
 

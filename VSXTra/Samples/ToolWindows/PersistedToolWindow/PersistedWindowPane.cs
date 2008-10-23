@@ -6,6 +6,8 @@
 using System;
 using System.Runtime.InteropServices;
 using VSXtra;
+using VSXtra.Commands;
+using VSXtra.Windows;
 
 namespace DeepDiver.PersistedToolWindow
 {

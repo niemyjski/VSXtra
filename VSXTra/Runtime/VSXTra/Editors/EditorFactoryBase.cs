@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ================================================================================================
+// EditorFactoryBase.cs
+//
+// Created: 2008.10.22, by Istvan Novak (DeepDiver)
+// ================================================================================================
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -6,9 +11,10 @@ using System.Security.Permissions;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Package;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace VSXtra
+namespace VSXtra.Editors
 {
   // ====================================================================================
   /// <summary>

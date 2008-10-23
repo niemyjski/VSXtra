@@ -6,7 +6,7 @@
 using System;
 using VSXtra.Properties;
 
-namespace VSXtra
+namespace VSXtra.Commands
 {
   #region DefaultCommandGroupAttribute
 

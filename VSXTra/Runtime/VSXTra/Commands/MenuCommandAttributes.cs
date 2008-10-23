@@ -5,10 +5,10 @@
 // ================================================================================================
 using System;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Interop;
 using System.ComponentModel.Design;
+using VSXtra.Package;
 
-namespace VSXtra
+namespace VSXtra.Commands
 {
   #region CommandIdAttribute
 

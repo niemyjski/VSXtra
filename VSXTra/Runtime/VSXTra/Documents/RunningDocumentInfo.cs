@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace VSXtra
+namespace VSXtra.Documents
 {
   // ================================================================================================
   /// <summary>

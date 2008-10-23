@@ -5,7 +5,8 @@
 // ================================================================================================
 using System.Drawing;
 using System.Windows.Forms;
-using VSXtra;
+using VSXtra.Documents;
+using VSXtra.Selection;
 
 namespace DeepDiver.RdtEventsWindow
 {
