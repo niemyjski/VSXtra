@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using VSXtra;
+using VSXtra.Commands;
+using VSXtra.Package;
 
 namespace DeepDiver.VSXtraCommands
 {

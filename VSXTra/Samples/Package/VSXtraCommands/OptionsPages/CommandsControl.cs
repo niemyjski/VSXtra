@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using VSXtra;
+using VSXtra.Commands;
 
 namespace DeepDiver.VSXtraCommands
 {

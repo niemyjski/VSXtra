@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-using VSXtra;
+using VSXtra.Commands;
 
 namespace DeepDiver.SolutionNodeAnalyzer
 {

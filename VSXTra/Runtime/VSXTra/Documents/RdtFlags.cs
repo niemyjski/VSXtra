@@ -6,7 +6,7 @@
 using System;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace VSXtra
+namespace VSXtra.Documents
 {
   // ================================================================================================
   /// <summary>

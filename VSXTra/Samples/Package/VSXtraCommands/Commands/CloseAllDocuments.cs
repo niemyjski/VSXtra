@@ -5,6 +5,7 @@
 // ================================================================================================
 using System.ComponentModel;
 using VSXtra;
+using VSXtra.Commands;
 
 namespace DeepDiver.VSXtraCommands
 {

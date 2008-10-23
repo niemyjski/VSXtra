@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Hierarchy;
+using VSXtra.Package;
 
-namespace VSXtra
+namespace VSXtra.Shell
 {
   // ================================================================================================
   /// <summary>
@@ -59,7 +61,7 @@ namespace VSXtra
       if (null != solutionHierarchy)
       {
         foreach (var item in TraverseHierarchyItem(solutionHierarchy, 
-          VSConstants.VSITEMID_ROOT, 0, true))
+                                                   VSConstants.VSITEMID_ROOT, 0, true))
         {
           yield return item;
         }
@@ -124,10 +126,10 @@ namespace VSXtra
         // --- expected to return the identical results as _FirstChild.
         object pVar;
         hr = hierarchy.GetProperty(itemid, 
-          (hierIsSolution && recursionLevel == 1)
-             ? (int) __VSHPROPID.VSHPROPID_FirstVisibleChild
-             : (int) __VSHPROPID.VSHPROPID_FirstChild, 
-           out pVar);
+                                   (hierIsSolution && recursionLevel == 1)
+                                     ? (int) __VSHPROPID.VSHPROPID_FirstVisibleChild
+                                     : (int) __VSHPROPID.VSHPROPID_FirstChild, 
+                                   out pVar);
         ErrorHandler.ThrowOnFailure(hr);
         if (VSConstants.S_OK == hr)
         {
@@ -149,10 +151,10 @@ namespace VSXtra
             // --- not a feature to hide a SolutionFolder or a Project, thus _NextVisibleSibling is 
             // --- expected to return the identical results as _NextSibling.
             hr = hierarchy.GetProperty(childId,
-              (hierIsSolution && recursionLevel == 1)
-                 ? (int)__VSHPROPID.VSHPROPID_NextVisibleSibling
-                 : (int)__VSHPROPID.VSHPROPID_NextSibling,
-               out pVar);
+                                       (hierIsSolution && recursionLevel == 1)
+                                         ? (int)__VSHPROPID.VSHPROPID_NextVisibleSibling
+                                         : (int)__VSHPROPID.VSHPROPID_NextSibling,
+                                       out pVar);
             if (VSConstants.S_OK == hr)
             {
               childId = GetItemId(pVar);
@@ -192,9 +194,6 @@ namespace VSXtra
     #endregion
   }
 
-  #region HierarchyTraversalInfo
-
-  // ================================================================================================
   /// <summary>
   /// This class represents the information when traversing the solution hierarchy
   /// </summary>
@@ -242,6 +241,4 @@ namespace VSXtra
       Depth = depth;
     }
   }
-
-  #endregion
 }

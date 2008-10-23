@@ -7,8 +7,9 @@ using System;
 using System.Windows.Forms;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Package;
 
-namespace VSXtra
+namespace VSXtra.Shell
 {
   // ================================================================================================
   /// <summary>
@@ -32,7 +33,7 @@ namespace VSXtra
     public static DialogResult Show(string text)
     {
       return ShowInternal(null, text, string.Empty, 0, MessageBoxButtons.OK,
-        MessageBoxDefaultButton.Button1, MessageBoxIcon.Information, false);
+                          MessageBoxDefaultButton.Button1, MessageBoxIcon.Information, false);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -48,7 +49,7 @@ namespace VSXtra
     public static DialogResult Show(string text, string title)
     {
       return ShowInternal(title, text, string.Empty, 0, MessageBoxButtons.OK,
-        MessageBoxDefaultButton.Button1, MessageBoxIcon.Information, false);
+                          MessageBoxDefaultButton.Button1, MessageBoxIcon.Information, false);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -63,10 +64,10 @@ namespace VSXtra
     /// </returns>
     // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
-      MessageBoxButtons buttons)
+                                    MessageBoxButtons buttons)
     {
       return ShowInternal(title, text, string.Empty, 0, buttons,
-        MessageBoxDefaultButton.Button1, MessageBoxIcon.Information, false);
+                          MessageBoxDefaultButton.Button1, MessageBoxIcon.Information, false);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -82,10 +83,10 @@ namespace VSXtra
     /// </returns>
     // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
-      MessageBoxButtons buttons, MessageBoxIcon icon)
+                                    MessageBoxButtons buttons, MessageBoxIcon icon)
     {
       return ShowInternal(title, text, string.Empty, 0, buttons,
-        MessageBoxDefaultButton.Button1, icon, false);
+                          MessageBoxDefaultButton.Button1, icon, false);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -102,10 +103,10 @@ namespace VSXtra
     /// </returns>
     // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
-      MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
+                                    MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
     {
       return ShowInternal(title, text, string.Empty, 0, buttons,
-        defaultButton, icon, false);
+                          defaultButton, icon, false);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -123,11 +124,11 @@ namespace VSXtra
     /// </returns>
     // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
-      MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, 
-      string helpFilePath)
+                                    MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, 
+                                    string helpFilePath)
     {
       return ShowInternal(title, text, helpFilePath, 0, buttons,
-        defaultButton, icon, false);
+                          defaultButton, icon, false);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -146,11 +147,11 @@ namespace VSXtra
     /// </returns>
     // --------------------------------------------------------------------------------------------
     public static DialogResult Show(string text, string title, 
-      MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, 
-      string helpFilePath, uint helpTopic)
+                                    MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, 
+                                    string helpFilePath, uint helpTopic)
     {
       return ShowInternal(title, text, helpFilePath, helpTopic, buttons,
-        defaultButton, icon, false);
+                          defaultButton, icon, false);
     }
     
     #endregion
@@ -184,23 +185,23 @@ namespace VSXtra
     /// </returns>
     // --------------------------------------------------------------------------------------------
     private static DialogResult ShowInternal(string title, string message, string helpFile, 
-      uint helpTopic, MessageBoxButtons buttons, MessageBoxDefaultButton defButton,
-      MessageBoxIcon icon, bool sysAlert)
+                                             uint helpTopic, MessageBoxButtons buttons, MessageBoxDefaultButton defButton,
+                                             MessageBoxIcon icon, bool sysAlert)
     {
       Guid clsid = Guid.Empty;
       int result;
       ErrorHandler.ThrowOnFailure(UIShell.ShowMessageBox(
-                 0,
-                 ref clsid,
-                 title,
-                 message, 
-                 helpFile,
-                 helpTopic,
-                 VsxConverter.ConvertToOleMsgButton(buttons),
-                 VsxConverter.ConvertToOleMsgDefButton(defButton),
-                 VsxConverter.ConvertToOleMsgIcon(icon),
-                 sysAlert ? 1 : 0,
-                 out result));
+                                    0,
+                                    ref clsid,
+                                    title,
+                                    message, 
+                                    helpFile,
+                                    helpTopic,
+                                    VsxConverter.ConvertToOleMsgButton(buttons),
+                                    VsxConverter.ConvertToOleMsgDefButton(defButton),
+                                    VsxConverter.ConvertToOleMsgIcon(icon),
+                                    sysAlert ? 1 : 0,
+                                    out result));
       return VsxConverter.Win32ResultToDialogResult(result);
     }
 

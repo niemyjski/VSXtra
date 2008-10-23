@@ -3,6 +3,7 @@
 using System;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using VSXtra.Package;
 using VSRegistry = Microsoft.VisualStudio.Shell.VSRegistry;
 
 namespace VSXtra.ProjectSystem

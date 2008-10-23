@@ -7,7 +7,9 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
-using VSXtra;
+using VSXtra.Commands;
+using VSXtra.Shell;
+using VSXtra.Windows;
 
 namespace DeepDiver.SolutionNodeAnalyzer
 {

@@ -9,6 +9,7 @@
 // ================================================================================================
 using System.Collections.Generic;
 using VSXtra;
+using VSXtra.Package;
 
 namespace DeepDiver.VSXtraCommands
 {

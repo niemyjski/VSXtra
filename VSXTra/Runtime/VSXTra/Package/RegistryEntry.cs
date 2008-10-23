@@ -5,7 +5,7 @@
 // ================================================================================================
 using System.Collections.Generic;
 
-namespace VSXtra
+namespace VSXtra.Package
 {
   #region RegistryEntry class
 

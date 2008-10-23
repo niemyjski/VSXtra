@@ -6,8 +6,10 @@
 using System;
 using System.ComponentModel.Design;
 using System.Windows.Forms;
+using VSXtra.Package;
+using VSXtra.Shell;
 
-namespace VSXtra
+namespace VSXtra.Commands
 {
   #region WriteMessageAction
 

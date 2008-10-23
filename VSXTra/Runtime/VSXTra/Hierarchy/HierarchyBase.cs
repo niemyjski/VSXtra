@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell.Interop;
 using IServiceProvider=Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace VSXtra
+namespace VSXtra.Hierarchy
 {
   #region IHierarchyBahavior
 

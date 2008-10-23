@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using VSXtra;
+using VSXtra.Commands;
+using VSXtra.Windows;
 
 namespace DeepDiver.MultiToolWindow
 {

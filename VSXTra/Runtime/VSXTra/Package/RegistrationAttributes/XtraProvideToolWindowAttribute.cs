@@ -9,7 +9,7 @@ using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using VSXtra.Properties;
 
-namespace VSXtra
+namespace VSXtra.Package
 {
   // ================================================================================================
   /// <summary>

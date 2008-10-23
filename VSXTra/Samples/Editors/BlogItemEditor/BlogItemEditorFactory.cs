@@ -6,6 +6,7 @@
 using System.Runtime.InteropServices;
 using DeepDiver.BlogItemEditor;
 using VSXtra;
+using VSXtra.Editors;
 
 namespace DeepDiver.BlogItemEditor
 {

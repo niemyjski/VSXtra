@@ -3,9 +3,7 @@
 //
 // Created: 2008.09.09, by Istvan Novak (DeepDiver)
 // ================================================================================================
-using Microsoft.VisualStudio.Shell.Interop;
-
-namespace VSXtra
+namespace VSXtra.Hierarchy
 {
   public class HierarchyRoot<TRoot, THier> : HierarchyBase<THier, TRoot>
     where TRoot : HierarchyRoot<TRoot, THier>

@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>VSXtraFakeKey.snk</AssemblyOriginatorKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -72,18 +72,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Master\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Utility\Exceptions\WindowPaneNotFoundException.cs" />
     <Compile Include="Hierarchy\HierarchyId.cs" />
     <Compile Include="Hierarchy\HierarchyItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Hierarchy\ItemMap.cs" />
+    <Compile Include="Utility\ItemMap.cs" />
     <Compile Include="Hierarchy\HierarchyBase.cs" />
     <Compile Include="Hierarchy\HierarchyNodeEventArgs.cs" />
     <Compile Include="Hierarchy\HierarchyRootBase.cs" />
     <Compile Include="Hierarchy\HierarchyProperty.cs" />
     <Compile Include="Hierarchy\SimpleHierarchyItem.cs" />
-    <Compile Include="Hierarchy\SimpleOleServiceProvider.cs" />
+    <Compile Include="Utility\SimpleOleServiceProvider.cs" />
     <Compile Include="Package\PackageBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -91,11 +94,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utility\RegistrationAttributes\XtraProvideEditorLogicalViewAttribute.cs" />
-    <Compile Include="Utility\RegistrationAttributes\XtraProvideOptionDialogPageAttribute.cs" />
-    <Compile Include="Utility\RegistrationAttributes\XtraProvideOptionPageAttribute.cs" />
-    <Compile Include="Utility\RegistrationAttributes\XtraProvideToolWindowAttribute.cs" />
-    <Compile Include="Utility\RegistrationAttributes\XtraProvideAutoLoadAttribute.cs" />
+    <Compile Include="Package\RegistrationAttributes\XtraProvideEditorLogicalViewAttribute.cs" />
+    <Compile Include="Package\RegistrationAttributes\XtraProvideOptionDialogPageAttribute.cs" />
+    <Compile Include="Package\RegistrationAttributes\XtraProvideOptionPageAttribute.cs" />
+    <Compile Include="Package\RegistrationAttributes\XtraProvideToolWindowAttribute.cs" />
+    <Compile Include="Package\RegistrationAttributes\XtraProvideAutoLoadAttribute.cs" />
     <Compile Include="Utility\Attributes\BoolAttribute.cs" />
     <Compile Include="Utility\Attributes\StringAttribute.cs" />
     <Compile Include="Utility\Attributes\TypeAttribute.cs" />
@@ -111,8 +114,8 @@
     <Compile Include="Utility\StringResolver.cs" />
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
-    <Compile Include="Commands\VSCommands\FileCommands.cs" />
-    <Compile Include="Commands\VSCommands\WindowCommands.cs" />
+    <Compile Include="Shell\VSCommands\FileCommands.cs" />
+    <Compile Include="Shell\VSCommands\WindowCommands.cs" />
     <Compile Include="Diagnostics\ActivityLog.cs" />
     <Compile Include="Shell\CommonAttributes.cs" />
     <Compile Include="Commands\ComboCommandHandler.cs" />
@@ -172,7 +175,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Key.snk" />
+    <None Include="VSXtraFakeKey.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,7 +9,7 @@ using System.Globalization;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace VSXtra
+namespace VSXtra.Hierarchy
 {
   // ================================================================================================
   /// <summary>

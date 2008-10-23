@@ -24,13 +24,17 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using VSXtra.Commands;
+using VSXtra.Diagnostics;
+using VSXtra.Editors;
 using VSXtra.Properties;
+using VSXtra.Windows;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using IServiceProvider = System.IServiceProvider;
 using System.Globalization;
 using System.Linq;
 
-namespace VSXtra
+namespace VSXtra.Package
 {
   // ================================================================================================
   /// <summary>

@@ -5,7 +5,7 @@
 // ================================================================================================
 using System.Linq;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
+using VSXtra.Commands;
 
 namespace DeepDiver.VSXtraCommands
 {

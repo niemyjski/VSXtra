@@ -5,10 +5,10 @@
 // ================================================================================================
 using System;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Package;
 
-namespace VSXtra
+namespace VSXtra.Shell
 {
-  // ================================================================================================
   /// <summary>
   /// This static class is a wrapper class around the SvSUIShell operations.
   /// </summary>
@@ -48,7 +48,7 @@ namespace VSXtra
     /// </returns>
     // --------------------------------------------------------------------------------
     public static int SaveDocDataToFile(VSSAVEFLAGS grfSave, object pPersistFile,
-      string pszUntitledPath, out string pbstrDocumentNew, out int pfCanceled)
+                                        string pszUntitledPath, out string pbstrDocumentNew, out int pfCanceled)
     {
       return UIShell.SaveDocDataToFile(grfSave, pPersistFile, pszUntitledPath,
                                        out pbstrDocumentNew, out pfCanceled);

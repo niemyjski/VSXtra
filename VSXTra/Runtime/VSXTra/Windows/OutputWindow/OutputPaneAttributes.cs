@@ -5,7 +5,7 @@
 // ================================================================================================
 using System;
 
-namespace VSXtra
+namespace VSXtra.Windows
 {
   // ================================================================================================
   /// <summary>
@@ -30,7 +30,6 @@ namespace VSXtra
     public ClearWithSolutionAttribute(bool value): base(value) {}
   }
 
-  // ================================================================================================
   /// <summary>
   /// This attribute declares if output window pane should be activated automatically after the 
   /// first write operation.

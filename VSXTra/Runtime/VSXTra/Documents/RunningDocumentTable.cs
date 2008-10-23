@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Package;
+using VSXtra.Windows;
 
-namespace VSXtra
+namespace VSXtra.Documents
 {
   // ================================================================================================
   /// <summary>

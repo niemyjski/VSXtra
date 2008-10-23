@@ -4,7 +4,7 @@
 // Created: 2008.09.02, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using Microsoft.VisualStudio.Shell.Interop;
-using VSXtra;
+using VSXtra.Windows;
 
 namespace DeepDiver.UIHierarchyWindow
 {

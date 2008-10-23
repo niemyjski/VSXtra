@@ -9,7 +9,7 @@
 // ================================================================================================
 using System.IO;
 using EnvDTE;
-using VSXtra;
+using VSXtra.Shell;
 
 namespace DeepDiver.VSXtraCommands
 {

@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using VSXtra;
+using VSXtra.Hierarchy;
+using VSXtra.Selection;
+using VSXtra.Shell;
 
 namespace DeepDiver.SolutionNodeAnalyzer
 {

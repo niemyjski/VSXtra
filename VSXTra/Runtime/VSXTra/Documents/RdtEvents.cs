@@ -5,8 +5,9 @@
 // ================================================================================================
 using System;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Windows;
 
-namespace VSXtra
+namespace VSXtra.Documents
 {
   #region RdtEventType
 

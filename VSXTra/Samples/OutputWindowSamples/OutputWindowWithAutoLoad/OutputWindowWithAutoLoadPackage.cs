@@ -7,6 +7,7 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using VSXtra;
+using VSXtra.Package;
 
 namespace DeepDiver.OutputWindowWithAutoLoad
 {

@@ -10,7 +10,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using VSXtra;
+using VSXtra.Shell;
+using VSXtra.Windows;
 
 namespace DeepDiver.OptionsPage
 {

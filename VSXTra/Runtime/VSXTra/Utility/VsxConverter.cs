@@ -6,6 +6,7 @@
 using System;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Diagnostics;
 
 namespace VSXtra
 {

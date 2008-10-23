@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Globalization;
 using Microsoft.VisualStudio;
 
-namespace VSXtra
+namespace VSXtra.Hierarchy
 {
   // ================================================================================================
   /// <summary>

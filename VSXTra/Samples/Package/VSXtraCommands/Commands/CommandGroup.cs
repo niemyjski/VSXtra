@@ -4,7 +4,7 @@
 // Created: 2008.07.23, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System.Runtime.InteropServices;
-using VSXtra;
+using VSXtra.Commands;
 
 namespace DeepDiver.VSXtraCommands
 {

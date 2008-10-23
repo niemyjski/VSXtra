@@ -6,7 +6,7 @@
 using System;
 using System.ComponentModel;
 
-namespace VSXtra
+namespace VSXtra.Windows
 {
   // ================================================================================================
   /// <summary>

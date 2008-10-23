@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra;
+using VSXtra.Package;
 
 namespace DeepDiver.BlogItemEditor
 {

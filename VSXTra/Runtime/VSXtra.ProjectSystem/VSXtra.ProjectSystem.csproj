@@ -17,7 +17,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>VSXtraFakeKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -105,6 +105,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Master\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Package\ProjectConstants.cs" />
     <Compile Include="ProjectBase\AssemblyReferenceNode.cs" />
     <Compile Include="ProjectBase\Attributes.cs" />
@@ -219,8 +222,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Key.snk" />
-    <None Include="Key.snk.pfx" />
     <None Include="ProjectBase\Diagrams\AutomationClasses.cd" />
     <None Include="ProjectBase\Diagrams\ConfigurationClasses.cd" />
     <None Include="ProjectBase\Diagrams\DocumentManagerClasses.cd" />
@@ -230,6 +231,7 @@
     <None Include="ProjectBase\Key.snk" />
     <None Include="ProjectBase\MPFProjectAll.files" />
     <None Include="ProjectBase\ProjectBase.files" />
+    <None Include="VSXtraFakeKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProjectBase\DontShowAgainDialog.resx">

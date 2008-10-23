@@ -18,9 +18,11 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Linq;
+using VSXtra.Diagnostics;
+using VSXtra.Package;
 using IServiceProvider = System.IServiceProvider;
 
-namespace VSXtra
+namespace VSXtra.Windows
 {
   // ================================================================================================
   /// <summary>
@@ -46,10 +48,10 @@ namespace VSXtra
   // ================================================================================================
   [CLSCompliant(false), ComVisible(true)]
   public class DialogPage<TPackage, TUIControl> : Component,
-    // --- This interface makes our dialog page recognizable by a package as a dialog page.
-    IDialogPageBehavior,
-    // --- We need to expose Win32 window handles, so we implement this interface 
-    IProfileManager
+                                                  // --- This interface makes our dialog page recognizable by a package as a dialog page.
+                                                  IDialogPageBehavior,
+                                                  // --- We need to expose Win32 window handles, so we implement this interface 
+                                                  IProfileManager
     where TPackage: PackageBase
     where TUIControl: Control, new()
   {
@@ -324,7 +326,7 @@ namespace VSXtra
       {
         object automationObject = AutomationObject;
         var properties = TypeDescriptor.GetProperties(automationObject, 
-          new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
+                                                      new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
         foreach (PropertyDescriptor property in properties)
         {
           var converter = property.Converter;
@@ -403,15 +405,15 @@ namespace VSXtra
           using (key)
           {
             var properties = TypeDescriptor.GetProperties(automationObject, 
-              new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
+                                                          new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
             foreach (PropertyDescriptor property in properties)
             {
               var converter = property.Converter;
               if (converter.CanConvertTo(typeof(string)) && 
-                converter.CanConvertFrom(typeof(string)))
+                  converter.CanConvertFrom(typeof(string)))
               {
                 key.SetValue(property.Name, 
-                  converter.ConvertToInvariantString(property.GetValue(automationObject)));
+                             converter.ConvertToInvariantString(property.GetValue(automationObject)));
               }
             }
           }
@@ -443,8 +445,8 @@ namespace VSXtra
         if (converter.CanConvertTo(typeof(string)) && converter.CanConvertFrom(typeof(string)))
         {
           NativeMethods.ThrowOnFailure(
-              writer.WriteSettingString(property.Name, converter.ConvertToInvariantString(property.GetValue(automationObject)))
-          );
+            writer.WriteSettingString(property.Name, converter.ConvertToInvariantString(property.GetValue(automationObject)))
+            );
         }
       }
     }
@@ -479,7 +481,7 @@ namespace VSXtra
         if (automationObject != null)
         {
           var properties = TypeDescriptor.GetProperties(automationObject, 
-            new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
+                                                        new Attribute[] { DesignerSerializationVisibilityAttribute.Visible });
 
           foreach (PropertyDescriptor property in properties)
           {
@@ -800,9 +802,6 @@ namespace VSXtra
     }
   }
 
-  #region PageApplyKind
-
-  // ================================================================================================
   /// <summary>
   /// This enum defines the possible kinds of page apply behaviour.
   /// </summary>
@@ -833,7 +832,4 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     CancelNoNavigate = 2
   };
-
-  #endregion
 }
-

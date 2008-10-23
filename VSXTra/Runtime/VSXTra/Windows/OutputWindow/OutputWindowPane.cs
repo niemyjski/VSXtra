@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace VSXtra
+namespace VSXtra.Windows
 {
   // ================================================================================================
   /// <summary>
@@ -69,7 +69,7 @@ namespace VSXtra
         if (IsVirtual)
           _Name = value;
         else
-        _Pane.SetName(value);
+          _Pane.SetName(value);
       }
     }
 

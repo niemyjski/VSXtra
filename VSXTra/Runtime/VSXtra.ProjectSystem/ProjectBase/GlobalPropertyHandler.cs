@@ -7,6 +7,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using VSXtra.Package;
 using IServiceProvider = System.IServiceProvider;
 using MSBuild = Microsoft.Build.BuildEngine;
 using VSRegistry = Microsoft.VisualStudio.Shell.VSRegistry;

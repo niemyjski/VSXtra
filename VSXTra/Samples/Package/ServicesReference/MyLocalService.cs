@@ -4,6 +4,8 @@
 // Created: 2008.07.20, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using VSXtra;
+using VSXtra.Package;
+using VSXtra.Windows;
 
 namespace DeepDiver.ServicesReference
 {

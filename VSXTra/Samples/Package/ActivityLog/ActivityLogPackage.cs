@@ -6,6 +6,9 @@
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using VSXtra;
+using VSXtra.Commands;
+using VSXtra.Diagnostics;
+using VSXtra.Package;
 
 namespace DeepDiver.ActivityLogPackage
 {

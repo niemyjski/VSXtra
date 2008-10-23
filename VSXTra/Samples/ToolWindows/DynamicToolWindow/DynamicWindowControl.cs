@@ -6,7 +6,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using VSXtra;
+using VSXtra.Windows;
 
 namespace DeepDiver.DynamicToolWindow
 {

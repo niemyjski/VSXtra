@@ -1,14 +1,20 @@
-﻿using System;
+﻿// ================================================================================================
+// ActivityLog.cs
+//
+// Created: 2008.10.22, by Istvan Novak (DeepDiver)
+// ================================================================================================
+using System;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Package;
 
-namespace VSXtra
+namespace VSXtra.Diagnostics
 {
-  // ==================================================================================
+  // ================================================================================================
   /// <summary>
   /// This enumeration declares the types of log entries that can be used for activity
   /// log. We use this types instead of __ACTIVITYLOG_ENTRYTYPE constants.
   /// </summary>
-  // ==================================================================================
+  // ================================================================================================
   public enum ActivityLogEntryType
   {
     /// <summary>Information entry</summary>
@@ -19,12 +25,12 @@ namespace VSXtra
     Error
   }
 
-  // ==================================================================================
+  // ================================================================================================
   /// <summary>
   /// This class defines an activity log entry with its all possible user defined
   /// properties.
   /// </summary>
-  // ==================================================================================
+  // ================================================================================================
   public sealed class ActivityLogEntry
   {
     #region Lifecyle methods
@@ -150,11 +156,11 @@ namespace VSXtra
     #endregion
   }
 
-  // ==================================================================================
+  // ================================================================================================
   /// <summary>
   /// This static class provides methods to create VS activity log entries.
   /// </summary>
-  // ==================================================================================
+  // ================================================================================================
   public static class ActivityLog
   {
     #region Public log methods
@@ -461,7 +467,7 @@ namespace VSXtra
     }
 
     private static void LogEntryGuid(ActivityLogEntryType type, string source, string message,
-      Guid guid)
+                                     Guid guid)
     {
       IVsActivityLog log = Log;
       if (log != null)
@@ -471,7 +477,7 @@ namespace VSXtra
     }
 
     private static void LogEntryGuidHr(ActivityLogEntryType type, string source, string message,
-      Guid guid, int hr)
+                                       Guid guid, int hr)
     {
       IVsActivityLog log = Log;
       if (log != null)
@@ -481,7 +487,7 @@ namespace VSXtra
     }
 
     private static void LogEntryGuidHrPath(ActivityLogEntryType type, string source, string message,
-      Guid guid, int hr, string path)
+                                           Guid guid, int hr, string path)
     {
       IVsActivityLog log = Log;
       if (log != null)
@@ -491,7 +497,7 @@ namespace VSXtra
     }
 
     private static void LogEntryGuidPath(ActivityLogEntryType type, string source, string message,
-      Guid guid, string path)
+                                         Guid guid, string path)
     {
       IVsActivityLog log = Log;
       if (log != null)
@@ -501,7 +507,7 @@ namespace VSXtra
     }
 
     private static void LogEntryHr(ActivityLogEntryType type, string source, string message,
-      int hr)
+                                   int hr)
     {
       IVsActivityLog log = Log;
       if (log != null)
@@ -511,7 +517,7 @@ namespace VSXtra
     }
 
     private static void LogEntryHrPath(ActivityLogEntryType type, string source, string message,
-      int hr, string path)
+                                       int hr, string path)
     {
       IVsActivityLog log = Log;
       if (log != null)
@@ -521,7 +527,7 @@ namespace VSXtra
     }
 
     private static void LogEntryPath(ActivityLogEntryType type, string source, string message,
-      string path)
+                                     string path)
     {
       IVsActivityLog log = Log;
       if (log != null)

@@ -7,8 +7,9 @@ using System;
 using System.ComponentModel;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Selection;
 
-namespace VSXtra
+namespace VSXtra.Hierarchy
 {
   // ================================================================================================
   /// <summary>

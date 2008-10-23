@@ -7,7 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
+using VSXtra.Commands;
+using VSXtra.Shell;
 
 namespace DeepDiver.ComboboxCommands
 {

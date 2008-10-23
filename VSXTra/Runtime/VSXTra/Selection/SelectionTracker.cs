@@ -10,7 +10,7 @@ using System.Linq;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace VSXtra
+namespace VSXtra.Selection
 {
   // ================================================================================================
   /// <summary>

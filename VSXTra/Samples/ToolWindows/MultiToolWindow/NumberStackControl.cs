@@ -5,7 +5,7 @@
 // ================================================================================================
 using System;
 using System.Windows.Forms;
-using VSXtra;
+using VSXtra.Shell;
 
 namespace DeepDiver.MultiToolWindow
 {

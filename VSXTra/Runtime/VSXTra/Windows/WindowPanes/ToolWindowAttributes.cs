@@ -4,12 +4,11 @@
 // Created by: Istvan Novak (DiveDeeper), 05/05/2008
 // ================================================================================================
 using System;
+using VSXtra.Commands;
 using VSXtra.Properties;
 
-namespace VSXtra
+namespace VSXtra.Windows
 {
-  #region InitialCaptionAttribute
-
   // ================================================================================================
   /// <summary>
   /// This attribute can set the initial caption of a tool window pane.
@@ -29,10 +28,6 @@ namespace VSXtra
     {
     }
   }
-
-  #endregion
-
-  #region BitmapResourceIdAttribute
 
   // ================================================================================================
   /// <summary>
@@ -83,10 +78,6 @@ namespace VSXtra
     public int BitmapIndex { get; private set; }
   }
 
-  #endregion
-
-  #region ToolbarLocationAttribute
-
   // ================================================================================================
   /// <summary>
   /// This attribute can set the toolbar location of a tool window pane.
@@ -115,10 +106,6 @@ namespace VSXtra
     public ToolbarLocation Location { get; private set; }
   }
 
-  #endregion
-
-  #region ToolbarAttribute
-
   // ================================================================================================
   /// <summary>
   /// This attribute can set the toolbar of a tool window pane.
@@ -142,6 +129,4 @@ namespace VSXtra
       }
     }
   }
-
-  #endregion
 }

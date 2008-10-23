@@ -4,7 +4,7 @@
 // Created: 2008.08.26, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System.Runtime.InteropServices;
-using VSXtra;
+using VSXtra.Windows;
 
 namespace DeepDiver.SimpleToolWindow
 {

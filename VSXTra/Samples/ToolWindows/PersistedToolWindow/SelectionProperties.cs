@@ -5,7 +5,7 @@
 // ================================================================================================
 using System;
 using System.ComponentModel;
-using VSXtra;
+using VSXtra.Selection;
 
 namespace DeepDiver.PersistedToolWindow
 {

@@ -6,6 +6,8 @@
 using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
 using VSXtra;
+using VSXtra.Commands;
+using VSXtra.Windows;
 
 namespace DeepDiver.VSXtraCommands
 {

@@ -4,8 +4,7 @@
 // Created: 2008.08.30, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
-using DeepDiver.BlogItemEditor;
-using VSXtra;
+using VSXtra.Editors;
 
 namespace DeepDiver.BlogItemEditor
 {

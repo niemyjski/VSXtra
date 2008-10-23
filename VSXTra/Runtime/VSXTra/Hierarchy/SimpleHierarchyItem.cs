@@ -1,4 +1,4 @@
-namespace VSXtra
+namespace VSXtra.Hierarchy
 {
   public class SimpleHierarchyItem: HierarchyBase<SimpleHierarchyItem, SimpleHierarchyRoot>
   {
