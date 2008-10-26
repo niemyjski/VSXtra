@@ -3,7 +3,6 @@
 //
 // Created: 2008.07.20, by Istvan Novak (DeepDiver)
 // ================================================================================================
-using VSXtra;
 using VSXtra.Package;
 using VSXtra.Windows;
 
@@ -19,15 +18,19 @@ namespace DeepDiver.ServicesReference
   // ================================================================================================
   [AutoCreateService]
   public class MyLocalService : VsxService<ServicesPackage, SMyLocalService>,
-    IMyLocalService
+                                IMyLocalService
   {
+    #region IMyLocalService Members
+
     public int LocalServiceFunction()
     {
-      var outputText = " ======================================\n" +
-                       "\tLocalServiceFunction called.\n" +
-                       " ======================================\n";
+      string outputText = " ======================================\n" +
+                          "\tLocalServiceFunction called.\n" +
+                          " ======================================\n";
       OutputWindow.General.WriteLine(outputText);
       return 0;
     }
+
+    #endregion
   }
 }

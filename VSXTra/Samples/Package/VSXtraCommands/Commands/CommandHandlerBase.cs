@@ -19,7 +19,7 @@ namespace DeepDiver.VSXtraCommands
   /// override the CanExecute method.
   /// </remarks>
   // ================================================================================================
-  public abstract class CommandHandlerBase : MenuCommandHandler 
+  public abstract class CommandHandlerBase : MenuCommandHandler
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -35,10 +35,10 @@ namespace DeepDiver.VSXtraCommands
     {
       // --- Check if the command is enabled on the Commands options page or not
       var commandsPage = Package.GetDialogPage<CommandsPage>();
-      bool canExecute = 
+      bool canExecute =
         commandsPage.DisabledCommands.SingleOrDefault(
           cmd => cmd.Guid.Equals(command.CommandID.Guid) &&
-              cmd.ID.Equals(command.CommandID.ID)) == null;
+                 cmd.ID.Equals(command.CommandID.ID)) == null;
       if (canExecute)
       {
         // --- Command is enabled, so we examine the command specific status

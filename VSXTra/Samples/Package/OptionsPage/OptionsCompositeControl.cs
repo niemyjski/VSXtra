@@ -4,8 +4,9 @@
 // Created: 2008.07.18, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
-using System.IO;
+using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace DeepDiver.OptionsPage
@@ -20,16 +21,17 @@ namespace DeepDiver.OptionsPage
   {
     #region Fields
 
-    private PictureBox pictureBox;
-    private OpenFileDialog openImageFileDialog;
     private Button buttonChooseImage;
     private Button buttonClearImage;
-    private OptionsPageCustom customOptionsPage;
 
     /// <summary> 
     /// Required designer variable.
     /// </summary>
-    private System.ComponentModel.Container components = null;
+    private Container components;
+
+    private OptionsPageCustom customOptionsPage;
+    private OpenFileDialog openImageFileDialog;
+    private PictureBox pictureBox;
 
     #endregion
 
@@ -74,6 +76,7 @@ namespace DeepDiver.OptionsPage
     #endregion
 
     #region Component Designer generated code
+
     /// <summary> 
     /// Required method for Designer support - do not modify 
     /// the contents of this method with the code editor.
@@ -84,14 +87,16 @@ namespace DeepDiver.OptionsPage
       this.openImageFileDialog = new System.Windows.Forms.OpenFileDialog();
       this.buttonChooseImage = new System.Windows.Forms.Button();
       this.buttonClearImage = new System.Windows.Forms.Button();
-      ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize) (this.pictureBox)).BeginInit();
       this.SuspendLayout();
       // 
       // pictureBox
       // 
-      this.pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.pictureBox.Anchor =
+        ((System.Windows.Forms.AnchorStyles)
+         ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+           | System.Windows.Forms.AnchorStyles.Right)));
       this.pictureBox.Location = new System.Drawing.Point(16, 16);
       this.pictureBox.Name = "pictureBox";
       this.pictureBox.Size = new System.Drawing.Size(295, 231);
@@ -100,7 +105,9 @@ namespace DeepDiver.OptionsPage
       // 
       // buttonChooseImage
       // 
-      this.buttonChooseImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.buttonChooseImage.Anchor =
+        ((System.Windows.Forms.AnchorStyles)
+         ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.buttonChooseImage.Location = new System.Drawing.Point(317, 16);
       this.buttonChooseImage.Name = "buttonChooseImage";
       this.buttonChooseImage.Size = new System.Drawing.Size(120, 40);
@@ -110,7 +117,9 @@ namespace DeepDiver.OptionsPage
       // 
       // buttonClearImage
       // 
-      this.buttonClearImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.buttonClearImage.Anchor =
+        ((System.Windows.Forms.AnchorStyles)
+         ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.buttonClearImage.Location = new System.Drawing.Point(317, 62);
       this.buttonClearImage.Name = "buttonClearImage";
       this.buttonClearImage.Size = new System.Drawing.Size(120, 40);
@@ -126,15 +135,29 @@ namespace DeepDiver.OptionsPage
       this.Controls.Add(this.pictureBox);
       this.Name = "OptionsCompositeControl";
       this.Size = new System.Drawing.Size(447, 260);
-      ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+      ((System.ComponentModel.ISupportInitialize) (this.pictureBox)).EndInit();
       this.ResumeLayout(false);
-
     }
+
     #endregion
 
     #region Private methods
 
     // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets or Sets the reference to the underlying OptionsPage object.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public OptionsPageCustom OptionsPage
+    {
+      get { return customOptionsPage; }
+      set
+      {
+        customOptionsPage = value;
+        RefreshImage();
+      }
+    }
+
     /// <summary>
     /// Handles the ChooseImage event. 
     /// </summary>
@@ -151,7 +174,7 @@ namespace DeepDiver.OptionsPage
         customOptionsPage.CustomBitmap = openImageFileDialog.FileName;
       RefreshImage();
     }
-    
+
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Handles the ClearImage event. 
@@ -177,7 +200,7 @@ namespace DeepDiver.OptionsPage
     public void RefreshImage()
     {
       if (customOptionsPage == null) return;
-      var fileName = customOptionsPage.CustomBitmap;
+      string fileName = customOptionsPage.CustomBitmap;
       if (!string.IsNullOrEmpty(fileName))
       {
         // --- Avoid to use Image.FromFile() method for loading image to exclude file locks
@@ -190,19 +213,6 @@ namespace DeepDiver.OptionsPage
     }
 
     // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Gets or Sets the reference to the underlying OptionsPage object.
-    /// </summary>
-    // --------------------------------------------------------------------------------------------
-    public OptionsPageCustom OptionsPage
-    {
-      get { return customOptionsPage; }
-      set
-      {
-        customOptionsPage = value;
-        RefreshImage();
-      }
-    }
 
     #endregion
   }

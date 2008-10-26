@@ -5,7 +5,7 @@
 // ================================================================================================
 namespace DeepDiver.DisplayLoadedPackages
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const uint cmdidDisplayPackages = 0x100;
   }

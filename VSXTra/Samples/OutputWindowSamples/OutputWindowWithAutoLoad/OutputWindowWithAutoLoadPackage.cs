@@ -39,19 +39,19 @@ namespace DeepDiver.OutputWindowWithAutoLoad
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideLoadKey("Standard", "1.0", "OutputWithAutoLoad", "DeepDiver", 1)]
   [Guid(GuidList.guidOutputWindowWithAutoLoadPkgString)]
-  [XtraProvideAutoLoad(typeof(UIContext.NoSolution))]
+  [XtraProvideAutoLoad(typeof (UIContext.NoSolution))]
   public sealed class OutputWindowWithAutoLoadPackage : PackageBase
   {
     protected override void Initialize()
     {
       Console.WriteLine();
       Console.WriteLine("This package demonstrates how to use the Output window.");
-      
+
       Console.Write("*** Boolean values: ");
       Console.Write(true);
       Console.Write("|");
       Console.WriteLine(false);
-      
+
       Console.Write("*** Character values: ");
       Console.Write('H');
       Console.Write("|");
@@ -62,7 +62,7 @@ namespace DeepDiver.OutputWindowWithAutoLoad
       Console.Write('l');
       Console.Write("|");
       Console.WriteLine('o');
-      
+
       Console.Write("*** Integral values: ");
       Console.Write(0xab);
       Console.Write("|");
@@ -71,19 +71,19 @@ namespace DeepDiver.OutputWindowWithAutoLoad
       Console.Write(123456789);
       Console.Write("|");
       Console.WriteLine(1234567890123456L);
-      
+
       Console.Write("*** String values: ");
       Console.Write("Hello");
       Console.Write("|");
       Console.WriteLine("World");
 
       Console.Write("*** Floating point values: ");
-      Console.Write((Single)Math.PI);
+      Console.Write((Single) Math.PI);
       Console.Write("|");
       Console.WriteLine(Math.E);
 
       Console.Write("*** Char arrays: ");
-      var chars = new [] { 'H', 'e', 'l', 'l', 'o' };
+      var chars = new[] {'H', 'e', 'l', 'l', 'o'};
       Console.Write(chars);
       Console.Write("|");
       Console.WriteLine(chars);

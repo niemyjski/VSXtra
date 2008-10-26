@@ -5,7 +5,7 @@
 // ================================================================================================
 namespace DeepDiver.OutputVsRegistry
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const uint cmdidDisplayRegistryValues = 0x100;
   }

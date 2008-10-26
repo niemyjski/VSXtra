@@ -39,7 +39,7 @@ namespace DeepDiver.DynamicToolWindow
       var frame = sender as WindowFrame;
       if (frame == null) return;
       Rectangle rect;
-      var framePos = frame.GetWindowPosition(out rect);
+      FramePosition framePos = frame.GetWindowPosition(out rect);
       xText.Text = rect.Left.ToString();
       yText.Text = rect.Top.ToString();
       widthText.Text = rect.Width.ToString();

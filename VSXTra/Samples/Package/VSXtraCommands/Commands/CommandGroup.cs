@@ -19,7 +19,7 @@ namespace DeepDiver.VSXtraCommands
   /// </remarks>
   // ================================================================================================
   [Guid(GuidList.guidVSXtraCommandsCmdSetString)]
-  public partial class VSXtraCommandGroup: CommandGroup<VSXtraCommandsPackage>
+  public partial class VSXtraCommandGroup : CommandGroup<VSXtraCommandsPackage>
   {
   }
 }

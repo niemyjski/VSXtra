@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RdtEventsWindow")]
 [assembly: AssemblyDescription("VSXtra RdtEventsWindow Sample")]
 [assembly: AssemblyConfiguration("")]
-
-[assembly: ComVisible(false)]     
+[assembly: ComVisible(false)]
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US")]

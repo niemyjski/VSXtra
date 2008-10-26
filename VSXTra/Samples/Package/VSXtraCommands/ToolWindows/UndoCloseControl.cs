@@ -11,10 +11,9 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
-using EnvDTE;
-using Microsoft.VisualStudio.Shell.Interop;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra;
 
 namespace DeepDiver.VSXtraCommands
@@ -28,10 +27,10 @@ namespace DeepDiver.VSXtraCommands
   {
     #region Fields
 
-    readonly IServiceProvider _ServiceProvider;
-    IUndoCloseManagerService _UndoCloseManager;
-    readonly ImageList _Images = new ImageList();
-    readonly ListViewGroup _RootGroup = new ListViewGroup(Resources.RecentlyClosedDocuments);
+    private readonly ImageList _Images = new ImageList();
+    private readonly ListViewGroup _RootGroup = new ListViewGroup(Resources.RecentlyClosedDocuments);
+    private readonly IServiceProvider _ServiceProvider;
+    private IUndoCloseManagerService _UndoCloseManager;
 
     #endregion
 
@@ -76,7 +75,7 @@ namespace DeepDiver.VSXtraCommands
 
     private void lstDocuments_KeyPress(object sender, KeyPressEventArgs e)
     {
-      if (e.KeyChar == (char)13)
+      if (e.KeyChar == (char) 13)
       {
         OpenDocument();
       }
@@ -85,6 +84,7 @@ namespace DeepDiver.VSXtraCommands
     #endregion
 
     #region Public Implementation
+
     /// <summary>
     /// Updates the document list.
     /// </summary>
@@ -95,7 +95,7 @@ namespace DeepDiver.VSXtraCommands
       ClearDocumentList();
 
       _UndoCloseManager.GetDocuments().ForEach(
-          info =>
+        info =>
           {
             string imageKey;
 
@@ -103,7 +103,7 @@ namespace DeepDiver.VSXtraCommands
 
             if (!lstDocuments.SmallImageList.Images.ContainsKey(imageKey))
             {
-              var icon = NativeMethods.GetIcon(info.DocumentPath);
+              Icon icon = NativeMethods.GetIcon(info.DocumentPath);
 
               if (icon != null)
               {
@@ -112,7 +112,7 @@ namespace DeepDiver.VSXtraCommands
             }
 
             var item =
-                new ListViewItem(info.DocumentPath, _RootGroup) { Tag = info, ImageKey = imageKey };
+              new ListViewItem(info.DocumentPath, _RootGroup) {Tag = info, ImageKey = imageKey};
 
             lstDocuments.Items.Add(item);
           });
@@ -127,12 +127,14 @@ namespace DeepDiver.VSXtraCommands
     {
       lstDocuments.Items.Clear();
     }
+
     #endregion
 
     #region Private Implementation
+
     private void OpenDocument()
     {
-      var item = lstDocuments.SelectedItems.OfType<ListViewItem>().First();
+      ListViewItem item = lstDocuments.SelectedItems.OfType<ListViewItem>().First();
       var docInfo = item.Tag as UndoDocumentInfo;
 
       if (docInfo != null)
@@ -147,7 +149,8 @@ namespace DeepDiver.VSXtraCommands
             docInfo.OpenDocument();
           }
           catch (COMException)
-          { }
+          {
+          }
         }
       }
     }
@@ -156,10 +159,10 @@ namespace DeepDiver.VSXtraCommands
     {
       IVsSolution solution = _ServiceProvider.GetService<SVsSolution, IVsSolution>();
 
-      HierarchyNodeIterator iterator = new HierarchyNodeIterator(solution);
+      var iterator = new HierarchyNodeIterator(solution);
 
       return iterator.SingleOrDefault(
-          node => node.FullName.Equals(file));
+        node => node.FullName.Equals(file));
     }
 
     private void InitializeList()
@@ -169,6 +172,7 @@ namespace DeepDiver.VSXtraCommands
       lstDocuments.Columns[0].Width = lstDocuments.Width - 8;
       lstDocuments.Groups.Add(_RootGroup);
     }
+
     #endregion
   }
 }

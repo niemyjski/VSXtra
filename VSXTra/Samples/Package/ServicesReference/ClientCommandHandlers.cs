@@ -24,6 +24,9 @@ namespace DeepDiver.ServicesReference
   public sealed class ClientCommandGroup : CommandGroup<ClientPackage>
   {
     // ================================================================================================
+
+    #region Nested type: GetGlobalServiceCommand
+
     /// <summary>
     /// This class implements the "Get C# Global Service" command.
     /// </summary>
@@ -33,7 +36,7 @@ namespace DeepDiver.ServicesReference
     {
       protected override void OnExecute(OleMenuCommand command)
       {
-        var service = ServiceProvider.GetService<SMyGlobalService, IMyGlobalService>();
+        IMyGlobalService service = ServiceProvider.GetService<SMyGlobalService, IMyGlobalService>();
         if (null == service)
         {
           OutputWindow.Debug.WriteLine("Can not get the global service.");
@@ -43,7 +46,12 @@ namespace DeepDiver.ServicesReference
       }
     }
 
+    #endregion
+
     // ================================================================================================
+
+    #region Nested type: GetLocalServiceCommand
+
     /// <summary>
     /// This class implements the "Get C# Local Service" command.
     /// </summary>
@@ -53,20 +61,25 @@ namespace DeepDiver.ServicesReference
     {
       protected override void OnExecute(OleMenuCommand command)
       {
-        var service = ServiceProvider.GetService<SMyLocalService, IMyLocalService>();
+        IMyLocalService service = ServiceProvider.GetService<SMyLocalService, IMyLocalService>();
         if (null != service)
         {
           OutputWindow.Debug.WriteLine("GetService for the local service succeeded, but it should fail.");
           return;
         }
-        var outputText = " ======================================\n" +
-                         "\tGetLocalServiceCallback test succeeded.\n" +
-                         " ======================================\n";
+        string outputText = " ======================================\n" +
+                            "\tGetLocalServiceCallback test succeeded.\n" +
+                            " ======================================\n";
         OutputWindow.General.WriteLine(outputText);
       }
     }
 
+    #endregion
+
     // ================================================================================================
+
+    #region Nested type: GetLocalUsinGlobalServiceCommand
+
     /// <summary>
     /// This class implements the "Get C# Local Using Global Service" command.
     /// </summary>
@@ -76,7 +89,7 @@ namespace DeepDiver.ServicesReference
     {
       protected override void OnExecute(OleMenuCommand command)
       {
-        var service = ServiceProvider.GetService<SMyGlobalService, IMyGlobalService>();
+        IMyGlobalService service = ServiceProvider.GetService<SMyGlobalService, IMyGlobalService>();
         if (null == service)
         {
           OutputWindow.General.WriteLine("Can not get the global service.");
@@ -85,5 +98,7 @@ namespace DeepDiver.ServicesReference
         service.CallLocalService();
       }
     }
+
+    #endregion
   }
 }

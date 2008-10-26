@@ -7,7 +7,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
 using VSXtra.Commands;
 using VSXtra.Package;
 using VSXtra.Windows;
@@ -27,19 +26,31 @@ namespace DeepDiver.CustomOutputWindowPane
     private static void CreateOutput()
     {
       Console.WriteLine("*** Turn to the CutomPane1 and CustomePane2 output panes!");
-      var pane1 = OutputWindow.GetPane<CustomPane1>();
+      OutputWindowPane pane1 = OutputWindow.GetPane<CustomPane1>();
       pane1.WriteLine("Welcome on CustomPane1!");
-      var pane2 = OutputWindow.GetPane<CustomPane2>();
+      OutputWindowPane pane2 = OutputWindow.GetPane<CustomPane2>();
       pane2.WriteLine("Welcome on CustomPane2!");
     }
 
+    #region Nested type: CustomPane1
+
     [DisplayName("CustomPane1")]
     [AutoActivate(true)]
-    class CustomPane1: OutputPaneDefinition {}
+    private class CustomPane1 : OutputPaneDefinition
+    {
+    }
+
+    #endregion
+
+    #region Nested type: CustomPane2
 
     [DisplayName("CustomPane2")]
     [AutoActivate(true)]
     [ClearWithSolution(true)]
-    class CustomPane2 : OutputPaneDefinition { }
+    private class CustomPane2 : OutputPaneDefinition
+    {
+    }
+
+    #endregion
   }
 }

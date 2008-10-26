@@ -5,7 +5,7 @@
 // ================================================================================================
 namespace DeepDiver.CustomOutputWindowPane
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const uint cmdidCreateOutput = 0x100;
   }

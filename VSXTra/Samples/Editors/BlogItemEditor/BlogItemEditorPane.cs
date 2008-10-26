@@ -8,7 +8,7 @@ using VSXtra.Editors;
 
 namespace DeepDiver.BlogItemEditor
 {
-  public sealed class BlogItemEditorPane: 
+  public sealed class BlogItemEditorPane :
     EditorPaneBase<BlogItemEditorPackage, BlogItemEditorFactory, BlogItemEditorControl>
   {
     #region Private fields
@@ -85,7 +85,7 @@ namespace DeepDiver.BlogItemEditor
     /// Occurs when the content changed at the control.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    void DataChangedInView(object sender, EventArgs e)
+    private void DataChangedInView(object sender, EventArgs e)
     {
       OnContentChanged();
     }

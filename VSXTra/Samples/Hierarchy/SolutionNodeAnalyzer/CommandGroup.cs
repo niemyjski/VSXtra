@@ -12,20 +12,34 @@ namespace DeepDiver.SolutionNodeAnalyzer
   public sealed class AnalyzerCommandGroup : CommandGroup<SolutionNodeAnalyzerPackage>
   {
     // ================================================================================================
-    /// <summary>
-    /// This class implements the command to display the Persisted Tool Window
-    /// </summary>
-    // ================================================================================================
-    [CommandId(CmdIDs.cmdidShowNodeAnalyzer)]
-    [ShowToolWindowAction(typeof(NodeAnalyzerToolWindow))]
-    public sealed class ShowToolCommand : MenuCommandHandler { }
 
     // ================================================================================================
+
+    #region Nested type: AnalyzerWindowToolbar
+
     /// <summary>
     /// Toolbar used by the NodeAnalyzerToolWindow
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.AnalyzerWindowToolbar)]
-    public sealed class AnalyzerWindowToolbar : ToolbarDefinition { }
+    public sealed class AnalyzerWindowToolbar : ToolbarDefinition
+    {
+    }
+
+    #endregion
+
+    #region Nested type: ShowToolCommand
+
+    /// <summary>
+    /// This class implements the command to display the Persisted Tool Window
+    /// </summary>
+    // ================================================================================================
+    [CommandId(CmdIDs.cmdidShowNodeAnalyzer)]
+    [ShowToolWindowAction(typeof (NodeAnalyzerToolWindow))]
+    public sealed class ShowToolCommand : MenuCommandHandler
+    {
+    }
+
+    #endregion
   }
 }

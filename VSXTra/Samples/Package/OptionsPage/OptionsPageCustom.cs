@@ -30,6 +30,14 @@ namespace DeepDiver.OptionsPage
       CustomBitmap = String.Empty;
     }
 
+    /// <summary>
+    /// Gets or sets the path to the image file.
+    /// </summary>
+    /// <remarks>The property that needs to be persisted.</remarks>
+    // --------------------------------------------------------------------------------------------
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    public string CustomBitmap { get; set; }
+
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Sets up the user control.
@@ -51,12 +59,5 @@ namespace DeepDiver.OptionsPage
     }
 
     // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Gets or sets the path to the image file.
-    /// </summary>
-    /// <remarks>The property that needs to be persisted.</remarks>
-    // --------------------------------------------------------------------------------------------
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-    public string CustomBitmap { get; set; }
   }
 }

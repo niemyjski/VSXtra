@@ -9,23 +9,37 @@ using VSXtra.Commands;
 namespace DeepDiver.RdtEventsWindow
 {
   [Guid(GuidList.guidRdtEventsWindowCmdSetString)]
-  public class RdtEventsCommandGroup: CommandGroup<RdtEventsWindowPackage>
+  public class RdtEventsCommandGroup : CommandGroup<RdtEventsWindowPackage>
   {
     // ================================================================================================
-    /// <summary>
-    /// Displays the RDT Event Explorer tool window
-    /// </summary>
-    // ================================================================================================
-    [CommandId(CmdIDs.cmdidShowRdtEventWindow)]
-    [ShowToolWindowAction(typeof(RdtEventsWindowPane))]
-    public sealed class ShowRdtEventExplore: MenuCommandHandler {}
 
     // ================================================================================================
+
+    #region Nested type: RdtEventExplorerToolbar
+
     /// <summary>
     /// Represents the RDT Event Explorer toolbar
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.RdtEventsToolbar)]
-    public sealed class RdtEventExplorerToolbar : ToolbarDefinition { }
+    public sealed class RdtEventExplorerToolbar : ToolbarDefinition
+    {
+    }
+
+    #endregion
+
+    #region Nested type: ShowRdtEventExplore
+
+    /// <summary>
+    /// Displays the RDT Event Explorer tool window
+    /// </summary>
+    // ================================================================================================
+    [CommandId(CmdIDs.cmdidShowRdtEventWindow)]
+    [ShowToolWindowAction(typeof (RdtEventsWindowPane))]
+    public sealed class ShowRdtEventExplore : MenuCommandHandler
+    {
+    }
+
+    #endregion
   }
 }

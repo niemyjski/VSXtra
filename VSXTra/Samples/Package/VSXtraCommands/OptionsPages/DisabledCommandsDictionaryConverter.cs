@@ -82,8 +82,8 @@ namespace DeepDiver.VSXtraCommands
     /// <exception cref="ArgumentNullException">The destinationType parameter is null.</exception>
     /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
     // --------------------------------------------------------------------------------------------
-    public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, 
-      Type destinationType)
+    public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+                                     Type destinationType)
     {
       _DisabledCommands = value as IList<CommandID>;
       var builder = new StringBuilder();
@@ -112,9 +112,9 @@ namespace DeepDiver.VSXtraCommands
         if (!string.IsNullOrEmpty(value.ToString()))
         {
           value.ToString().Split(';').ForEach(
-              item =>
+            item =>
               {
-                var subItems = item.Split(',');
+                string[] subItems = item.Split(',');
                 if (subItems.Count() == 2)
                 {
                   var cmdGuid = new Guid(subItems[0]);

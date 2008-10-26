@@ -27,7 +27,7 @@ namespace DeepDiver.VSXtraCommands
     #region Fields
 
     private IList<CommandID> _DisabledCommands = new List<CommandID>();
-    
+
     #endregion
 
     #region Properties
@@ -38,7 +38,7 @@ namespace DeepDiver.VSXtraCommands
     /// </summary>
     /// <value>The disabled commands.</value>
     // --------------------------------------------------------------------------------------------
-    [TypeConverter(typeof(DisabledCommandsDictionaryConverter))]
+    [TypeConverter(typeof (DisabledCommandsDictionaryConverter))]
     public IList<CommandID> DisabledCommands
     {
       get { return _DisabledCommands; }

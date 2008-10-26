@@ -17,8 +17,8 @@ namespace DeepDiver.RdtEventsWindow
   // ================================================================================================
   [Guid("4CCE3BDE-60B2-4165-9FC9-8682A19BCB70")]
   [InitialCaption("RDT Event Explorer")]
-  [Toolbar(typeof(RdtEventsCommandGroup.RdtEventExplorerToolbar))]
-  public class RdtEventsWindowPane: ToolWindowPane<RdtEventsWindowPackage, RdtEventControl>
+  [Toolbar(typeof (RdtEventsCommandGroup.RdtEventExplorerToolbar))]
+  public class RdtEventsWindowPane : ToolWindowPane<RdtEventsWindowPackage, RdtEventControl>
   {
     #region Private fields
 
@@ -95,62 +95,62 @@ namespace DeepDiver.RdtEventsWindow
 
     #region RDT event handler methods
 
-    void OnBeforeSave(object sender, RdtEventArgs e)
+    private void OnBeforeSave(object sender, RdtEventArgs e)
     {
       if (Options.OptBeforeSave) LogEvent(e);
     }
 
-    void OnBeforeLastDocumentUnlock(object sender, RdtLockEventArgs e)
+    private void OnBeforeLastDocumentUnlock(object sender, RdtLockEventArgs e)
     {
       if (Options.OptBeforeLastDocumentUnlock) LogEvent(e);
     }
 
-    void OnBeforeFirstDocumentLock(object sender, RdtFirstLockEventArgs e)
+    private void OnBeforeFirstDocumentLock(object sender, RdtFirstLockEventArgs e)
     {
       if (Options.OptBeforeFirstDocumentLock) LogEvent(e);
     }
 
-    void OnBeforeDocumentWindowShow(object sender, RdtWindowShowEventArgs e)
+    private void OnBeforeDocumentWindowShow(object sender, RdtWindowShowEventArgs e)
     {
       if (Options.OptBeforeDocumentWindowShow) LogEvent(e);
     }
 
-    void OnAfterSaveAll(object sender, RdtEventArgs e)
+    private void OnAfterSaveAll(object sender, RdtEventArgs e)
     {
       if (Options.OptAfterSaveAll) LogEvent(e);
     }
 
-    void OnAfterSave(object sender, RdtEventArgs e)
+    private void OnAfterSave(object sender, RdtEventArgs e)
     {
       if (Options.OptAfterSave) LogEvent(e);
     }
 
-    void OnAfterLastDocumentUnlock(object sender, RdtLastUnlockEventArgs e)
+    private void OnAfterLastDocumentUnlock(object sender, RdtLastUnlockEventArgs e)
     {
       if (Options.OptAfterLastDocumentUnlock) LogEvent(e);
     }
 
-    void OnAfterFirstDocumentLock(object sender, RdtLockEventArgs e)
+    private void OnAfterFirstDocumentLock(object sender, RdtLockEventArgs e)
     {
       if (Options.OptAfterFirstDocumentLock) LogEvent(e);
     }
 
-    void OnAfterDocumentWindowHide(object sender, RdtWindowEventArgs e)
+    private void OnAfterDocumentWindowHide(object sender, RdtWindowEventArgs e)
     {
       if (Options.OptAfterDocumentWindowHide) LogEvent(e);
     }
 
-    void OnAfterAttributeChangeEx(object sender, RdtDocumentChangedEventArgs e)
+    private void OnAfterAttributeChangeEx(object sender, RdtDocumentChangedEventArgs e)
     {
       if (Options.OptAfterAttributeChangeEx) LogEvent(e);
     }
 
-    void OnAfterAttributeChange(object sender, RdtDocumentChangedEventArgs e)
+    private void OnAfterAttributeChange(object sender, RdtDocumentChangedEventArgs e)
     {
       if (Options.OptAfterAttributeChange) LogEvent(e);
     }
 
-    void LogEvent(RdtEventArgs e)
+    private void LogEvent(RdtEventArgs e)
     {
       UIControl.AddEventToGrid(e);
     }

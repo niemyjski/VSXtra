@@ -14,18 +14,23 @@ namespace DeepDiver.VSXtraCommands
   public partial class VSXtraCommandGroup
   {
     // ================================================================================================
+
+    #region Nested type: ClearAllPanes
+
     /// <summary>
     /// This class clears all the panes of Output window.
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.ClearAllPanesCommand)]
     [DisplayName("Clear All Panes")]
-    public sealed class ClearAllPanes: CommandHandlerBase
+    public sealed class ClearAllPanes : CommandHandlerBase
     {
       protected override void OnExecute(OleMenuCommand command)
       {
         OutputWindow.OutputWindowPanes.ForEach(pane => pane.Clear());
       }
     }
+
+    #endregion
   }
 }

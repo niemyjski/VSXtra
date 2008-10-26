@@ -13,32 +13,37 @@ namespace DeepDiver.VSXtraCommands
   internal class UndoCloseManagerService : IUndoCloseManagerService, SUndoCloseManagerService
   {
     #region Fields
+
     private const int capacity = 20;
 
-    FixedCapacityStack<IUndoDocumentInfo> documents;
+    private FixedCapacityStack<IUndoDocumentInfo> documents;
+
     #endregion
 
     #region Constructors
+
     public UndoCloseManagerService()
     {
       documents = new FixedCapacityStack<IUndoDocumentInfo>(capacity);
     }
+
     #endregion
 
     #region Public Implementation
+
     public void PushDocument(IUndoDocumentInfo undoDocument)
     {
       IUndoDocumentInfo docInfo =
-          documents.SingleOrDefault(
-              info => info.DocumentPath.Equals(undoDocument.DocumentPath));
+        documents.SingleOrDefault(
+          info => info.DocumentPath.Equals(undoDocument.DocumentPath));
 
       if (docInfo != null)
       {
         var temp =
-            new FixedCapacityStack<IUndoDocumentInfo>(capacity);
+          new FixedCapacityStack<IUndoDocumentInfo>(capacity);
 
         documents.Reverse().ForEach(
-            info =>
+          info =>
             {
               if (info.DocumentPath != undoDocument.DocumentPath)
               {
@@ -70,16 +75,16 @@ namespace DeepDiver.VSXtraCommands
     public IUndoDocumentInfo PopDocument(IUndoDocumentInfo undoDocument)
     {
       IUndoDocumentInfo docInfo =
-          documents.SingleOrDefault(
-              info => info.DocumentPath.Equals(undoDocument.DocumentPath));
+        documents.SingleOrDefault(
+          info => info.DocumentPath.Equals(undoDocument.DocumentPath));
 
       if (docInfo != null)
       {
         var temp =
-            new FixedCapacityStack<IUndoDocumentInfo>(capacity);
+          new FixedCapacityStack<IUndoDocumentInfo>(capacity);
 
         documents.Reverse().ForEach(
-            info =>
+          info =>
             {
               if (info.DocumentPath != undoDocument.DocumentPath)
               {
@@ -117,6 +122,7 @@ namespace DeepDiver.VSXtraCommands
     {
       return documents;
     }
+
     #endregion
   }
 }

@@ -20,38 +20,39 @@ namespace DeepDiver.SolutionNodeAnalyzer
   {
     private List<HierarchyItem> _HierarchyNodes;
 
-    public SelectionTracker SelectionTracker { get; set; }
-
     public NodeAnalyzerControl()
     {
       InitializeComponent();
     }
+
+    public SelectionTracker SelectionTracker { get; set; }
 
     public void RefreshList(IEnumerable<HierarchyTraversalInfo> info)
     {
       _HierarchyNodes = new List<HierarchyItem>();
       info.ForEach(item => _HierarchyNodes.Add(item.HierarchyNode));
       NodeListView.Items.Clear();
-      foreach (var nodeInfo in info)
+      foreach (HierarchyTraversalInfo nodeInfo in info)
       {
-        var node = nodeInfo.HierarchyNode;
+        HierarchyItem node = nodeInfo.HierarchyNode;
         var listItem = new ListViewItem {Tag = node};
         if (node.Id.IsRoot)
         {
           listItem.ImageKey = "Root";
         }
-        else listItem.ImageKey = node.FirstChild.IsNil 
-          ? "Item" 
-          : "Folder";
-        listItem.Text = node.IsNestedHierachy 
-          ? String.Format("{0} / {1}", node.Id, node.ParentHierarchyItemId) 
-          : node.Id.ToString();
+        else
+          listItem.ImageKey = node.FirstChild.IsNil
+                                ? "Item"
+                                : "Folder";
+        listItem.Text = node.IsNestedHierachy
+                          ? String.Format("{0} / {1}", node.Id, node.ParentHierarchyItemId)
+                          : node.Id.ToString();
         NodeListView.Items.Add(listItem);
         var depthItem = new ListViewItem.ListViewSubItem {Text = nodeInfo.Depth.ToString()};
         listItem.SubItems.Add(depthItem);
         var nameItem = new ListViewItem.ListViewSubItem {Text = node.Name};
         listItem.SubItems.Add(nameItem);
-        var parentItem = new ListViewItem.ListViewSubItem { Text = node.ParentId.ToString() };
+        var parentItem = new ListViewItem.ListViewSubItem {Text = node.ParentId.ToString()};
         listItem.SubItems.Add(parentItem);
         var parentHItem = new ListViewItem.ListViewSubItem
                             {

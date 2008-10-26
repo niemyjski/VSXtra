@@ -23,6 +23,13 @@ namespace DeepDiver.VSXtraCommands
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the current document.
+    /// </summary>
+    /// <value>The current document.</value>
+    // --------------------------------------------------------------------------------------------
+    IUndoDocumentInfo CurrentUndoDocument { get; }
+
+    /// <summary>
     /// Pushes an UndoDocument to the stack.
     /// </summary>
     /// <param name="undoDocument">The document.</param>
@@ -50,12 +57,6 @@ namespace DeepDiver.VSXtraCommands
     IUndoDocumentInfo PopDocument(IUndoDocumentInfo undoDocument);
 
     // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Gets the current document.
-    /// </summary>
-    /// <value>The current document.</value>
-    // --------------------------------------------------------------------------------------------
-    IUndoDocumentInfo CurrentUndoDocument { get; }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>

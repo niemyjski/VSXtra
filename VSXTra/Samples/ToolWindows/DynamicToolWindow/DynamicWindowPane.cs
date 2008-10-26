@@ -19,7 +19,7 @@ namespace DeepDiver.DynamicToolWindow
   [Guid("F0E1E9A1-9860-484d-AD5D-367D79AABF55")]
   [InitialCaption("Dynamic Tool Window")]
   [BitmapResourceId(301)]
-  class DynamicWindowPane : ToolWindowPane<DynamicToolWindowPackage, DynamicWindowControl>
+  internal class DynamicWindowPane : ToolWindowPane<DynamicToolWindowPackage, DynamicWindowControl>
   {
     private OutputWindowPane _OutputPane;
 
@@ -31,11 +31,11 @@ namespace DeepDiver.DynamicToolWindow
     public override void OnToolWindowCreated()
     {
       base.OnToolWindowCreated();
-      
+
       // --- Set up the window pane
       _OutputPane = OutputWindow.GetPane<EventsPane>();
       VsDebug.Assert(_OutputPane != null, "Output pane creation failed.");
-      
+
       // --- Set up window frame events
       Frame.OnShow += OnFrameShow;
       Frame.OnClose += OnFrameClose;
@@ -50,7 +50,7 @@ namespace DeepDiver.DynamicToolWindow
     /// The dock position has been chnaged.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    void OnFrameDockChange(object sender, WindowFrameDockChangedEventArgs e)
+    private void OnFrameDockChange(object sender, WindowFrameDockChangedEventArgs e)
     {
       _OutputPane.WriteLine("Dock state changed.");
       _OutputPane.WriteLine("  Docked: {0}", e.Docked);
@@ -62,7 +62,7 @@ namespace DeepDiver.DynamicToolWindow
     /// The tool window has been moved.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    void OnFrameMove(object sender, WindowFramePositionChangedEventArgs e)
+    private void OnFrameMove(object sender, WindowFramePositionChangedEventArgs e)
     {
       _OutputPane.WriteLine("Frame moved.");
       DisplayPosition(e.Position);
@@ -73,7 +73,7 @@ namespace DeepDiver.DynamicToolWindow
     /// The tool window has been resized.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    void OnFrameResize(object sender, WindowFramePositionChangedEventArgs e)
+    private void OnFrameResize(object sender, WindowFramePositionChangedEventArgs e)
     {
       _OutputPane.WriteLine("Frame sized.");
       DisplayPosition(e.Position);
@@ -84,7 +84,7 @@ namespace DeepDiver.DynamicToolWindow
     /// The tool window has been closed.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    void OnFrameClose(object sender, WindowFrameCloseEventArgs e)
+    private void OnFrameClose(object sender, WindowFrameCloseEventArgs e)
     {
       _OutputPane.WriteLine("Frame closed.");
       _OutputPane.WriteLine("  Reason: {0}", e.CloseOption);
@@ -95,7 +95,7 @@ namespace DeepDiver.DynamicToolWindow
     /// The show state of the tool window has been changed.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    void OnFrameShow(object sender, WindowFrameShowEventArgs e)
+    private void OnFrameShow(object sender, WindowFrameShowEventArgs e)
     {
       _OutputPane.WriteLine("Frame show state changed.");
       _OutputPane.WriteLine("  Reason: {0}", e.Reason);
@@ -106,7 +106,7 @@ namespace DeepDiver.DynamicToolWindow
     /// The show state of the tool window has been changed.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    void DisplayPosition(Rectangle rect)
+    private void DisplayPosition(Rectangle rect)
     {
       _OutputPane.WriteLine("  New position: {0}", rect);
     }
@@ -119,7 +119,7 @@ namespace DeepDiver.DynamicToolWindow
   // ================================================================================================
   [AutoActivate(true)]
   [DisplayName("Dynamic window events")]
-  class EventsPane : OutputPaneDefinition
+  internal class EventsPane : OutputPaneDefinition
   {
   }
 }

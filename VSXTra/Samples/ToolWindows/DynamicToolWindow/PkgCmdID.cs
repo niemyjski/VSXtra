@@ -6,8 +6,8 @@
 
 namespace DeepDiver.DynamicToolWindow
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const uint cmdidMyTool = 0x101;
-  };
+  } ;
 }

@@ -5,11 +5,11 @@
 // ================================================================================================
 namespace DeepDiver.VSXtraCommands
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const uint ClearAllPanesCommand = 0x2000;
-    public const uint CloseAllDocumentsCommand = 0x2001;
     public const uint ClearRecentFileListCommand = 0x2002;
     public const uint ClearRecentProjectListCommand = 0x2003;
+    public const uint CloseAllDocumentsCommand = 0x2001;
   }
 }

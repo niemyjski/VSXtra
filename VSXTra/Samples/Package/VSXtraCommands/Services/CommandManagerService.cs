@@ -26,15 +26,15 @@ namespace DeepDiver.VSXtraCommands
   /// </remarks>
   // ================================================================================================
   [Promote]
-  internal class CommandManagerService : 
+  internal class CommandManagerService :
     VsxService<VSXtraCommandsPackage, SCommandManagerService>,
     ICommandManagerService
   {
     #region Fields
 
-    private readonly IList<MenuCommandHandler> _RegisteredCommands = 
+    private readonly IList<MenuCommandHandler> _RegisteredCommands =
       new List<MenuCommandHandler>();
-    
+
     #endregion
 
     #region Public Implementation
@@ -48,7 +48,7 @@ namespace DeepDiver.VSXtraCommands
     public void RegisterCommand(MenuCommandHandler command)
     {
       if (_RegisteredCommands.SingleOrDefault(
-          cmd => cmd.Guid.Equals(command.Guid) && cmd.Id.Equals(command.Id)) == null)
+            cmd => cmd.Guid.Equals(command.Guid) && cmd.Id.Equals(command.Id)) == null)
       {
         _RegisteredCommands.Add(command);
       }
@@ -63,7 +63,7 @@ namespace DeepDiver.VSXtraCommands
     public void UnRegisterCommand(MenuCommandHandler command)
     {
       if (_RegisteredCommands.SingleOrDefault(
-          cmd => cmd.Guid.Equals(command.Guid) && cmd.Id.Equals(command.Id)) != null)
+            cmd => cmd.Guid.Equals(command.Guid) && cmd.Id.Equals(command.Id)) != null)
       {
         _RegisteredCommands.Remove(command);
       }

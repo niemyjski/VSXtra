@@ -24,6 +24,9 @@ namespace DeepDiver.ComboboxCommands
   public sealed partial class ComboCommandGroup : CommandGroup<ComboboxCommandsPackage>
   {
     // ================================================================================================
+
+    #region Nested type: DropDownComboCommand
+
     /// <summary>
     /// This command handler responds to the DropDownCombo events.
     /// </summary>
@@ -56,7 +59,12 @@ namespace DeepDiver.ComboboxCommands
       }
     }
 
+    #endregion
+
     // ================================================================================================
+
+    #region Nested type: IndexComboCommand
+
     /// <summary>
     /// This command handler responds to the IndexCombo events.
     /// </summary>
@@ -88,7 +96,12 @@ namespace DeepDiver.ComboboxCommands
       }
     }
 
+    #endregion
+
     // ================================================================================================
+
+    #region Nested type: MruComboCommand
+
     /// <summary>
     /// This command handler responds to the MRUCombo events.
     /// </summary>
@@ -106,5 +119,7 @@ namespace DeepDiver.ComboboxCommands
         VsMessageBox.Show(SelectedValue, Resources.MyMRUCombo);
       }
     }
+
+    #endregion
   }
 }

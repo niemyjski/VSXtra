@@ -5,7 +5,7 @@
 // ================================================================================================
 namespace DeepDiver.ServicesReference
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const int cmdidClientGetGlobalService = 0x2001;
     public const int cmdidClientGetLocalService = 0x2002;

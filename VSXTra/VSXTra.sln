@@ -72,9 +72,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hierarchy", "Hierarchy", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolutionNodeAnalyzer", "Samples\Hierarchy\SolutionNodeAnalyzer\SolutionNodeAnalyzer.csproj", "{1D3EC074-3275-43A9-95C9-F7BD299C61D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra.Test.Functional", "UnitTests\VSXtra.Test.Functional\VSXtra.Test.Functional.csproj", "{FA5D07AB-EBC7-4EC4-AC9C-0F04D35D1621}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 23
+		SccNumberOfProjects = 24
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs02.codeplex.com/
 		SccLocalPath0 = .
@@ -166,6 +168,10 @@ Global
 		SccProjectTopLevelParentUniqueName22 = VSXTra.sln
 		SccProjectName22 = Samples/Hierarchy/SolutionNodeAnalyzer
 		SccLocalPath22 = Samples\\Hierarchy\\SolutionNodeAnalyzer
+		SccProjectUniqueName23 = UnitTests\\VSXtra.Test.Functional\\VSXtra.Test.Functional.csproj
+		SccProjectTopLevelParentUniqueName23 = VSXTra.sln
+		SccProjectName23 = UnitTests/VSXtra.Test.Functional
+		SccLocalPath23 = UnitTests\\VSXtra.Test.Functional
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -260,6 +266,10 @@ Global
 		{1D3EC074-3275-43A9-95C9-F7BD299C61D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D3EC074-3275-43A9-95C9-F7BD299C61D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D3EC074-3275-43A9-95C9-F7BD299C61D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA5D07AB-EBC7-4EC4-AC9C-0F04D35D1621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA5D07AB-EBC7-4EC4-AC9C-0F04D35D1621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA5D07AB-EBC7-4EC4-AC9C-0F04D35D1621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA5D07AB-EBC7-4EC4-AC9C-0F04D35D1621}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -267,6 +277,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7C6D8E7F-2CC4-431D-8D96-1BB86F869DE8} = {7DE710CE-48D1-4EBD-8022-432D8B3F5792}
 		{BBB209BC-F584-498E-BE59-CD54F848CF32} = {7DE710CE-48D1-4EBD-8022-432D8B3F5792}
+		{FA5D07AB-EBC7-4EC4-AC9C-0F04D35D1621} = {0E640953-2F56-45BE-8F1E-C0D319CEA771}
 		{0FC25268-6CF2-443D-90EE-9F627CE29D30} = {20E76D0F-5B35-4A91-91DB-5ACD1783E98D}
 		{1D548488-9D1D-4E72-8FA8-A7C86F98FBBA} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
 		{F990B9E3-95D8-4DFE-B104-83652F77652B} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}

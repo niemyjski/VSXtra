@@ -5,7 +5,6 @@
 // ================================================================================================
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
 using VSXtra.Package;
 
 namespace DeepDiver.DynamicToolWindow
@@ -15,7 +14,7 @@ namespace DeepDiver.DynamicToolWindow
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideLoadKey("Standard", "1.0", "DynamicToolWindow", "DeepDiver", 1)]
   [ProvideMenuResource(1000, 1)]
-  [XtraProvideToolWindow(typeof(DynamicWindowPane), MultiInstances = true)]
+  [XtraProvideToolWindow(typeof (DynamicWindowPane), MultiInstances = true)]
   [Guid(GuidList.guidDynamicToolWindowPkgString)]
   public sealed class DynamicToolWindowPackage : PackageBase
   {

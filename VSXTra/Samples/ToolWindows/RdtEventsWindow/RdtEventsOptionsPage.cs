@@ -15,7 +15,7 @@ namespace DeepDiver.RdtEventsWindow
   /// </summary>
   // ================================================================================================
   [Guid(GuidList.guidOptionsPageString)]
-  public class RdtEventsOptionsPage: DialogPage<RdtEventsWindowPackage>
+  public class RdtEventsOptionsPage : DialogPage<RdtEventsWindowPackage>
   {
     #region Lifecycle methods
 

@@ -5,7 +5,7 @@
 // ================================================================================================
 namespace DeepDiver.PersistedToolWindow
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const int cmdidPersistedWindow = 0x2001;
     public const int cmdidRefreshWindowsList = 0x2002;

@@ -9,10 +9,12 @@
 using System.Reflection;
 
 // --- VSXtra version information
-[assembly: AssemblyVersion("0.4.1.34")]
-[assembly: AssemblyFileVersion("0.4.1.34")]
+
+[assembly: AssemblyVersion("0.4.1.37")]
+[assembly: AssemblyFileVersion("0.4.1.37")]
 
 // --- Common assembly attributes
+
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyCopyright("Copyright © DiveDeeper, 2008")]
 [assembly: AssemblyProduct("VSXtra")]

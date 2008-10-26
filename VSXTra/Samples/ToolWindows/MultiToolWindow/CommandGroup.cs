@@ -14,20 +14,44 @@ namespace DeepDiver.MultiToolWindow
   /// </summary>
   // ================================================================================================
   [Guid(GuidList.guidMultiToolWindowCmdSetString)]
-  public sealed class CommandGroup: CommandGroup<MultiToolWindowPackage>
+  public sealed class CommandGroup : CommandGroup<MultiToolWindowPackage>
   {
+    #region Nested type: ShowStackWindow1
+
     [CommandId(CmdIDs.cmdidShowFirstWindow)]
-    [ShowToolWindowAction(typeof(NumberStackWindowPane1))]
-    public sealed class ShowStackWindow1: MenuCommandHandler {}
+    [ShowToolWindowAction(typeof (NumberStackWindowPane1))]
+    public sealed class ShowStackWindow1 : MenuCommandHandler
+    {
+    }
+
+    #endregion
+
+    #region Nested type: ShowStackWindow2
 
     [CommandId(CmdIDs.cmdidShowSecondWindow)]
-    [ShowToolWindowAction(typeof(NumberStackWindowPane2))]
-    public sealed class ShowStackWindow2 : MenuCommandHandler { }
+    [ShowToolWindowAction(typeof (NumberStackWindowPane2))]
+    public sealed class ShowStackWindow2 : MenuCommandHandler
+    {
+    }
+
+    #endregion
+
+    #region Nested type: StackWindowToolbar1
 
     [CommandId(CmdIDs.cmdidStackWindowToolbar1)]
-    public sealed class StackWindowToolbar1 : ToolbarDefinition { }
+    public sealed class StackWindowToolbar1 : ToolbarDefinition
+    {
+    }
+
+    #endregion
+
+    #region Nested type: StackWindowToolbar2
 
     [CommandId(CmdIDs.cmdidStackWindowToolbar2)]
-    public sealed class StackWindowToolbar2 : ToolbarDefinition { }
+    public sealed class StackWindowToolbar2 : ToolbarDefinition
+    {
+    }
+
+    #endregion
   }
 }

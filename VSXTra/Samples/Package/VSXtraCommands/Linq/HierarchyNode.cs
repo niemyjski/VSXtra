@@ -21,6 +21,12 @@ namespace DeepDiver.VSXtraCommands
   /// </summary>
   public class HierarchyNode : IDisposable
   {
+    private readonly IVsHierarchy _Hierarchy;
+    private readonly uint _ItemId;
+    private Icon _Icon;
+    private bool disposed;
+    private string fullName;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="HierarchyNode"/> class.
     /// </summary>
@@ -32,8 +38,6 @@ namespace DeepDiver.VSXtraCommands
       _ItemId = itemId;
     }
 
-    private readonly uint _ItemId;
-
     /// <summary>
     /// Gets the item id.
     /// </summary>
@@ -42,8 +46,6 @@ namespace DeepDiver.VSXtraCommands
     {
       get { return _ItemId; }
     }
-
-    private readonly IVsHierarchy _Hierarchy;
 
     /// <summary>
     /// Gets the hierarchy.
@@ -62,8 +64,6 @@ namespace DeepDiver.VSXtraCommands
     {
       get { return GetProperty<string>(__VSHPROPID.VSHPROPID_Name); }
     }
-
-    private string fullName;
 
     /// <summary>
     /// Gets the full name.
@@ -106,13 +106,8 @@ namespace DeepDiver.VSXtraCommands
     /// <value>The subtype.</value>
     public string Subtype
     {
-      get
-      {
-        return GetProperty<string>(__VSHPROPID.VSHPROPID_ItemSubType);
-      }
+      get { return GetProperty<string>(__VSHPROPID.VSHPROPID_ItemSubType); }
     }
-
-    private Icon _Icon;
 
     /// <summary>
     /// Gets the icon.
@@ -129,7 +124,7 @@ namespace DeepDiver.VSXtraCommands
           {
             if (iconHandle != IntPtr.Zero.ToInt32())
             {
-              _Icon = Icon.FromHandle((IntPtr)iconHandle).Clone() as Icon;
+              _Icon = Icon.FromHandle((IntPtr) iconHandle).Clone() as Icon;
             }
             else
             {
@@ -143,9 +138,9 @@ namespace DeepDiver.VSXtraCommands
                   && index < countImages)
               {
                 const int hbmMask = 0x0F00;
-                var handleIcon = NativeMethods.ImageList_GetIcon(imageList, index, hbmMask);
+                int handleIcon = NativeMethods.ImageList_GetIcon(imageList, index, hbmMask);
 
-                _Icon = Icon.FromHandle((IntPtr)handleIcon).Clone() as Icon;
+                _Icon = Icon.FromHandle((IntPtr) handleIcon).Clone() as Icon;
               }
             }
 
@@ -160,12 +155,27 @@ namespace DeepDiver.VSXtraCommands
               }
             }
           }
-          catch (COMException){ }
+          catch (COMException)
+          {
+          }
         }
 
         return _Icon;
       }
     }
+
+    #region IDisposable Members
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    #endregion
 
     /// <summary>
     /// Gets the object.
@@ -173,7 +183,7 @@ namespace DeepDiver.VSXtraCommands
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     public T GetObject<T>()
-        where T : class
+      where T : class
     {
       return (_Hierarchy as T);
     }
@@ -192,24 +202,12 @@ namespace DeepDiver.VSXtraCommands
     private T GetProperty<T>(__VSHPROPID propId, uint itemid)
     {
       object value;
-      int hr = _Hierarchy.GetProperty(itemid, (int)propId, out value);
+      int hr = _Hierarchy.GetProperty(itemid, (int) propId, out value);
       if (hr != VSConstants.S_OK || value == null)
       {
         return default(T);
       }
-      return (T)value;
-    }
-
-    #region IDisposable Members
-
-    private bool disposed;
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public void Dispose()
-    {
-      Dispose(true);
-      GC.SuppressFinalize(this);
+      return (T) value;
     }
 
     /// <summary>
@@ -236,7 +234,5 @@ namespace DeepDiver.VSXtraCommands
     {
       Dispose(false);
     }
-
-    #endregion
   }
 }

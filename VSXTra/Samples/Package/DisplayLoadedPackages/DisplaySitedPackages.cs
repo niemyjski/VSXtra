@@ -4,10 +4,10 @@
 // Created: 2008.08.28, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
 using VSXtra.Commands;
 using VSXtra.Package;
 
@@ -25,16 +25,16 @@ namespace DeepDiver.DisplayLoadedPackages
     [CommandId(GuidList.guidDisplayLoadedPackagesCmdSetString, CmdIDs.cmdidDisplayPackages)]
     private static void DisplayPackageInfo()
     {
-      var sitedPackages = SitedVSXtraPackages;
+      List<PackageBase> sitedPackages = SitedVSXtraPackages;
       Console.WriteLine("There are currently {0} sited VSXtra packages:", sitedPackages.Count);
-      foreach (var package in sitedPackages)
+      foreach (PackageBase package in sitedPackages)
       {
         Console.WriteLine("  {0}", package.GetType().FullName);
-        var registeredHandlers = GetCommandHandlerInstances(package.GetType());
+        IEnumerable<MenuCommandHandler> registeredHandlers = GetCommandHandlerInstances(package.GetType());
         if (registeredHandlers.Count() > 0)
         {
           Console.WriteLine("    Registered command handlers:");
-          foreach (var command in registeredHandlers)
+          foreach (MenuCommandHandler command in registeredHandlers)
           {
             Console.WriteLine("      {0}", command.GetType().FullName);
           }

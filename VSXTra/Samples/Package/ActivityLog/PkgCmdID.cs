@@ -5,7 +5,7 @@
 // ================================================================================================
 namespace DeepDiver.ActivityLogPackage
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const uint cmdidWriteEntry = 0x100;
   }

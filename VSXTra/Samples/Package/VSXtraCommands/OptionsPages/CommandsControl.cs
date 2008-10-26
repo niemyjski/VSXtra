@@ -8,6 +8,7 @@
 // Revised: 2008.07.24, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -58,11 +59,11 @@ namespace DeepDiver.VSXtraCommands
     // --------------------------------------------------------------------------------------------
     private void CommandsControl_Load(object sender, EventArgs e)
     {
-      var items =
+      IEnumerable<CommandRowItem> items =
         from command in MenuCommandHandler.GetRegisteredHandlerInstances<VSXtraCommandsPackage>()
         orderby command.GetType().Name
         select
-          new CommandRowItem()
+          new CommandRowItem
             {
               Command = command.CommandId,
               CommandText = GetDisplayName(command.GetType()),

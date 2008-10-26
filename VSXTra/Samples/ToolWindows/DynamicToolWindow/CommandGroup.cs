@@ -14,15 +14,22 @@ namespace DeepDiver.DynamicToolWindow
   /// </summary>
   // ================================================================================================
   [Guid(GuidList.guidDynamicToolWindowCmdSetString)]
-  public sealed class DynamicToolWindowCommandGroup: CommandGroup<DynamicToolWindowPackage>
+  public sealed class DynamicToolWindowCommandGroup : CommandGroup<DynamicToolWindowPackage>
   {
     // ================================================================================================
+
+    #region Nested type: ShowToolCommand
+
     /// <summary>
     /// This class implements the command to display the Dynamic Tool Window
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidMyTool)]
-    [ShowToolWindowAction(typeof(DynamicWindowPane))]
-    public sealed class ShowToolCommand : MenuCommandHandler { }
+    [ShowToolWindowAction(typeof (DynamicWindowPane))]
+    public sealed class ShowToolCommand : MenuCommandHandler
+    {
+    }
+
+    #endregion
   }
 }

@@ -16,18 +16,21 @@ namespace DeepDiver.ServicesReference
   // ================================================================================================
   [Promote]
   public class MyGlobalService : VsxService<ServicesPackage, SMyGlobalService>,
-    IMyGlobalService
+                                 IMyGlobalService
   {
     // --------------------------------------------------------------------------------------------
+
+    #region IMyGlobalService Members
+
     /// <summary>
     /// Implementation of the function that does not access the local service.
     /// </summary>
     // --------------------------------------------------------------------------------------------
     public void GlobalServiceFunction()
     {
-      var outputText = " ======================================\n" +
-                       "\tGlobalServiceFunction called.\n" +
-                       " ======================================\n";
+      string outputText = " ======================================\n" +
+                          "\tGlobalServiceFunction called.\n" +
+                          " ======================================\n";
       OutputWindow.General.WriteLine(outputText);
     }
 
@@ -43,7 +46,7 @@ namespace DeepDiver.ServicesReference
       // --- Query the service provider for the local service. This object is supposed to be 
       // --- build by ServicesPackage and it pass its service provider to the constructor, 
       // --- so the local service should be found.
-      var localService = ServiceProvider.GetService<SMyLocalService, IMyLocalService>();
+      IMyLocalService localService = ServiceProvider.GetService<SMyLocalService, IMyLocalService>();
       if (null == localService)
       {
         // --- The local service was not found; write a message on the debug output and exit.
@@ -54,5 +57,7 @@ namespace DeepDiver.ServicesReference
       // --- Now call the method of the local service. This will write a message on the output window.
       return localService.LocalServiceFunction();
     }
+
+    #endregion
   }
 }

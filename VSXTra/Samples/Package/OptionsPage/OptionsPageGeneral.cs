@@ -60,7 +60,7 @@ namespace DeepDiver.OptionsPage
     /// The property that you want to be show in the options page.
     /// </remarks>
     // --------------------------------------------------------------------------------------------
-    [Category("Integer Options")] 
+    [Category("Integer Options")]
     [Description("My integer option")]
     public int OptionInteger { get; set; }
 
@@ -91,12 +91,12 @@ namespace DeepDiver.OptionsPage
     // --------------------------------------------------------------------------------------------
     protected override void OnActivate(CancelEventArgs e)
     {
-      var result = VsMessageBox.Show(Resources.MessageOnActivateEntered, "OnActivate",
-        MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+      DialogResult result = VsMessageBox.Show(Resources.MessageOnActivateEntered, "OnActivate",
+                                              MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
       if (result == DialogResult.Cancel)
       {
-        Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, 
-          "Cancelled the OnActivate event"));
+        Trace.WriteLine(string.Format(CultureInfo.CurrentCulture,
+                                      "Cancelled the OnActivate event"));
         e.Cancel = true;
       }
       base.OnActivate(e);
@@ -127,12 +127,12 @@ namespace DeepDiver.OptionsPage
     // --------------------------------------------------------------------------------------------
     protected override void OnDeactivate(CancelEventArgs e)
     {
-      var result = VsMessageBox.Show(Resources.MessageOnDeactivateEntered, 
-        "OnDeactivate", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+      DialogResult result = VsMessageBox.Show(Resources.MessageOnDeactivateEntered,
+                                              "OnDeactivate", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
       if (result == DialogResult.Cancel)
       {
-        Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, 
-          "Cancelled the OnDeactivate event"));
+        Trace.WriteLine(string.Format(CultureInfo.CurrentCulture,
+                                      "Cancelled the OnDeactivate event"));
         e.Cancel = true;
       }
     }
@@ -148,11 +148,11 @@ namespace DeepDiver.OptionsPage
     // --------------------------------------------------------------------------------------------
     protected override void OnApply(PageApplyEventArgs e)
     {
-      var result = VsMessageBox.Show(Resources.MessageOnApplyEntered);
+      DialogResult result = VsMessageBox.Show(Resources.MessageOnApplyEntered);
       if (result == DialogResult.Cancel)
       {
-        Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, 
-          "Cancelled the OnApply event"));
+        Trace.WriteLine(string.Format(CultureInfo.CurrentCulture,
+                                      "Cancelled the OnApply event"));
         e.ApplyBehavior = PageApplyKind.Cancel;
       }
       else
