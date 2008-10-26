@@ -21,9 +21,9 @@ namespace DeepDiver.PersistedToolWindow
   // ================================================================================================
   public partial class PersistedWindowControl : UserControl
   {
-    private List<WindowFrame> _ToolWindowList;
     private bool _IgnoreSelectedObjectsChanges;
     private SelectionTracker _SelectionTracker;
+    private List<WindowFrame> _ToolWindowList;
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -54,6 +54,26 @@ namespace DeepDiver.PersistedToolWindow
       }
     }
 
+    /// <summary>
+    /// Gets the list of available tool windows' properties.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    private ArrayList WindowsProperties
+    {
+      get
+      {
+        int index = 0;
+        var properties = new ArrayList();
+        foreach (WindowFrame frame in _ToolWindowList)
+        {
+          var property = new SelectionProperties(frame.Caption, frame.Guid) {Index = index};
+          properties.Add(property);
+          ++index;
+        }
+        return properties;
+      }
+    }
+
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Repopulate the listview with the latest data.
@@ -73,7 +93,7 @@ namespace DeepDiver.PersistedToolWindow
     private void PopulateListView()
     {
       listView1.Items.Clear();
-      foreach (var windowFrame in _ToolWindowList)
+      foreach (WindowFrame windowFrame in _ToolWindowList)
       {
         listView1.Items.Add(windowFrame.Caption);
       }
@@ -102,8 +122,8 @@ namespace DeepDiver.PersistedToolWindow
       if (listView1.SelectedItems.Count <= 0) return;
 
       int index = listView1.SelectedItems[0].Index;
-      var frame = _ToolWindowList[index];
-      var properties = new SelectionProperties(frame.Caption, frame.Guid) { Index = index };
+      WindowFrame frame = _ToolWindowList[index];
+      var properties = new SelectionProperties(frame.Caption, frame.Guid) {Index = index};
       SelectionTracker.SelectObject(properties, WindowsProperties);
     }
 
@@ -116,7 +136,7 @@ namespace DeepDiver.PersistedToolWindow
     {
       ChangeSelection();
     }
-    
+
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Changes the current selection to the specified object.
@@ -137,24 +157,5 @@ namespace DeepDiver.PersistedToolWindow
     }
 
     // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Gets the list of available tool windows' properties.
-    /// </summary>
-    // --------------------------------------------------------------------------------------------
-    private ArrayList WindowsProperties
-    {
-      get
-      {
-        int index = 0;
-        var properties = new ArrayList();
-        foreach (WindowFrame frame in _ToolWindowList)
-        {
-          var property = new SelectionProperties(frame.Caption, frame.Guid) { Index = index };
-          properties.Add(property);
-          ++index;
-        }
-        return properties;
-      }
-    }
   }
 }

@@ -88,7 +88,7 @@ namespace DeepDiver.VSXtraCommands
     {
       if (File.Exists(DocumentPath))
       {
-        var window = VsIde.DteInstance.OpenFile(DocumentViewKind, DocumentPath);
+        Window window = VsIde.DteInstance.OpenFile(DocumentViewKind, DocumentPath);
         if (window != null)
         {
           window.Visible = true;

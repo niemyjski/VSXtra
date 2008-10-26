@@ -51,9 +51,10 @@ namespace DeepDiver.VSXtraCommands
 
     #endregion
 
+    // --------------------------------------------------------------------------------------------
+
     #region ICollection Members
 
-    // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Copies the elements of the collection to an array, starting at a particular index.
     /// </summary>

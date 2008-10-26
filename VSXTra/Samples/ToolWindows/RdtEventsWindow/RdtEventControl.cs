@@ -47,7 +47,7 @@ namespace DeepDiver.RdtEventsWindow
 
       int x = Screen.PrimaryScreen.Bounds.Size.Width;
       int y = Screen.PrimaryScreen.Bounds.Size.Height;
-      Size = new Size(x / 3, y / 3);
+      Size = new Size(x/3, y/3);
     }
 
     #endregion
@@ -79,7 +79,7 @@ namespace DeepDiver.RdtEventsWindow
       }
       return base.ProcessDialogChar(charCode);
     }
-    
+
     #endregion
 
     #region Public methods
@@ -94,7 +94,7 @@ namespace DeepDiver.RdtEventsWindow
     {
       if (ev == null) return;
       int n = eventGrid.Rows.Add();
-      var row = eventGrid.Rows[n];
+      DataGridViewRow row = eventGrid.Rows[n];
       row.Cells["Event"].Value = ev.EventType.ToString();
       row.Cells["Moniker"].Value = ev.Moniker;
       row.Tag = ev;
@@ -120,15 +120,15 @@ namespace DeepDiver.RdtEventsWindow
     /// Track the event associated with selected grid row in the Properties window.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    void eventGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+    private void eventGrid_CellClick(object sender, DataGridViewCellEventArgs e)
     {
       // --- Ignore click on header row.
       if (e.RowIndex < 0) return;
 
       // --- Find the selected row.
-      var row = eventGrid.Rows[e.RowIndex];
+      DataGridViewRow row = eventGrid.Rows[e.RowIndex];
       // --- Recover the associated event object.
-      var ev = (RdtEventArgs)row.Tag;
+      var ev = (RdtEventArgs) row.Tag;
 
       // --- Create an array of one event object and track it in the Properties window.
       SelectionTracker.SelectObject(ev);

@@ -57,7 +57,7 @@ namespace DeepDiver.VSXtraCommands
     /// Fired when the Cancel button is clicked
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public static readonly RoutedCommand DoCancel = 
+    public static readonly RoutedCommand DoCancel =
       new RoutedCommand("DoCancel", typeof (ClearListView));
 
     // --------------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ namespace DeepDiver.VSXtraCommands
     /// Fired when the ClearAndRestart button is clicked
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public static readonly RoutedCommand DoClearAndRestart = 
+    public static readonly RoutedCommand DoClearAndRestart =
       new RoutedCommand("DoClearAndRestart", typeof (ClearListView));
 
     #endregion
@@ -107,7 +107,7 @@ namespace DeepDiver.VSXtraCommands
     {
       bool areAllItemChecked = true;
 
-      foreach (var dataItem in Model.ListEntries)
+      foreach (FileEntry dataItem in Model.ListEntries)
       {
         var lbitem = (ListBoxItem) lstEntries.ItemContainerGenerator.ContainerFromItem(dataItem);
         if (lbitem == null) continue;
@@ -124,9 +124,9 @@ namespace DeepDiver.VSXtraCommands
       var border = VisualTreeHelper.GetChild(lbitem, 0) as Border;
       if (border == null) return null;
       var contentPresenter = VisualTreeHelper.GetChild(border, 0) as ContentPresenter;
-      return contentPresenter == null 
-        ? null 
-        : lstEntries.ItemTemplate.FindName(name, contentPresenter);
+      return contentPresenter == null
+               ? null
+               : lstEntries.ItemTemplate.FindName(name, contentPresenter);
     }
 
     #endregion

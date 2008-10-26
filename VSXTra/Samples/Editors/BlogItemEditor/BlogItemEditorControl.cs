@@ -18,7 +18,7 @@ namespace DeepDiver.BlogItemEditor
   /// supported by the SimpleEditorPane.
   /// </remarks>
   // ==================================================================================
-  public partial class BlogItemEditorControl : 
+  public partial class BlogItemEditorControl :
     UserControl,
     ICommonEditorCommand
   {
@@ -66,9 +66,10 @@ namespace DeepDiver.BlogItemEditor
 
     #endregion
 
-    #region ICommonCommandSupport Members
-
     // --------------------------------------------------------------------------------
+
+    #region ICommonEditorCommand Members
+
     /// <summary>
     /// Get the flag indicating if "SelectAll" command is supported or not.
     /// </summary>

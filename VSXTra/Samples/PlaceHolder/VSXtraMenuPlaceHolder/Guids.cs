@@ -5,7 +5,7 @@
 // ================================================================================================
 namespace DeepDiver.VSXtraMenuPlaceHolder
 {
-  static class GuidList
+  internal static class GuidList
   {
     public const string guidVSXtraMenuPlaceHolderPkgString = "6cac7830-b897-47a5-9fb0-146b6a74c351";
   }

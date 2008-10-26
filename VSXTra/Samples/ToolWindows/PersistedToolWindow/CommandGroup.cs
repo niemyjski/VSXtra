@@ -17,20 +17,34 @@ namespace DeepDiver.PersistedToolWindow
   public sealed class PersistedToolWindowCommandGroup : CommandGroup<PersistedToolWindowPackage>
   {
     // ================================================================================================
-    /// <summary>
-    /// This class implements the command to display the Persisted Tool Window
-    /// </summary>
-    // ================================================================================================
-    [CommandId(CmdIDs.cmdidPersistedWindow)]
-    [ShowToolWindowAction(typeof(PersistedWindowPane))]
-    public sealed class ShowToolCommand : MenuCommandHandler { }
 
     // ================================================================================================
+
+    #region Nested type: PersistedWindowToolbar
+
     /// <summary>
     /// This class implements the command to display the Persisted Tool Window
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.IDM_PersistedWindowToolbar)]
-    public sealed class PersistedWindowToolbar : ToolbarDefinition {}
+    public sealed class PersistedWindowToolbar : ToolbarDefinition
+    {
+    }
+
+    #endregion
+
+    #region Nested type: ShowToolCommand
+
+    /// <summary>
+    /// This class implements the command to display the Persisted Tool Window
+    /// </summary>
+    // ================================================================================================
+    [CommandId(CmdIDs.cmdidPersistedWindow)]
+    [ShowToolWindowAction(typeof (PersistedWindowPane))]
+    public sealed class ShowToolCommand : MenuCommandHandler
+    {
+    }
+
+    #endregion
   }
 }

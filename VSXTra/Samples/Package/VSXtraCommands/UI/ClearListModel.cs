@@ -8,7 +8,6 @@
 // Revised: 2008.07.29, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System.Collections.Generic;
-using VSXtra;
 using VSXtra.Package;
 
 namespace DeepDiver.VSXtraCommands
@@ -32,7 +31,7 @@ namespace DeepDiver.VSXtraCommands
       ListEntries = new List<FileEntry>();
       SelectedListEntries = new List<FileEntry>();
     }
-    
+
     #endregion
 
     #region Properties
@@ -52,7 +51,7 @@ namespace DeepDiver.VSXtraCommands
     /// <value>The selected list entries.</value>
     // --------------------------------------------------------------------------------------------
     public List<FileEntry> SelectedListEntries { get; set; }
-    
+
     #endregion
   }
 }

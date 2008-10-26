@@ -17,6 +17,29 @@ namespace DeepDiver.VSXtraCommands
   public partial class VSXtraCommandGroup
   {
     // ================================================================================================
+
+    // ================================================================================================
+
+    #region Nested type: ClearRecentFileList
+
+    /// <summary>
+    /// This class implements the command handler Clear Recent Files commands.
+    /// </summary>
+    // ================================================================================================
+    [CommandId(CmdIDs.ClearRecentFileListCommand)]
+    [DisplayName("Clear Recent Files")]
+    public sealed class ClearRecentFileList : ClearRecentListBase
+    {
+      protected override RegistryKey RecentListKey
+      {
+        get { return VsRegistry.GetRecentFilesListKey(true); }
+      }
+    }
+
+    #endregion
+
+    #region Nested type: ClearRecentListBase
+
     /// <summary>
     /// This class implements an abstract command handler class for the Clear Recent Projects and 
     /// Clear Recent Files commands.
@@ -25,6 +48,12 @@ namespace DeepDiver.VSXtraCommands
     public abstract class ClearRecentListBase : CommandHandlerBase
     {
       // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Gets the registry key containing the list of recent objects.
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      protected abstract RegistryKey RecentListKey { get; }
+
       /// <summary>
       /// Checks if the command should be enabled or not.
       /// </summary>
@@ -50,7 +79,7 @@ namespace DeepDiver.VSXtraCommands
         var view = new ClearListView();
         VsRegistry.GetFileEntryList(RecentListKey).
           ForEach(item => view.Model.ListEntries.Add(item));
-        if ((bool)view.ShowDialog())
+        if ((bool) view.ShowDialog())
         {
           VsIde.File.SaveAll();
           DeleteRecentFileList(view.Model.SelectedListEntries);
@@ -59,11 +88,6 @@ namespace DeepDiver.VSXtraCommands
       }
 
       // --------------------------------------------------------------------------------------------
-      /// <summary>
-      /// Gets the registry key containing the list of recent objects.
-      /// </summary>
-      // --------------------------------------------------------------------------------------------
-      protected abstract RegistryKey RecentListKey { get; }
 
       // --------------------------------------------------------------------------------------------
       /// <summary>
@@ -72,17 +96,17 @@ namespace DeepDiver.VSXtraCommands
       // --------------------------------------------------------------------------------------------
       private void DeleteRecentFileList(List<FileEntry> entriesToDelete)
       {
-        using (var key = RecentListKey)
+        using (RegistryKey key = RecentListKey)
         {
           // --- Remove entries from the registry marked by the user to delete
           entriesToDelete.ForEach(entry => key.DeleteValue(entry.Key));
 
           // --- Reenumerate the items, if there are any
-          var valueNames = key.GetValueNames();
+          string[] valueNames = key.GetValueNames();
           if (valueNames.Length <= 0) return;
 
-          var fileCounter = 1;
-          
+          int fileCounter = 1;
+
           // --- Rename items 
           valueNames.ForEach(
             valueName =>
@@ -102,22 +126,12 @@ namespace DeepDiver.VSXtraCommands
       }
     }
 
-    // ================================================================================================
-    /// <summary>
-    /// This class implements the command handler Clear Recent Files commands.
-    /// </summary>
-    // ================================================================================================
-    [CommandId(CmdIDs.ClearRecentFileListCommand)]
-    [DisplayName("Clear Recent Files")]
-    public sealed class ClearRecentFileList : ClearRecentListBase
-    {
-      protected override RegistryKey RecentListKey
-      {
-        get { return VsRegistry.GetRecentFilesListKey(true); }
-      }
-    }
+    #endregion
 
     // ================================================================================================
+
+    #region Nested type: ClearRecentProjectList
+
     /// <summary>
     /// This class implements the command handler Clear Recent Projects commands.
     /// </summary>
@@ -131,5 +145,7 @@ namespace DeepDiver.VSXtraCommands
         get { return VsRegistry.GetRecentProjectsListKey(true); }
       }
     }
+
+    #endregion
   }
 }

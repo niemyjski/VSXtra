@@ -3,7 +3,6 @@
 //
 // Created: 2008.07.05, by Istvan Novak (DeepDiver)
 // ================================================================================================
-using System;
 using System.Runtime.InteropServices;
 using VSXtra;
 using VSXtra.Commands;
@@ -19,8 +18,8 @@ namespace DeepDiver.PersistedToolWindow
   [Guid("0A6F8EDC-5DDB-4aaa-A6B3-2AC1E319693E")]
   [InitialCaption("Persisted Tool Window")]
   [BitmapResourceId(301)]
-  [Toolbar(typeof(PersistedToolWindowCommandGroup.PersistedWindowToolbar))]
-  class PersistedWindowPane : ToolWindowPane<PersistedToolWindowPackage, PersistedWindowControl>
+  [Toolbar(typeof (PersistedToolWindowCommandGroup.PersistedWindowToolbar))]
+  internal class PersistedWindowPane : ToolWindowPane<PersistedToolWindowPackage, PersistedWindowControl>
   {
     #region Overridden methods
 

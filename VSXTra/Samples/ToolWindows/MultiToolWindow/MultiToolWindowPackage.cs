@@ -5,7 +5,6 @@
 // ================================================================================================
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
 using VSXtra.Package;
 
 namespace DeepDiver.MultiToolWindow
@@ -15,8 +14,8 @@ namespace DeepDiver.MultiToolWindow
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideLoadKey("Standard", "1.0", "MultiToolWindow", "DeepDiver", 1)]
   [ProvideMenuResource(1000, 1)]
-  [XtraProvideToolWindow(typeof(NumberStackWindowPane1))]
-  [XtraProvideToolWindow(typeof(NumberStackWindowPane2))]
+  [XtraProvideToolWindow(typeof (NumberStackWindowPane1))]
+  [XtraProvideToolWindow(typeof (NumberStackWindowPane2))]
   [Guid(GuidList.guidMultiToolWindowPkgString)]
   public sealed class MultiToolWindowPackage : PackageBase
   {

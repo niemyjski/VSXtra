@@ -5,7 +5,6 @@
 // ================================================================================================
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
 using VSXtra.Commands;
 using VSXtra.Package;
 
@@ -16,13 +15,13 @@ namespace DeepDiver.SimpleToolWindow
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideLoadKey("Standard", "1.0", "SimpleToolWindow", "DeepDiver", 1)]
   [ProvideMenuResource(1000, 1)]
-  [XtraProvideToolWindow(typeof(MyToolWindow))]
+  [XtraProvideToolWindow(typeof (MyToolWindow))]
   [Guid(GuidList.guidSimpleToolWindowPkgString)]
   public sealed class SimpleToolWindowPackage : PackageBase
   {
     [CommandExecMethod]
     [CommandId(GuidList.guidSimpleToolWindowCmdSetString, CmdIDs.cmdidShowToolWindow)]
-    [ShowToolWindowAction(typeof(MyToolWindow))]
+    [ShowToolWindowAction(typeof (MyToolWindow))]
     private void ShowToolWindow()
     {
     }

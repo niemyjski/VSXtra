@@ -57,6 +57,17 @@ namespace DeepDiver.MultiToolWindow
     #region Public methods
 
     // --------------------------------------------------------------------------------------------
+
+    #region Delegates
+
+    /// <summary>
+    /// Delegate representing a binary operator.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public delegate int BinaryOperator(int x, int y);
+
+    #endregion
+
     /// <summary>
     /// Gets the flag indicating if a binary operation can be executed.
     /// </summary>
@@ -111,7 +122,7 @@ namespace DeepDiver.MultiToolWindow
     {
       if (NumberStack.Items.Count == 0)
         throw new InvalidOperationException("Number stack is empty.");
-      var result = (int)NumberStack.Items[0];
+      var result = (int) NumberStack.Items[0];
       NumberStack.Items.RemoveAt(0);
       return result;
     }
@@ -126,15 +137,10 @@ namespace DeepDiver.MultiToolWindow
     {
       if (NumberStack.Items.Count == 0)
         throw new InvalidOperationException("Number stack is empty.");
-      return (int)NumberStack.Items[0];
+      return (int) NumberStack.Items[0];
     }
 
     // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Delegate representing a binary operator.
-    /// </summary>
-    // --------------------------------------------------------------------------------------------
-    public delegate int BinaryOperator(int x, int y);
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -145,8 +151,8 @@ namespace DeepDiver.MultiToolWindow
     // --------------------------------------------------------------------------------------------
     public void Operation(BinaryOperator oper)
     {
-      var y = PopValue();
-      var x = PopValue();
+      int y = PopValue();
+      int x = PopValue();
       try
       {
         PushText(oper(x, y).ToString());

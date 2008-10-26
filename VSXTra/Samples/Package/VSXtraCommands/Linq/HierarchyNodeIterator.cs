@@ -55,7 +55,7 @@ namespace DeepDiver.VSXtraCommands
     {
       IEnumHierarchies penum;
       Guid nullGuid = Guid.Empty;
-      int hr = _Solution.GetProjectEnum((uint)__VSENUMPROJFLAGS.EPF_ALLINSOLUTION, ref nullGuid, out penum);
+      int hr = _Solution.GetProjectEnum((uint) __VSENUMPROJFLAGS.EPF_ALLINSOLUTION, ref nullGuid, out penum);
       ErrorHandler.ThrowOnFailure(hr);
       if ((VSConstants.S_OK == hr) && (penum != null))
       {
@@ -79,6 +79,7 @@ namespace DeepDiver.VSXtraCommands
     #endregion
 
     #region Private Implementation
+
     private static IEnumerable<HierarchyNode> Enumerate(IVsHierarchy hierarchy, uint itemid, int recursionLevel)
     {
       yield return new HierarchyNode(hierarchy, itemid);
@@ -86,7 +87,7 @@ namespace DeepDiver.VSXtraCommands
       object pVar;
       recursionLevel++;
 
-      int hr = hierarchy.GetProperty(itemid, (int)__VSHPROPID.VSHPROPID_FirstChild, out pVar);
+      int hr = hierarchy.GetProperty(itemid, (int) __VSHPROPID.VSHPROPID_FirstChild, out pVar);
       ErrorHandler.ThrowOnFailure(hr);
 
       if (VSConstants.S_OK == hr)
@@ -99,7 +100,7 @@ namespace DeepDiver.VSXtraCommands
             yield return nestedNode;
           }
 
-          hr = hierarchy.GetProperty(childId, (int)__VSHPROPID.VSHPROPID_NextSibling, out pVar);
+          hr = hierarchy.GetProperty(childId, (int) __VSHPROPID.VSHPROPID_NextSibling, out pVar);
 
           if (VSConstants.S_OK == hr)
           {
@@ -117,11 +118,11 @@ namespace DeepDiver.VSXtraCommands
     private static uint GetItemId(object pvar)
     {
       if (pvar == null) return VSConstants.VSITEMID_NIL;
-      if (pvar is int) return (uint)(int)pvar;
-      if (pvar is uint) return (uint)pvar;
-      if (pvar is short) return (uint)(short)pvar;
-      if (pvar is ushort) return (ushort)pvar;
-      if (pvar is long) return (uint)(long)pvar;
+      if (pvar is int) return (uint) (int) pvar;
+      if (pvar is uint) return (uint) pvar;
+      if (pvar is short) return (uint) (short) pvar;
+      if (pvar is ushort) return (ushort) pvar;
+      if (pvar is long) return (uint) (long) pvar;
       return VSConstants.VSITEMID_NIL;
     }
 

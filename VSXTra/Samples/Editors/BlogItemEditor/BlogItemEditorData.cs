@@ -18,22 +18,22 @@ namespace DeepDiver.BlogItemEditor
   {
     #region Constant values
 
-    public const string BlogItemNamespace = "http://www.codeplex.com/VSXtra/BlogItemv1.0";
     public const string BlogItemLiteral = "BlogItem";
-    public const string TitleLiteral = "Title";
+    public const string BlogItemNamespace = "http://www.codeplex.com/VSXtra/BlogItemv1.0";
+    public const string BodyLiteral = "Body";
     public const string CategoriesLiteral = "Categories";
     public const string CategoryLiteral = "Category";
-    public const string BodyLiteral = "Body";
+    public const string TitleLiteral = "Title";
 
     #endregion
 
     #region XName values
 
     private readonly XName BlogItemXName = XName.Get(BlogItemLiteral, BlogItemNamespace);
-    private readonly XName TitleXName = XName.Get(TitleLiteral, BlogItemNamespace);
+    private readonly XName BodyXName = XName.Get(BodyLiteral, BlogItemNamespace);
     private readonly XName CategoriesXName = XName.Get(CategoriesLiteral, BlogItemNamespace);
     private readonly XName CategoryXName = XName.Get(CategoryLiteral, BlogItemNamespace);
-    private readonly XName BodyXName = XName.Get(BodyLiteral, BlogItemNamespace);
+    private readonly XName TitleXName = XName.Get(TitleLiteral, BlogItemNamespace);
 
     #endregion
 
@@ -46,8 +46,8 @@ namespace DeepDiver.BlogItemEditor
     // --------------------------------------------------------------------------------
     public BlogItemEditorData()
     {
-    } 
-    
+    }
+
     // --------------------------------------------------------------------------------
     /// <summary>
     /// Creates a new instance of BlogItemEditorData
@@ -144,7 +144,7 @@ namespace DeepDiver.BlogItemEditor
     {
       // --- Create title
       targetElement.Add(new XElement(TitleXName, Title));
-      
+
       // --- Create category hierarchy
       var categories = new XElement(CategoriesXName);
       targetElement.Add(categories);
@@ -184,7 +184,7 @@ namespace DeepDiver.BlogItemEditor
       XElement categoriesElement = sourceElement.Element(CategoriesXName);
       if (categoriesElement != null)
       {
-        foreach(XElement categoryElement in categoriesElement.Elements(CategoryXName))
+        foreach (XElement categoryElement in categoriesElement.Elements(CategoryXName))
         {
           if (Categories.Length > 0) Categories += "; ";
           Categories += categoryElement.Value;

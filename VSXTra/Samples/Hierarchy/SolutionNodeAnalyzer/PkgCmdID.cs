@@ -5,10 +5,10 @@
 // ================================================================================================
 namespace DeepDiver.SolutionNodeAnalyzer
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
-    public const uint cmdidShowNodeAnalyzer = 0x0101;
-    public const uint cmdidRefreshHierarchy = 0x0102;
     public const uint AnalyzerWindowToolbar = 0x1021;
+    public const uint cmdidRefreshHierarchy = 0x0102;
+    public const uint cmdidShowNodeAnalyzer = 0x0101;
   }
 }

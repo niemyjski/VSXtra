@@ -20,6 +20,9 @@ namespace DeepDiver.ComboboxCommands
   public partial class ComboCommandGroup
   {
     // ================================================================================================
+
+    #region Nested type: DynamicComboCommand
+
     /// <summary>
     /// This command handler responds to the DynamicCombo events.
     /// </summary>
@@ -28,11 +31,13 @@ namespace DeepDiver.ComboboxCommands
     [ListCommandId(CmdIDs.cmdidMyDynamicComboGetList)]
     public sealed class DynamicComboCommand : DynamicComboCommandHandler
     {
-      private readonly double[] _NumericZoomLevels = 
-        { 4.0, 3.0, 2.0, 1.5, 1.25, 1.0, .75, .66, .50, .33, .25, .10 };
-      private readonly string _ZoomToFit = Resources.ZoomToFit;
-      private readonly string _Zoom_to_Fit = Resources.Zoom_to_Fit;
       private readonly NumberFormatInfo _NumberFormatInfo;
+
+      private readonly double[] _NumericZoomLevels =
+        {4.0, 3.0, 2.0, 1.5, 1.25, 1.0, .75, .66, .50, .33, .25, .10};
+
+      private readonly string _Zoom_to_Fit = Resources.Zoom_to_Fit;
+      private readonly string _ZoomToFit = Resources.ZoomToFit;
 
 
       // --------------------------------------------------------------------------------------------
@@ -44,8 +49,14 @@ namespace DeepDiver.ComboboxCommands
       {
         CurrentZoomFactor = 1.0;
         SelectedValue = "100 %";
-        _NumberFormatInfo = (NumberFormatInfo)CultureInfo.CurrentUICulture.NumberFormat.Clone();
+        _NumberFormatInfo = (NumberFormatInfo) CultureInfo.CurrentUICulture.NumberFormat.Clone();
       }
+
+      /// <summary>
+      /// Gets the currently selected zoom factor
+      /// </summary>
+      // --------------------------------------------------------------------------------------------
+      public double CurrentZoomFactor { get; private set; }
 
       // --------------------------------------------------------------------------------------------
       /// <summary>
@@ -94,11 +105,12 @@ namespace DeepDiver.ComboboxCommands
         CurrentZoomFactor = 0;
         try
         {
-          float newZoom = Single.Parse(input.Replace(NumberFormatInfo.InvariantInfo.PercentSymbol, ""), CultureInfo.CurrentCulture);
-          newZoom = (float)Math.Round(newZoom);
+          float newZoom = Single.Parse(input.Replace(NumberFormatInfo.InvariantInfo.PercentSymbol, ""),
+                                       CultureInfo.CurrentCulture);
+          newZoom = (float) Math.Round(newZoom);
           if (newZoom < 0)
             throw (new ArgumentException(Resources.ZoomMustBeGTZero));
-          CurrentZoomFactor = newZoom / (float)100.0;
+          CurrentZoomFactor = newZoom/(float) 100.0;
           output = CurrentZoomFactor.ToString("P0", _NumberFormatInfo);
         }
         catch (FormatException)
@@ -113,11 +125,8 @@ namespace DeepDiver.ComboboxCommands
       }
 
       // --------------------------------------------------------------------------------------------
-      /// <summary>
-      /// Gets the currently selected zoom factor
-      /// </summary>
-      // --------------------------------------------------------------------------------------------
-      public double CurrentZoomFactor { get; private set; }
     }
+
+    #endregion
   }
 }

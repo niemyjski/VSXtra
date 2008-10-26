@@ -6,7 +6,6 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using VSXtra;
 using VSXtra.Package;
 using Constants=Microsoft.VisualStudio.OLE.Interop.Constants;
 using IDataObject=Microsoft.VisualStudio.OLE.Interop.IDataObject;
@@ -366,7 +365,7 @@ namespace DeepDiver.UIHierarchyWindow
         // create a webbrowser instance and tie it to our hierarchy item
         if (_webBrowser == null)
         {
-          var svc =
+          IVsWebBrowsingService svc =
             PackageBase.GetPackageInstance<UIHierarchyWindowPackage>().
               GetService<SVsWebBrowsingService, IVsWebBrowsingService>();
           uint dwCreateFlags = (uint) __VSCREATEWEBBROWSER.VSCWB_FrameMdiChild |

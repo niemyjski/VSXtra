@@ -5,7 +5,7 @@
 // ================================================================================================
 namespace DeepDiver.SimpleToolWindow
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const uint cmdidShowToolWindow = 0x101;
   }

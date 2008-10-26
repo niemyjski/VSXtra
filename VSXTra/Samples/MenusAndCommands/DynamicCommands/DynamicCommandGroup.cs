@@ -22,33 +22,36 @@ namespace DeepDiver.DynamicCommands
   public sealed class DynamicCommandGroup : CommandGroup<DynamicCommandsPackage>
   {
     // ================================================================================================
-    /// <summary>
-    /// This class implements the "VSXtra Sample Command".
-    /// </summary>
-    // ================================================================================================
-    [CommandId(CmdIDs.cmdidMyCommand)]
-    [WriteMessageAction("Sample Command executed.")]
-    public sealed class MyCommand : MenuCommandHandler { }
 
     // ================================================================================================
+
+    #region Nested type: DynamicText
+
     /// <summary>
-    /// This class implements the "VSXtra Graph Command".
+    /// This class implements the "VSXtra Dynamic Text Command".
     /// </summary>
     // ================================================================================================
-    [CommandId(CmdIDs.cmdidMyGraph)]
-    [ShowMessageAction("Graph Command executed.")]
-    public sealed class MyGraph : MenuCommandHandler { }
+    [CommandId(CmdIDs.cmdidDynamicTxt)]
+    public sealed class DynamicText : MenuCommandHandler
+    {
+      private int _ClickCount;
 
-    // ================================================================================================
-    /// <summary>
-    /// This class implements the "VSXtra Graph Command".
-    /// </summary>
-    // ================================================================================================
-    [CommandId(CmdIDs.cmdidMyZoom)]
-    [WriteMessageAction("Zoom Command executed.")]
-    public sealed class MyZoom : MenuCommandHandler { }
+      // --------------------------------------------------------------------------------------------
+      /// <summary>
+      /// Executes the command: outputs a simple message to the output window.
+      /// </summary>
+      /// <param name="command">Command to be executed.</param>
+      // --------------------------------------------------------------------------------------------
+      protected override void OnExecute(OleMenuCommand command)
+      {
+        command.Text = "VSXtra Text Changed: " + ++_ClickCount;
+      }
+    }
 
-    // ================================================================================================
+    #endregion
+
+    #region Nested type: DynamicVisibility
+
     /// <summary>
     /// This abstract class implements the command handlers for dynamic visibility commands.
     /// </summary>
@@ -71,44 +74,86 @@ namespace DeepDiver.DynamicCommands
       }
     }
 
+    #endregion
+
     // ================================================================================================
+
+    #region Nested type: DynamicVisibility1
+
     /// <summary>
     /// This class implements the command handlers for DynamicVisibility1 command.
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidDynVisibility1)]
     [CommandVisible(true)]
-    public sealed class DynamicVisibility1 : DynamicVisibility { }
+    public sealed class DynamicVisibility1 : DynamicVisibility
+    {
+    }
+
+    #endregion
 
     // ================================================================================================
+
+    #region Nested type: DynamicVisibility2
+
     /// <summary>
     /// This class implements the command handlers for DynamicVisibility2 command.
     /// </summary>
     // ================================================================================================
     [CommandId(CmdIDs.cmdidDynVisibility2)]
     [CommandVisible(false)]
-    public sealed class DynamicVisibility2 : DynamicVisibility { }
+    public sealed class DynamicVisibility2 : DynamicVisibility
+    {
+    }
 
-    // ================================================================================================
+    #endregion
+
+    #region Nested type: MyCommand
+
     /// <summary>
-    /// This class implements the "VSXtra Dynamic Text Command".
+    /// This class implements the "VSXtra Sample Command".
     /// </summary>
     // ================================================================================================
-    [CommandId(CmdIDs.cmdidDynamicTxt)]
-    public sealed class DynamicText : MenuCommandHandler
+    [CommandId(CmdIDs.cmdidMyCommand)]
+    [WriteMessageAction("Sample Command executed.")]
+    public sealed class MyCommand : MenuCommandHandler
     {
-      private int _ClickCount;
-
-      // --------------------------------------------------------------------------------------------
-      /// <summary>
-      /// Executes the command: outputs a simple message to the output window.
-      /// </summary>
-      /// <param name="command">Command to be executed.</param>
-      // --------------------------------------------------------------------------------------------
-      protected override void OnExecute(OleMenuCommand command)
-      {
-        command.Text = "VSXtra Text Changed: " + ++_ClickCount;
-      }
     }
+
+    #endregion
+
+    // ================================================================================================
+
+    #region Nested type: MyGraph
+
+    /// <summary>
+    /// This class implements the "VSXtra Graph Command".
+    /// </summary>
+    // ================================================================================================
+    [CommandId(CmdIDs.cmdidMyGraph)]
+    [ShowMessageAction("Graph Command executed.")]
+    public sealed class MyGraph : MenuCommandHandler
+    {
+    }
+
+    #endregion
+
+    // ================================================================================================
+
+    #region Nested type: MyZoom
+
+    /// <summary>
+    /// This class implements the "VSXtra Graph Command".
+    /// </summary>
+    // ================================================================================================
+    [CommandId(CmdIDs.cmdidMyZoom)]
+    [WriteMessageAction("Zoom Command executed.")]
+    public sealed class MyZoom : MenuCommandHandler
+    {
+    }
+
+    #endregion
+
+    // ================================================================================================
   }
 }

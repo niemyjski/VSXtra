@@ -5,7 +5,6 @@
 // ================================================================================================
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
 using VSXtra.Package;
 
 namespace DeepDiver.SolutionNodeAnalyzer
@@ -15,7 +14,7 @@ namespace DeepDiver.SolutionNodeAnalyzer
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideLoadKey("Standard", "1.0", "SolutionNodeAnalyzer", "DeepDiver", 1)]
   [ProvideMenuResource(1000, 1)]
-  [XtraProvideToolWindow(typeof(NodeAnalyzerToolWindow))]
+  [XtraProvideToolWindow(typeof (NodeAnalyzerToolWindow))]
   [Guid(GuidList.guidSolutionNodeAnalyzerPkgString)]
   public sealed class SolutionNodeAnalyzerPackage : PackageBase
   {

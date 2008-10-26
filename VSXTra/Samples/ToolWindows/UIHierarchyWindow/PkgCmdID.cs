@@ -5,7 +5,7 @@
 // ================================================================================================
 namespace DeepDiver.UIHierarchyWindow
 {
-  static class CmdIDs
+  internal static class CmdIDs
   {
     public const uint cmdidShowUIHierarchy = 0x100;
     public const uint HierWindowToolbar = 0x1021;

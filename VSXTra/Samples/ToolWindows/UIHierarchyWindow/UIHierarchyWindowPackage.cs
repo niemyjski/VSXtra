@@ -5,7 +5,6 @@
 // ================================================================================================
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
 using VSXtra.Commands;
 using VSXtra.Package;
 
@@ -16,16 +15,15 @@ namespace DeepDiver.UIHierarchyWindow
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideLoadKey("Standard", "1.0", "UIHierarchyWindow", "DeepDiver", 1)]
   [ProvideMenuResource(1000, 1)]
-  [XtraProvideToolWindow(typeof(SimpleUIHierarchyToolWindow))]
+  [XtraProvideToolWindow(typeof (SimpleUIHierarchyToolWindow))]
   [Guid(GuidList.guidUIHierarchyWindowPkgString)]
   public sealed class UIHierarchyWindowPackage : PackageBase
   {
     [CommandExecMethod]
     [CommandId(GuidList.guidUIHierarchyWindowCmdSetString, CmdIDs.cmdidShowUIHierarchy)]
-    [ShowToolWindowAction(typeof(SimpleUIHierarchyToolWindow))]
+    [ShowToolWindowAction(typeof (SimpleUIHierarchyToolWindow))]
     private static void ShowUIHierarchyWindow()
     {
     }
-
   }
 }

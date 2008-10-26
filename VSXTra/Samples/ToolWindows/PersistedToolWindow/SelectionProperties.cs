@@ -5,39 +5,40 @@
 // ================================================================================================
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using VSXtra.Selection;
 
 namespace DeepDiver.PersistedToolWindow
 {
   // ================================================================================================
   /// <summary>
-	/// This class holds the properties that will be displayed in the Properties window for the 
-	/// selected object.
-	/// </summary>
-	/// <remarks>
-	/// While all these properties are read-only, defining the set method would make them writable.
-	/// We derive from CustomTypeDescriptor, which is an ICustomTypeDescriptor, and the only part that 
-	/// we overload is the ComponentName.
+  /// This class holds the properties that will be displayed in the Properties window for the 
+  /// selected object.
+  /// </summary>
+  /// <remarks>
+  /// While all these properties are read-only, defining the set method would make them writable.
+  /// We derive from CustomTypeDescriptor, which is an ICustomTypeDescriptor, and the only part that 
+  /// we overload is the ComponentName.
   /// </remarks>
   // ================================================================================================
   public class SelectionProperties : CustomTypeDescriptorBase
-	{
+  {
+    private int _Index = -1;
     private Guid _PersistanceGuid = Guid.Empty;
-		private int _Index = -1;
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-		/// This class holds the properties for one item. The list of properties could be modified to 
-		/// display a different set of properties.
-		/// </summary>
-		/// <param name="caption">Window Title</param>
-		/// <param name="persistence">Persistence Guid</param>
+    /// This class holds the properties for one item. The list of properties could be modified to 
+    /// display a different set of properties.
+    /// </summary>
+    /// <param name="caption">Window Title</param>
+    /// <param name="persistence">Persistence Guid</param>
     // --------------------------------------------------------------------------------------------
     public SelectionProperties(string caption, Guid persistence)
-		{
-			Caption = caption;
-			_PersistanceGuid = persistence;
-		}
+    {
+      Caption = caption;
+      _PersistanceGuid = persistence;
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -48,40 +49,40 @@ namespace DeepDiver.PersistedToolWindow
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-		/// Guid corresponding to the tool window.
-		/// </summary>
+    /// Guid corresponding to the tool window.
+    /// </summary>
     // --------------------------------------------------------------------------------------------
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-		[DisplayName("Persistence GUID")]
-		[Description("Guids used to uniquely identify the window type.")]
-		[Category("Advanced")]
-		public String PersistenceGuid
-		{
-			get { return _PersistanceGuid.ToString("B"); }
-		}
+    [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+    [DisplayName("Persistence GUID")]
+    [Description("Guids used to uniquely identify the window type.")]
+    [Category("Advanced")]
+    public String PersistenceGuid
+    {
+      get { return _PersistanceGuid.ToString("B"); }
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-		/// Index of the window in our list. We use this internally to avoid having to search the list 
-		/// of windows when the selection is changed from the Property window.
-		/// This property will not be visible because we are using the Browsable(false) attribute.
-		/// </summary>
+    /// Index of the window in our list. We use this internally to avoid having to search the list 
+    /// of windows when the selection is changed from the Property window.
+    /// This property will not be visible because we are using the Browsable(false) attribute.
+    /// </summary>
     // --------------------------------------------------------------------------------------------
     [Browsable(false)]
-		public int Index
-		{
-			get { return _Index; }
-			set { _Index = value; }
-		}
+    public int Index
+    {
+      get { return _Index; }
+      set { _Index = value; }
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-		/// String that will be displayed in the Properties window combo box.
-		/// </summary>
+    /// String that will be displayed in the Properties window combo box.
+    /// </summary>
     // --------------------------------------------------------------------------------------------
     protected override string ComponentName
-		{
-			get { return Caption; }
-		}
-	}
+    {
+      get { return Caption; }
+    }
+  }
 }

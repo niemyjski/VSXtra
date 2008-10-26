@@ -4,8 +4,6 @@
 // Created: 2008.08.30, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System.Runtime.InteropServices;
-using DeepDiver.BlogItemEditor;
-using VSXtra;
 using VSXtra.Editors;
 
 namespace DeepDiver.BlogItemEditor
@@ -16,8 +14,8 @@ namespace DeepDiver.BlogItemEditor
   /// </summary>
   // ==================================================================================
   [Guid(GuidList.GuidBlogEditorFactoryString)]
-  public sealed class BlogItemEditorFactory: 
-    EditorFactoryBase<BlogItemEditorPackage,BlogItemEditorPane>
+  public sealed class BlogItemEditorFactory :
+    EditorFactoryBase<BlogItemEditorPackage, BlogItemEditorPane>
   {
   }
 }

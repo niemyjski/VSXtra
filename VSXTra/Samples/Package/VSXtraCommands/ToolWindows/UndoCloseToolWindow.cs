@@ -26,20 +26,20 @@ namespace DeepDiver.VSXtraCommands
     #endregion
 
     #region Properties
+
     /// <summary>
     /// Gets the control.
     /// </summary>
     /// <value>The control.</value>
     public UndoCloseControl Control
     {
-      get
-      {
-        return _Control;
-      }
+      get { return _Control; }
     }
+
     #endregion
 
     #region Constructors
+
     /// <summary>
     /// Initializes a new instance of the <see cref="UndoCloseToolWindow"/> class.
     /// </summary>
@@ -52,9 +52,11 @@ namespace DeepDiver.VSXtraCommands
 
       _Control = new UndoCloseControl(this);
     }
+
     #endregion
 
     #region Public Implementation
+
     /// <summary>
     /// </summary>
     /// <value></value>
@@ -66,10 +68,7 @@ namespace DeepDiver.VSXtraCommands
     /// dialog page so it can get access to global services.
     public override IWin32Window Window
     {
-      get
-      {
-        return _Control;
-      }
+      get { return _Control; }
     }
 
     #endregion

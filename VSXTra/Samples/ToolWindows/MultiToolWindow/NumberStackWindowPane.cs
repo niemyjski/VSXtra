@@ -18,7 +18,7 @@ namespace DeepDiver.MultiToolWindow
   /// This class defines the abstract base class of Number Stack tool window panes.
   /// </summary>
   // ================================================================================================
-  public abstract class NumberStackWindowPane: ToolWindowPane<MultiToolWindowPackage, NumberStackControl>
+  public abstract class NumberStackWindowPane : ToolWindowPane<MultiToolWindowPackage, NumberStackControl>
   {
     #region Command handler methods
 
@@ -48,7 +48,13 @@ namespace DeepDiver.MultiToolWindow
     [CommandId(CmdIDs.cmdidAdd1)]
     protected void AddExec()
     {
-      UIControl.Operation((x, y) => { checked { return x + y; } });
+      UIControl.Operation((x, y) =>
+                            {
+                              checked
+                              {
+                                return x + y;
+                              }
+                            });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -60,7 +66,13 @@ namespace DeepDiver.MultiToolWindow
     [CommandId(CmdIDs.cmdidSubtract1)]
     protected void SubtractExec()
     {
-      UIControl.Operation((x, y) => { checked { return x - y; } });
+      UIControl.Operation((x, y) =>
+                            {
+                              checked
+                              {
+                                return x - y;
+                              }
+                            });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -72,7 +84,13 @@ namespace DeepDiver.MultiToolWindow
     [CommandId(CmdIDs.cmdidMultiply1)]
     protected void MultiplyExec()
     {
-      UIControl.Operation((x, y) => { checked { return x * y; } });
+      UIControl.Operation((x, y) =>
+                            {
+                              checked
+                              {
+                                return x*y;
+                              }
+                            });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -84,7 +102,13 @@ namespace DeepDiver.MultiToolWindow
     [CommandId(CmdIDs.cmdidDivide1)]
     protected void DivideExec()
     {
-      UIControl.Operation((x, y) => { checked { return x / y; } });
+      UIControl.Operation((x, y) =>
+                            {
+                              checked
+                              {
+                                return x/y;
+                              }
+                            });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -162,7 +186,7 @@ namespace DeepDiver.MultiToolWindow
   [InitialCaption("Stack Window #1")]
   [BitmapResourceId(300, 1)]
   [ToolbarLocation(ToolbarLocation.Right)]
-  [Toolbar(typeof(CommandGroup.StackWindowToolbar1))]
+  [Toolbar(typeof (CommandGroup.StackWindowToolbar1))]
   public sealed class NumberStackWindowPane1 : NumberStackWindowPane
   {
   }
@@ -176,8 +200,8 @@ namespace DeepDiver.MultiToolWindow
   [InitialCaption("Stack Window #2")]
   [BitmapResourceId(300, 2)]
   [ToolbarLocation(ToolbarLocation.Right)]
-  [Toolbar(typeof(CommandGroup.StackWindowToolbar2))]
-  [CommandMap(CmdIDs.cmdidAdd1, CmdIDs.cmdidDivide1, (int)(CmdIDs.cmdidAdd2 - CmdIDs.cmdidAdd1))]
+  [Toolbar(typeof (CommandGroup.StackWindowToolbar2))]
+  [CommandMap(CmdIDs.cmdidAdd1, CmdIDs.cmdidDivide1, (int) (CmdIDs.cmdidAdd2 - CmdIDs.cmdidAdd1))]
   public sealed class NumberStackWindowPane2 : NumberStackWindowPane
   {
   }

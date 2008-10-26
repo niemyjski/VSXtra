@@ -5,14 +5,13 @@
 // ================================================================================================
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using VSXtra;
 using VSXtra.Package;
 
 namespace DeepDiver.ServicesReference
 {
   [PackageRegistration(UseManagedResourcesOnly = true)]
   [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0")]
-  [ProvideService(typeof(SMyGlobalService))]
+  [ProvideService(typeof (SMyGlobalService))]
   [Guid(GuidList.guidServicesPkgString)]
   public sealed class ServicesPackage : PackageBase
   {
