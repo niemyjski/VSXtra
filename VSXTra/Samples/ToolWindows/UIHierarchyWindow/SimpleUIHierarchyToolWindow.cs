@@ -18,7 +18,8 @@ namespace DeepDiver.UIHierarchyWindow
   {
     protected override IVsUIHierarchy InitialHierarchy
     {
-      get { return new SimpleHierarchy(HierarchyWindow); }
+      //get { return new SimpleHierarchy(HierarchyWindow); }
+      get { return new FileHierarchyNode("C:\\Publications"); }
     }
   }
 }
