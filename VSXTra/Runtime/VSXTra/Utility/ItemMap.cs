@@ -6,6 +6,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using VSXtra.Hierarchy;
 
 namespace VSXtra
 {
@@ -124,7 +125,17 @@ namespace VSXtra
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Indexer access to the event sink.
+    /// Update the event sink associated with the given cookie.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public void SetAt(HierarchyId id, T value)
+    {
+      SetAt((uint)id, value);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Indexer access to the item.
     /// </summary>
     // --------------------------------------------------------------------------------------------
     public T this[uint cookie]
@@ -139,6 +150,17 @@ namespace VSXtra
       {
         GetMap()[(int)cookie - 1] = value;
       }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Indexer access to the item.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public T this[HierarchyId id]
+    {
+      get { return this[(uint) id]; }
+      set { this[(uint) id] = value; }
     }
 
     // --------------------------------------------------------------------------------------------

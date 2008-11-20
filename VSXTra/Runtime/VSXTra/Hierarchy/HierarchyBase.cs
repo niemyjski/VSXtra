@@ -4,9 +4,12 @@
 // Created: 2008.09.05, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Shell;
 using IServiceProvider=Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace VSXtra.Hierarchy
@@ -37,7 +40,8 @@ namespace VSXtra.Hierarchy
   /// element.
   /// </remarks>
   // ================================================================================================
-  public abstract class HierarchyBase<THier, TRoot> : IHierarchyBehavior
+  public abstract class HierarchyBase<THier, TRoot> : IHierarchyBehavior,
+    IDisposable
     where THier : HierarchyBase<THier, TRoot>
     where TRoot : HierarchyRoot<TRoot, THier>
   {
@@ -47,44 +51,177 @@ namespace VSXtra.Hierarchy
     private readonly ItemMap<IVsHierarchyEvents> _EventSinks =
       new ItemMap<IVsHierarchyEvents>();
 
-    private readonly TRoot _ManagerNode;
     private HierarchyBase<THier, TRoot> _ParentNode;
     private HierarchyBase<THier, TRoot> _NextSibling;
     private HierarchyBase<THier, TRoot> _FirstChild;
     private HierarchyBase<THier, TRoot> _LastChild;
-    private uint _HierarchyId;
-    private SimpleOleServiceProvider _OleServiceProvider = new SimpleOleServiceProvider();
+    private HierarchyId _HierarchyId;
+    private readonly SimpleOleServiceProvider _OleServiceProvider = new SimpleOleServiceProvider();
     private IVsHierarchy _ParentHierarchy;
     private int _ParentHierarchyItemId;
-    private EventHandler<HierarchyNodeEventArgs> onChildAdded;
-    private EventHandler<HierarchyNodeEventArgs> onChildRemoved;
+    private EventHandler<HierarchyNodeEventArgs> _OnChildAdded;
+    private EventHandler<HierarchyNodeEventArgs> _OnChildRemoved;
 
     /// <summary>
     /// Has the object been disposed.
     /// </summary>
     /// <devremark>We will not specify a property for isDisposed, rather it is expected that the a private flag is defined
     /// on all subclasses. We do not want get in a situation where the base class's dipose is not called because a child sets the flag through the property.</devremark>
-    private bool isDisposed;
+    private bool _IsDisposed;
 
     #endregion
 
     #region Lifecycle methods
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HierarchyBase&lt;THier, TRoot&gt;"/> class.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     protected HierarchyBase()
     {
       IsExpanded = true;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HierarchyBase&lt;THier, TRoot&gt;"/> class.
+    /// </summary>
+    /// <param name="root">The root instance.</param>
+    // --------------------------------------------------------------------------------------------
     protected HierarchyBase(TRoot root)
     {
-      _ManagerNode = root;
-      _HierarchyId = _ManagerNode.ManagedItems.Add(this);
+      ManagerNode = root;
+      _HierarchyId = ManagerNode.AddSubordinate(this);
       _OleServiceProvider.AddService(typeof(IVsHierarchy), root, false);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources
+    /// </summary>
+    /// <param name="disposing">
+    /// Is the Dispose called by some internal member, or it is called by from GC.
+    /// </param>
+    // --------------------------------------------------------------------------------------------
+    protected virtual void Dispose(bool disposing)
+    {
+      if (_IsDisposed) return;
+      if (disposing)
+      {
+        // --- This will dispose any subclassed project node that implements IDisposable.
+        if (_OleServiceProvider != null)
+        {
+          // --- Dispose the ole service provider object.
+          _OleServiceProvider.Dispose();
+        }
+      }
+      _IsDisposed = true;
     }
 
     #endregion
 
     #region Public properties
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the ID of the node within the hierarchy.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public HierarchyId HierarchyId
+    {
+      get { return _HierarchyId;  }
+    }
+
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the parent node.
+    /// </summary>
+    /// <value>The parent node.</value>
+    // --------------------------------------------------------------------------------------------
+    public HierarchyBase<THier, TRoot> ParentNode
+    {
+      get { return _ParentNode; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the manager node.
+    /// </summary>
+    /// <value>The manager node.</value>
+    // --------------------------------------------------------------------------------------------
+    public HierarchyRoot<TRoot, THier> ManagerNode { get; protected set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the next sibling.
+    /// </summary>
+    /// <value>The next sibling.</value>
+    // --------------------------------------------------------------------------------------------
+    public HierarchyBase<THier, TRoot> NextSibling
+    {
+      get { return _NextSibling; }
+    }
+
+    [System.ComponentModel.BrowsableAttribute(false)]
+    public HierarchyBase<THier, TRoot> PreviousSibling
+    {
+      get
+      {
+        if (_ParentNode == null) return null;
+        HierarchyBase<THier, TRoot> prev = null;
+        foreach (var child in Children)
+        {
+          if (child == this)
+            break;
+          prev = child;
+        }
+        return prev;
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the first child.
+    /// </summary>
+    /// <value>The first child.</value>
+    // --------------------------------------------------------------------------------------------
+    public HierarchyBase<THier, TRoot> FirstChild
+    {
+      get { return _FirstChild; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the last child.
+    /// </summary>
+    /// <value>The last child.</value>
+    // --------------------------------------------------------------------------------------------
+    public HierarchyBase<THier, TRoot> LastChild
+    {
+      get { return _LastChild; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the flag indicating if this node has a parent node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool HasParent
+    {
+      get { return _ParentNode != null; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the flag indicating if this node is a leaf node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool IsLeaf
+    {
+      get { return _FirstChild == null; }
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -96,74 +233,516 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     public bool IsExpanded { get; set; }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the value indicating if this node is expanded by default or not.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool ExpandByDefault { get; set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the canonical name of the hierarchy node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public virtual string CanonicalName
+    {
+      get { return Caption; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Event raised when a child has been added to this node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    internal event EventHandler<HierarchyNodeEventArgs> OnChildAdded
+    {
+      add { _OnChildAdded += value; }
+      remove { _OnChildAdded -= value; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Event raised when a child has been removed from this node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    internal event EventHandler<HierarchyNodeEventArgs> OnChildRemoved
+    {
+      add { _OnChildRemoved += value; }
+      remove { _OnChildRemoved -= value; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Defines the hierarchy (sort) order.
+    /// </summary>
+    /// <remarks>
+    /// This value is used when a new child node is added to the hierarchy.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    public int SortPriority { get; set; }
+
+    #endregion
+
+    #region Virtual and abstract methods 
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the caption of the node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public abstract string Caption { get; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Closes and cleans up a hierarchy once the environment determines that it is no longer used.
+    /// </summary>
+    /// <remarks>
+    /// Override this method to clean up the node information.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    public virtual void Close()
+    {
+      Dispose(true);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Makes it possible for a node of a given hierarchy to be a shortcut to the middle of 
+    /// another hierarchy. 
+    /// </summary>
+    /// <param name="itemId">
+    /// Item identifier of the node whose nested hierarchy information is requested.
+    /// </param>
+    /// <param name="iidHierarchyNested">
+    /// Identifier of the interface to be returned in ppHierarchyNested.
+    /// </param>
+    /// <param name="ppHierarchyNested">
+    /// Pointer to the interface whose identifier was passed in iidHierarchyNested.
+    /// </param>
+    /// <param name="pitemidNested">
+    /// Pointer to an item identifier of the root node of the nested hierarchy.
+    /// </param>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    protected int GetNestedHierarchy(uint itemId, ref Guid iidHierarchyNested,
+                                        out IntPtr ppHierarchyNested, out uint pitemidNested)
+    {
+      ppHierarchyNested = IntPtr.Zero;
+      pitemidNested = 0;
+      return VSConstants.E_FAIL;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the specified property of this hierarchy node.
+    /// </summary>
+    /// <param name="propId">Property identifier.</param>
+    /// <returns></returns>
+    // --------------------------------------------------------------------------------------------
+    public virtual object GetProperty(int propId)
+		{
+      object result = null;
+      switch ((__VSHPROPID)propId)
+      {
+        case __VSHPROPID.VSHPROPID_Expandable:
+          result = (_FirstChild != null);
+          break;
+
+        case __VSHPROPID.VSHPROPID_Caption:
+        case __VSHPROPID.VSHPROPID_Name:
+        case __VSHPROPID.VSHPROPID_SaveName:
+          result = Caption;
+          break;
+
+        case __VSHPROPID.VSHPROPID_ExpandByDefault:
+          result = ExpandByDefault;
+          break;
+
+        case __VSHPROPID.VSHPROPID_IconImgList:
+          result = ManagerNode.ImageHandler.ImageList.Handle;
+          break;
+
+        case __VSHPROPID.VSHPROPID_OpenFolderIconIndex:
+        case __VSHPROPID.VSHPROPID_IconIndex:
+          result = 0;
+          break;
+
+        case __VSHPROPID.VSHPROPID_StateIconIndex:
+          //result = (int)this.StateIconIndex;
+          break;
+
+        case __VSHPROPID.VSHPROPID_IconHandle:
+          //result = GetIconHandle(false);
+          break;
+
+        case __VSHPROPID.VSHPROPID_OpenFolderIconHandle:
+          //result = GetIconHandle(true);
+          break;
+
+        case __VSHPROPID.VSHPROPID_NextVisibleSibling:
+        case __VSHPROPID.VSHPROPID_NextSibling:
+          result = (int)((_NextSibling != null) ? _NextSibling.HierarchyId : VSConstants.VSITEMID_NIL);
+          break;
+
+        case __VSHPROPID.VSHPROPID_FirstChild:
+        case __VSHPROPID.VSHPROPID_FirstVisibleChild:
+          result = (int)((_FirstChild != null) ? _FirstChild.HierarchyId : VSConstants.VSITEMID_NIL);
+          break;
+
+        case __VSHPROPID.VSHPROPID_Parent:
+          if (_ParentNode == null)
+          {
+            unchecked { result = new IntPtr((int)VSConstants.VSITEMID_NIL); }
+          }
+          else
+          {
+            result = new IntPtr((int)_ParentNode.HierarchyId);
+          }
+          break;
+
+        case __VSHPROPID.VSHPROPID_ParentHierarchyItemid:
+          //if (parentHierarchy != null)
+          //{
+          //  result = (IntPtr)parentHierarchyItemId; // VS requires VT_I4 | VT_INT_PTR
+          //}
+          break;
+
+        case __VSHPROPID.VSHPROPID_ParentHierarchy:
+          //result = parentHierarchy;
+          break;
+
+        case __VSHPROPID.VSHPROPID_Root:
+          result = Marshal.GetIUnknownForObject(ManagerNode);
+          break;
+
+        case __VSHPROPID.VSHPROPID_Expanded:
+          result = IsExpanded;
+          break;
+
+        case __VSHPROPID.VSHPROPID_BrowseObject:
+          //result = this.NodeProperties;
+          //if (result != null) result = new DispatchWrapper(result);
+          break;
+
+        case __VSHPROPID.VSHPROPID_EditLabel:
+          //if (this.ProjectMgr != null && !this.ProjectMgr.IsClosed && !this.ProjectMgr.IsCurrentStateASuppressCommandsMode())
+          //{
+          //  result = GetEditLabel();
+          //}
+          break;
+
+        case __VSHPROPID.VSHPROPID_ItemDocCookie:
+          //if (this.docCookie != 0) return (IntPtr)this.docCookie; //cast to IntPtr as some callers expect VT_INT
+          break;
+
+        case __VSHPROPID.VSHPROPID_ExtObject:
+          //result = GetAutomationObject();
+          break;
+      }
+      return result;
+    }
+
+
+    #endregion
+
+    #region Public methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Add a child node to this node, sorted in the right location.
+    /// </summary>
+    /// <param name="node">The child node to add to this node.</param>
+    // --------------------------------------------------------------------------------------------
+    public virtual void AddChild(HierarchyBase<THier, TRoot> node)
+    {
+      if (node == null)
+      {
+        throw new ArgumentNullException("node");
+      }
+
+      // --- Make sure the node is in the map.
+      var nodeWithSameID = ManagerNode.NodeById(node.HierarchyId);
+      if (!ReferenceEquals(node, nodeWithSameID))
+      {
+        if (nodeWithSameID == null && (int)node.HierarchyId <= ManagerNode.ManagedItems.Count)
+        { 
+          ManagerNode.ManagedItems.SetAt(node.HierarchyId, this);
+        }
+        else
+        {
+          throw new InvalidOperationException();
+        }
+      }
+
+      HierarchyBase<THier, TRoot> previous = null;
+      foreach (var n in Children)
+      {
+        if (ManagerNode.CompareNodes(node, n) > 0) break;
+        previous = n;
+      }
+      // --- Insert "node" after "previous".
+      if (previous != null)
+      {
+        node._NextSibling = previous._NextSibling;
+        previous._NextSibling = node;
+        if (previous == _LastChild)
+        {
+          _LastChild = node;
+        }
+      }
+      else
+      {
+        if (_LastChild == null)
+        {
+          _LastChild = node;
+        }
+        node._NextSibling = _FirstChild;
+        _FirstChild = node;
+      }
+      node._ParentNode = this;
+      OnItemAdded(this, node);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This method is executed when a new item is added to the hierarchy node.
+    /// </summary>
+    /// <param name="parent">Parent of the node.</param>
+    /// <param name="child">Child node added.</param>
+    // --------------------------------------------------------------------------------------------
+    protected void OnItemAdded(HierarchyBase<THier, TRoot> parent, HierarchyBase<THier, TRoot> child)
+    {
+      if (null != parent._OnChildAdded)
+      {
+        var args = new HierarchyNodeEventArgs(child);
+        parent._OnChildAdded(parent, args);
+      }
+      if (parent == null) throw new ArgumentNullException("parent");
+      if (child == null)throw new ArgumentNullException("child");
+
+      // --- Check if the manager node wants to trigger this event
+      var foo = ManagerNode ?? this;
+      if (foo == ManagerNode && (ManagerNode.DoNotTriggerHierarchyEvents)) return;
+
+      var prev = child.PreviousSibling;
+      uint prevId = (prev != null) ? (uint)prev.HierarchyId : VSConstants.VSITEMID_NIL;
+      foreach (var sink in foo._EventSinks)
+      {
+        int result = sink.OnItemAdded((uint)parent.HierarchyId, prevId, (uint)child.HierarchyId);
+        if (ErrorHandler.Failed(result) && result != VSConstants.E_NOTIMPL)
+        {
+          ErrorHandler.ThrowOnFailure(result);
+        }
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Removes a node from the hierarchy.
+    /// </summary>
+    /// <param name="node">The node to remove.</param>
+    // --------------------------------------------------------------------------------------------
+    public virtual void RemoveChild(HierarchyBase<THier, TRoot> node)
+    {
+      if (node == null)
+      {
+        throw new ArgumentNullException("node");
+      }
+
+      ManagerNode.ManagedItems.Remove(node);
+      HierarchyBase<THier, TRoot> last = null;
+      foreach (var n in Children)
+      {
+        if (n == node)
+        {
+          if (last != null)
+          {
+            last._NextSibling = n._NextSibling;
+          }
+          if (n == _LastChild)
+          {
+            if (last == _LastChild)
+            {
+              _LastChild = null;
+            }
+            else
+            {
+              _LastChild = last;
+            }
+          }
+          if (n == _FirstChild)
+          {
+            _FirstChild = n._NextSibling;
+          }
+          return;
+        }
+        last = n;
+      }
+      throw new InvalidOperationException("Node not found");
+    }
+
+    #endregion
+
+    #region Iterators
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the enumerable list of node items.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public IEnumerable<HierarchyBase<THier, TRoot>> Children
+    {
+      get
+      {
+        for (var n = _FirstChild; n != null; n = n._NextSibling)
+          yield return n;
+      }
+    }
+
     #endregion
 
     #region IVsHierarchy implementation
 
-    int IVsHierarchy.GetSite(out IServiceProvider ppSP)
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the service provider from which to access the services.
+    /// </summary>
+    /// <param name="site">IServiceProvider interface of the service provider.</param>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    int IVsHierarchy.GetSite(out IServiceProvider site)
     {
-      throw new NotImplementedException();
+      site = ManagerNode.Site.GetService(typeof(IServiceProvider)) as IServiceProvider;
+      return VSConstants.S_OK;
     }
 
     int IVsHierarchy.QueryClose(out int pfCanClose)
     {
-      throw new NotImplementedException();
+      pfCanClose = 1;
+      return VSConstants.S_OK;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Closes and cleans up a hierarchy once the environment determines that it is no longer used.
+    /// </summary>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
     int IVsHierarchy.Close()
     {
-      throw new NotImplementedException();
+      Close();
+      return VSConstants.S_OK;
     }
 
     int IVsHierarchy.GetGuidProperty(uint itemid, int propid, out Guid pguid)
     {
-      throw new NotImplementedException();
+      pguid = Guid.Empty;
+      return VSConstants.S_OK;
     }
 
     int IVsHierarchy.SetGuidProperty(uint itemid, int propid, ref Guid rguid)
     {
-      throw new NotImplementedException();
+      return VSConstants.S_OK;
     }
 
-    int IVsHierarchy.GetProperty(uint itemid, int propid, out object pvar)
+    int IVsHierarchy.GetProperty(uint itemId, int propId, out object propVal)
     {
-      throw new NotImplementedException();
+      propVal = null;
+
+      // --- IconImgList is available only for the root item
+      if (itemId != VSConstants.VSITEMID_ROOT && propId == (int)__VSHPROPID.VSHPROPID_IconImgList)
+      {
+        return VSConstants.DISP_E_MEMBERNOTFOUND;
+      }
+
+      // --- Obtain the node by the specified ID
+      var node = ManagerNode.NodeById(itemId);
+      if (node != null)
+      {
+        propVal = node.GetProperty(propId);
+      }
+      return propVal == null 
+        ? VSConstants.DISP_E_MEMBERNOTFOUND 
+        : VSConstants.S_OK;
     }
 
     int IVsHierarchy.SetProperty(uint itemid, int propid, object var)
     {
-      throw new NotImplementedException();
+      return VSConstants.S_OK;
     }
 
-    int IVsHierarchy.GetNestedHierarchy(uint itemid, ref Guid iidHierarchyNested,
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Makes it possible for a node of a given hierarchy to be a shortcut to the middle of 
+    /// another hierarchy. 
+    /// </summary>
+    /// <param name="itemId">
+    /// Item identifier of the node whose nested hierarchy information is requested.
+    /// </param>
+    /// <param name="iidHierarchyNested">
+    /// Identifier of the interface to be returned in ppHierarchyNested.
+    /// </param>
+    /// <param name="ppHierarchyNested">
+    /// Pointer to the interface whose identifier was passed in iidHierarchyNested.
+    /// </param>
+    /// <param name="pitemidNested">
+    /// Pointer to an item identifier of the root node of the nested hierarchy.
+    /// </param>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    int IVsHierarchy.GetNestedHierarchy(uint itemId, ref Guid iidHierarchyNested,
                                         out IntPtr ppHierarchyNested, out uint pitemidNested)
     {
-      throw new NotImplementedException();
+      return GetNestedHierarchy(itemId, ref iidHierarchyNested, 
+        out ppHierarchyNested, out pitemidNested);
     }
 
-    int IVsHierarchy.GetCanonicalName(uint itemid, out string pbstrName)
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the canonical name of this hierarchy node.
+    /// </summary>
+    /// <param name="itemId">The item id.</param>
+    /// <param name="name">The name.</param>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    int IVsHierarchy.GetCanonicalName(uint itemId, out string name)
     {
-      throw new NotImplementedException();
+      var node = ManagerNode.NodeById(itemId);
+      name = (node != null) ? node.CanonicalName : null;
+      return VSConstants.S_OK;
     }
 
     int IVsHierarchy.ParseCanonicalName(string pszName, out uint pitemid)
     {
-      throw new NotImplementedException();
+      pitemid = VSConstants.VSITEMID_NIL;
+      return VSConstants.S_OK;
     }
 
     int IVsHierarchy.AdviseHierarchyEvents(IVsHierarchyEvents pEventSink, out uint pdwCookie)
     {
-      throw new NotImplementedException();
+      pdwCookie = 0;
+      return VSConstants.S_OK;
     }
 
     int IVsHierarchy.UnadviseHierarchyEvents(uint dwCookie)
     {
-      throw new NotImplementedException();
+      return VSConstants.S_OK;
     }
 
     int IVsHierarchy.SetSite(IServiceProvider psp)
     {
-      return VSConstants.E_NOTIMPL;
+      return VSConstants.S_OK;
     }
 
     #endregion
@@ -172,12 +751,25 @@ namespace VSXtra.Hierarchy
 
     int IVsUIHierarchy.QueryStatusCommand(uint itemid, ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
     {
-      throw new System.NotImplementedException();
+      return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_UNKNOWNGROUP;
     }
 
     int IVsUIHierarchy.ExecCommand(uint itemid, ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
     {
-      throw new System.NotImplementedException();
+      if (pguidCmdGroup.Equals(VSConstants.GUID_VsUIHierarchyWindowCmds))
+      {
+        switch (nCmdID)
+        {
+          case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_DoubleClick:
+            {
+              VsMessageBox.Show("DoubleClick for " + itemid);
+            }
+            break;
+        }
+        return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+      }
+
+      return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
     }
 
     #endregion
@@ -302,6 +894,79 @@ namespace VSXtra.Hierarchy
     {
       return VSConstants.E_NOTIMPL;
     }
+
+    #endregion
+
+    #region Implementation of IDisposable
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting 
+    /// unmanaged resources.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public void Dispose()
+    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    #endregion
+
+    #region Helper methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the specified hierarchy property.
+    /// </summary>
+    /// <typeparam name="T">Type of the property value.</typeparam>
+    /// <param name="propId">Property identifier.</param>
+    /// <returns>Property value ofthe specified property.</returns>
+    // --------------------------------------------------------------------------------------------
+    protected T GetProperty<T>(__VSHPROPID propId)
+    {
+      return (T)GetProperty(propId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the specified hierarchy property.
+    /// </summary>
+    /// <typeparam name="T">Type of the property value.</typeparam>
+    /// <param name="propId">Property identifier.</param>
+    /// <returns>Property value ofthe specified property.</returns>
+    // --------------------------------------------------------------------------------------------
+    protected T GetProperty<T>(int propId)
+    {
+      return (T)GetProperty(propId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the specified hierarchy property.
+    /// </summary>
+    /// <param name="propId">Property identifier.</param>
+    /// <returns>Property value ofthe specified property.</returns>
+    // --------------------------------------------------------------------------------------------
+    protected object GetProperty(__VSHPROPID propId)
+    {
+      return GetProperty((int)propId);
+    }
+
+    //// --------------------------------------------------------------------------------------------
+    ///// <summary>
+    ///// Gets the specified GUID hierarchy property.
+    ///// </summary>
+    ///// <param name="propId">Property identifier.</param>
+    ///// <returns>Property value ofthe specified property.</returns>
+    //// --------------------------------------------------------------------------------------------
+    //protected object GetGuidProperty(int propId)
+    //{
+    //  if (propId == (int)__VSHPROPID.VSHPROPID_NIL) return null;
+    //  Guid propValue;
+    //  _Hierarchy.GetGuidProperty(_ItemId, propId, out propValue);
+    //  return propValue;
+    //}
 
     #endregion
   }

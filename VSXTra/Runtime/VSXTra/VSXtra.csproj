@@ -75,6 +75,7 @@
     <Compile Include="..\..\Master\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Hierarchy\ImageHandler.cs" />
     <Compile Include="Utility\Exceptions\WindowPaneNotFoundException.cs" />
     <Compile Include="Hierarchy\HierarchyId.cs" />
     <Compile Include="Hierarchy\HierarchyItem.cs">
@@ -176,6 +177,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="VSXtraFakeKey.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Hierarchy\imagelis.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
