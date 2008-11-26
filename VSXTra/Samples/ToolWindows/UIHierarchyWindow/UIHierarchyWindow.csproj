@@ -57,14 +57,16 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="FileHierarchyNode.cs" />
+    <Compile Include="FileNode.cs" />
+    <Compile Include="FolderNode.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="NotLoadedNode.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SHResources.Designer.cs" />
-    <Compile Include="SimpleHierarchy.cs" />
     <Compile Include="SimpleUIHierarchyToolWindow.cs" />
     <Compile Include="UIHierarchyWindowPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,7 +93,11 @@
     <None Include="Resources\Images_32bit.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\folder.png" />
+    <Content Include="Resources\house.png" />
     <Content Include="Resources\Package.ico" />
+    <Content Include="Resources\page.png" />
+    <Content Include="Resources\page_lightning.png" />
     <Content Include="SimpleHierarchyImages.bmp" />
   </ItemGroup>
   <ItemGroup>
