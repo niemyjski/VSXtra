@@ -136,7 +136,6 @@
     <Compile Include="ProjectBase\GlobalSuppressions.cs" />
     <Compile Include="ProjectBase\HierarchyNode.cs" />
     <Compile Include="ProjectBase\IDEBuildLogger.cs" />
-    <Compile Include="ProjectBase\ImageHandler.cs" />
     <Compile Include="ProjectBase\Interfaces.cs" />
     <Compile Include="ProjectBase\LangProj\OAAssemblyReference.cs" />
     <Compile Include="ProjectBase\LangProj\OABuildManager.cs" />

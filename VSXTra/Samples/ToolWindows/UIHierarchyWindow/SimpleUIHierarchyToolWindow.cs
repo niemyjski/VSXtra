@@ -13,13 +13,12 @@ namespace DeepDiver.UIHierarchyWindow
   [DoNotSortRootNodes]
   [LinesAtRoot]
   [RouteCmdidDelete]
-  [ActAsProjectTypeWindow]
+//  [ActAsProjectTypeWindow]
   public class SimpleUIHierarchyToolWindow : UIHierarchyToolWindow<UIHierarchyWindowPackage>
   {
     protected override IVsUIHierarchy InitialHierarchy
     {
-      //get { return new SimpleHierarchy(HierarchyWindow); }
-      get { return new FileHierarchyNode("C:\\Publications"); }
+      get { return FileHierarchyNode.CreateRoot("C:\\"); }
     }
   }
 }

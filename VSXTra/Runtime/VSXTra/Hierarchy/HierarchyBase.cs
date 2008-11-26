@@ -14,7 +14,7 @@ using IServiceProvider=Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace VSXtra.Hierarchy
 {
-  #region IHierarchyBahavior
+  #region IHierarchyBehavior
 
   // ================================================================================================
   /// <summary>
@@ -45,6 +45,12 @@ namespace VSXtra.Hierarchy
     where THier : HierarchyBase<THier, TRoot>
     where TRoot : HierarchyRoot<TRoot, THier>
   {
+    #region Constant values
+
+    private const int NoImageIndex = -1;
+
+    #endregion
+
     #region Private Fields
 
     /// <summary>Stores the map for event sink subscribers</summary>
@@ -73,14 +79,9 @@ namespace VSXtra.Hierarchy
 
     #region Lifecycle methods
 
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HierarchyBase&lt;THier, TRoot&gt;"/> class.
-    /// </summary>
-    // --------------------------------------------------------------------------------------------
     protected HierarchyBase()
     {
-      IsExpanded = true;
+      SortPriority = 1000;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -89,7 +90,7 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <param name="root">The root instance.</param>
     // --------------------------------------------------------------------------------------------
-    protected HierarchyBase(TRoot root)
+    protected HierarchyBase(TRoot root): this()
     {
       ManagerNode = root;
       _HierarchyId = ManagerNode.AddSubordinate(this);
@@ -131,8 +132,8 @@ namespace VSXtra.Hierarchy
     public HierarchyId HierarchyId
     {
       get { return _HierarchyId;  }
+      internal set { _HierarchyId = value; }
     }
-
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -151,7 +152,16 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <value>The manager node.</value>
     // --------------------------------------------------------------------------------------------
-    public HierarchyRoot<TRoot, THier> ManagerNode { get; protected set; }
+    //public HierarchyRoot<TRoot, THier> ManagerNode { get; protected set; }
+    public TRoot ManagerNode { get; protected set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the root node.
+    /// </summary>
+    /// <value>The root node.</value>
+    // --------------------------------------------------------------------------------------------
+    public TRoot RootNode { get; protected set; }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -164,6 +174,11 @@ namespace VSXtra.Hierarchy
       get { return _NextSibling; }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the previous sibling.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     [System.ComponentModel.BrowsableAttribute(false)]
     public HierarchyBase<THier, TRoot> PreviousSibling
     {
@@ -282,6 +297,16 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     public int SortPriority { get; set; }
 
+    public virtual int ImageIndex
+    {
+      get { return NoImageIndex; }
+    }
+
+    public virtual int ExpandedImageIndex
+    {
+      get { return ImageIndex; }
+    }
+
     #endregion
 
     #region Virtual and abstract methods 
@@ -344,6 +369,7 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     public virtual object GetProperty(int propId)
 		{
+      Console.WriteLine("GetProperty {0}:{1}", _HierarchyId, propId);
       object result = null;
       switch ((__VSHPROPID)propId)
       {
@@ -362,12 +388,14 @@ namespace VSXtra.Hierarchy
           break;
 
         case __VSHPROPID.VSHPROPID_IconImgList:
-          result = ManagerNode.ImageHandler.ImageList.Handle;
+          result = ManagerNode.ImageListHandle;
           break;
 
         case __VSHPROPID.VSHPROPID_OpenFolderIconIndex:
+          result = ExpandedImageIndex;
+          break;
         case __VSHPROPID.VSHPROPID_IconIndex:
-          result = 0;
+          result = ImageIndex;
           break;
 
         case __VSHPROPID.VSHPROPID_StateIconIndex:
@@ -445,6 +473,63 @@ namespace VSXtra.Hierarchy
       return result;
     }
 
+    public virtual int SetProperty(int propid, object value)
+    {
+      var id = (__VSHPROPID)propid;
+      switch (id)
+      {
+        case __VSHPROPID.VSHPROPID_Expanded:
+          if ((bool) value)
+          {
+            OnBeforeExpanded();
+            IsExpanded = true;
+            OnAfterExpanded();
+          }
+          else
+          {
+            OnBeforeCollapsed();
+            IsExpanded = false;
+            OnAfterCollapsed();
+          }
+          break;
+
+        //case __VSHPROPID.VSHPROPID_ParentHierarchy:
+        //  parentHierarchy = (IVsHierarchy)value;
+        //  break;
+
+        //case __VSHPROPID.VSHPROPID_ParentHierarchyItemid:
+        //  parentHierarchyItemId = (int)value;
+        //  break;
+
+        //case __VSHPROPID.VSHPROPID_EditLabel:
+        //  return SetEditLabel((string)value);
+
+        default:
+          break;
+      }
+      return VSConstants.S_OK;
+    }
+
+    protected virtual void OnBeforeExpanded()
+    {
+    }
+
+    protected virtual void OnAfterExpanded()
+    {
+    }
+
+    protected virtual void OnBeforeCollapsed()
+    {
+    }
+
+    protected virtual void OnAfterCollapsed()
+    {
+    }
+
+    public void InvalidateItem()
+    {
+      RaiseHierarchyEvent(sink => sink.OnInvalidateItems((uint)HierarchyId));
+    }
 
     #endregion
 
@@ -564,14 +649,7 @@ namespace VSXtra.Hierarchy
           }
           if (n == _LastChild)
           {
-            if (last == _LastChild)
-            {
-              _LastChild = null;
-            }
-            else
-            {
-              _LastChild = last;
-            }
+            _LastChild = last == _LastChild ? null : last;
           }
           if (n == _FirstChild)
           {
@@ -652,6 +730,17 @@ namespace VSXtra.Hierarchy
       return VSConstants.S_OK;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets properties of a given node or of the hierarchy.
+    /// </summary>
+    /// <param name="itemId">Item identifier of an item in the hierarchy.</param>
+    /// <param name="propId">Identifier of the hierarchy property.</param>
+    /// <param name="propVal">Pointer to a VARIANT containing the property value</param>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
     int IVsHierarchy.GetProperty(uint itemId, int propId, out object propVal)
     {
       propVal = null;
@@ -673,9 +762,25 @@ namespace VSXtra.Hierarchy
         : VSConstants.S_OK;
     }
 
-    int IVsHierarchy.SetProperty(uint itemid, int propid, object var)
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets properties of a specific node or of the hierarchy.
+    /// </summary>
+    /// <param name="itemId">Item identifier of an item in the hierarchy.</param>
+    /// <param name="propId">Identifier of the hierarchy property.</param>
+    /// <param name="value">Variant that contains property information</param>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    int IVsHierarchy.SetProperty(uint itemId, int propId, object value)
     {
-      return VSConstants.S_OK;
+      var node = ManagerNode.NodeById(itemId);
+      if (node != null)
+      {
+        return node.SetProperty(propId, value);
+      }
+      return VSConstants.DISP_E_MEMBERNOTFOUND;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -729,14 +834,42 @@ namespace VSXtra.Hierarchy
       return VSConstants.S_OK;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Establishes client notification of hierarchy events.
+    /// </summary>
+    /// <param name="pEventSink">
+    /// IVsHierarchyEvents interface on the object requesting notification of hierarchy events.
+    /// </param>
+    /// <param name="pdwCookie">
+    /// Pointer to a unique identifier for the referenced event sink. This value is required to 
+    /// unadvise the event sink using UnadviseHierarchyEvents. 
+    /// </param>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
     int IVsHierarchy.AdviseHierarchyEvents(IVsHierarchyEvents pEventSink, out uint pdwCookie)
     {
-      pdwCookie = 0;
+      pdwCookie = _EventSinks.Add(pEventSink) + 1;
       return VSConstants.S_OK;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Disables client notification of hierarchy events.
+    /// </summary>
+    /// <param name="dwCookie">
+    /// Abstract handle to the client that was disabled from receiving notifications of 
+    /// hierarchy events.
+    /// </param>
+    /// <returns>
+    /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
     int IVsHierarchy.UnadviseHierarchyEvents(uint dwCookie)
     {
+      _EventSinks.RemoveAt(dwCookie - 1);
       return VSConstants.S_OK;
     }
 
@@ -761,14 +894,11 @@ namespace VSXtra.Hierarchy
         switch (nCmdID)
         {
           case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_DoubleClick:
-            {
-              VsMessageBox.Show("DoubleClick for " + itemid);
-            }
+            VsMessageBox.Show("DoubleClick for " + itemid);
             break;
         }
-        return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
+        return VSConstants.S_OK; // return S_FALSE to avoid the exec of the original function
       }
-
       return (int)Microsoft.VisualStudio.OLE.Interop.Constants.OLECMDERR_E_NOTSUPPORTED;
     }
 
@@ -967,6 +1097,15 @@ namespace VSXtra.Hierarchy
     //  _Hierarchy.GetGuidProperty(_ItemId, propId, out propValue);
     //  return propValue;
     //}
+
+    private void RaiseHierarchyEvent(Action<IVsHierarchyEvents> sinkAction)
+    {
+      if (ManagerNode == null) return;
+      foreach (var sink in ManagerNode._EventSinks)
+      {
+        sinkAction(sink);
+      }
+    }
 
     #endregion
   }

@@ -4,12 +4,26 @@
 // Created: 2008.09.09, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using System.Drawing;
 using System.Globalization;
+using System.Reflection;
 using Microsoft.VisualStudio;
 using VSXtra.Diagnostics;
 
 namespace VSXtra.Hierarchy
 {
+  public abstract class HierarchyRoot<TRoot>: HierarchyRoot<TRoot, TRoot>
+    where TRoot: HierarchyRoot<TRoot, TRoot>
+  {
+    protected HierarchyRoot()
+    {
+    }
+
+    protected HierarchyRoot(TRoot root) : base(root)
+    {
+    }
+  }
+
   // ================================================================================================
   /// <summary>
   /// This class is intended to be the root class of all IVsHierarchy implementation representing 
@@ -34,20 +48,14 @@ namespace VSXtra.Hierarchy
     private bool _DoNotTriggerHierarchyEvents = true;
     private bool _DoNotTriggerTrackerEvents = true;
 
-    private ImageHandler imageHandler;
+    private ImageHandler _ImageHandler;
 
     #endregion
 
     #region Lifecycle methods
 
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HierarchyRoot&lt;TRoot, THier&gt;"/> class.
-    /// </summary>
-    // --------------------------------------------------------------------------------------------
     protected HierarchyRoot()
     {
-      ManagerNode = this;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -59,6 +67,26 @@ namespace VSXtra.Hierarchy
     protected HierarchyRoot(TRoot root)
       : base(root)
     {
+    }
+
+    public static TRoot CreateRoot()
+    {
+      if (typeof(TRoot).IsAbstract)
+        throw new InvalidOperationException(
+          String.Format("{0} is not a concrete type", typeof(TRoot)));
+      var ci = typeof (TRoot).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, 
+        null, Type.EmptyTypes, null);
+      if (ci == null)
+        throw new InvalidOperationException(
+          String.Format("{0} does not have a parameterless constructor", typeof(TRoot)));
+      var root = ci.Invoke(new object[] {}) as TRoot;
+      if (root == null)
+        throw new InvalidOperationException(
+          String.Format("{0} constructor does not result the expected instance", typeof(TRoot)));
+      root.ManagerNode = root;
+      root.HierarchyId = HierarchyId.Root;
+      root.InitRootNode();
+      return root;
     }
 
     #endregion
@@ -108,18 +136,32 @@ namespace VSXtra.Hierarchy
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the handle of the image list used by this manager node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public IntPtr ImageListHandle
+    {
+      get { return ImageHandler.ImageList.Handle; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Gets an ImageHandler for the root node.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public ImageHandler ImageHandler
+    protected ImageHandler ImageHandler
     {
       get
       {
-        if (null == imageHandler)
+        if (_ImageHandler == null)
         {
-          imageHandler = new ImageHandler(typeof(ImageHandler).Assembly.GetManifestResourceStream("VSXtra.Hierarchy.imagelis.bmp"));
+          _ImageHandler = InitImageHandler();
         }
-        return imageHandler;
+        if (_ImageHandler == null)
+        {
+          _ImageHandler = GetDefaultImageHandler();
+        }
+        return _ImageHandler;
       }
     }
 
@@ -189,6 +231,101 @@ namespace VSXtra.Hierarchy
       return node1.SortPriority == node2.SortPriority
                ? String.Compare(node2.Caption, node1.Caption, true, CultureInfo.CurrentCulture)
                : node2.SortPriority - node1.SortPriority;
+    }
+
+    #endregion
+
+    #region Abstract and virtual members
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Override this method to do additional initializatios steps on the root node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected void InitRootNode()
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Override this method to initialize the ImageList on your own way.
+    /// </summary>
+    /// <returns>
+    /// ImageList object if initialization is succesful; otherwise null.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    protected virtual ImageHandler InitImageHandler()
+    {
+      if (ImageResourceAssembly != null && !String.IsNullOrEmpty(ImageResourceStreamName))
+      {
+        try
+        {
+          return new ImageHandler(
+            ImageResourceAssembly.GetManifestResourceStream(ImageResourceStreamName));
+        }
+        catch (SystemException)
+        {
+        }
+      }
+      return null;  
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the assembly holding the ImageList resource information.
+    /// </summary>
+    /// <remarks>
+    /// Override this property if the resource is stored in a different assembly than the type 
+    /// representing the root hierarchy node.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    protected virtual Assembly ImageResourceAssembly
+    {
+      get { return GetType().Assembly; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the resource name where the ImageList is stored.
+    /// </summary>
+    /// <value>Resource name for the ImageList or null if no resource is specified.</value>
+    /// <remarks>
+    /// Override this to specify the resource stream name.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
+    protected virtual string ImageResourceStreamName
+    {
+      get { return null; }
+    }
+
+    #endregion
+
+    #region Helper methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a default ImageList for this manager node.
+    /// </summary>
+    /// <returns>Default ImageList</returns>
+    // --------------------------------------------------------------------------------------------
+    private static ImageHandler GetDefaultImageHandler()
+    {
+      const int bitmapSize = 16;
+      var pixelBackColor = Color.LightBlue;
+      var pixelForeColor = Color.DarkBlue;
+
+      var bitmap = new Bitmap(bitmapSize, bitmapSize);
+      for (int i = 0; i < bitmapSize; i++)
+        for (int j = 0; j < bitmapSize; j++)
+        {
+          bitmap.SetPixel(i, j, 
+            (i == 0 || i == bitmapSize - 1 || j == 0 || j == bitmapSize - 1 || i == j 
+            ? pixelForeColor : pixelBackColor)
+            );
+        }
+      var result = new ImageHandler();
+      result.AddImage(bitmap);
+      return result;
     }
 
     #endregion
