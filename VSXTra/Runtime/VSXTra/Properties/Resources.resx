@@ -255,4 +255,7 @@
   <data name="ILogicalViewGuidType_Expected" xml:space="preserve">
     <value>Only types implementing ILogicalViewGuidType are accepted in XtraProvideEditorLogicalView.</value>
   </data>
+  <data name="Hierarchy_SiteAlreadySet" xml:space="preserve">
+    <value>A site has already been set on hierarchy {0}.</value>
+  </data>
 </root>

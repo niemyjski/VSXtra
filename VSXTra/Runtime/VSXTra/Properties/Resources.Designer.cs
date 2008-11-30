@@ -214,6 +214,15 @@ namespace VSXtra.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A site has already been set on hierarchy {0}..
+        /// </summary>
+        internal static string Hierarchy_SiteAlreadySet {
+            get {
+                return ResourceManager.GetString("Hierarchy_SiteAlreadySet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Only types implementing ICommandGroupProvider are accepted in the attribute..
         /// </summary>
         internal static string ICommandGroupProvider_Expected {

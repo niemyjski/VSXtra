@@ -1,10 +1,11 @@
 // ================================================================================================
-// StringResolver.cs
+// ResourceResolver.cs
 //
 // Created: 2008.04.05, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using VSXtra.Package;
@@ -24,7 +25,7 @@ namespace VSXtra
   /// only one VSPackage in your assembly!
   /// </remarks>
   // ==================================================================================
-  public static class StringResolver<TPackage>
+  public static class ResourceResolver<TPackage>
     where TPackage: IVsPackage
   {
     #region Private fields
@@ -41,7 +42,7 @@ namespace VSXtra
     /// Resolves a string from the Resource.resx in the assembly of the specified 
     /// package.
     /// </summary>
-    /// <param name="toResolve">String to resolve.</param>
+    /// <param name="key">String to resolve.</param>
     /// <returns>
     /// The resolved string value.
     /// </returns>
@@ -55,26 +56,31 @@ namespace VSXtra
     /// In other cases the input string itself is returned.
     /// </remarks>
     // --------------------------------------------------------------------------------
-    public static string Resolve(string toResolve)
+    public static string GetString(string key)
     {
-      if (string.IsNullOrEmpty(toResolve) || toResolve.Length < 2)
-        return toResolve;
+      if (string.IsNullOrEmpty(key) || key.Length < 2)
+        return key;
 
-      if (toResolve.StartsWith("#"))
+      if (key.StartsWith("#"))
       {
-        toResolve = toResolve.Substring(1);
-        return toResolve.StartsWith("#")
-                 ? toResolve
-                 : ResolveInPackageResources(toResolve.Trim());
+        key = key.Substring(1);
+        return key.StartsWith("#")
+                 ? key
+                 : GetStringFromPackageResources(key.Trim());
       }
-      if (toResolve.StartsWith("$"))
+      if (key.StartsWith("$"))
       {
-        toResolve = toResolve.Substring(1);
-        return toResolve.StartsWith("$")
-                 ? toResolve
-                 : ResolveInResourcesClass(toResolve.Trim());
+        key = key.Substring(1);
+        return key.StartsWith("$")
+                 ? key
+                 : GetStringFromResourcesClass(key.Trim());
       }
-      return toResolve;
+      return key;
+    }
+
+    public static Bitmap GetBitmap(string key)
+    {
+      return GetBitmapFromResourcesClass(key.Trim());
     }
 
     // --------------------------------------------------------------------------------
@@ -89,10 +95,10 @@ namespace VSXtra
     // --------------------------------------------------------------------------------
     public static bool ExistsInResourcesClass(string key)
     {
-      Type resourceType = GetResourcesClassType();
+      var resourceType = GetResourcesClassType();
       if (resourceType == null) return false;
-      PropertyInfo propInfo = resourceType.GetProperty(key, BindingFlags.Static | 
-        BindingFlags.NonPublic);
+      var propInfo = 
+        resourceType.GetProperty(key, BindingFlags.Static | BindingFlags.NonPublic);
       return propInfo != null;
     }
 
@@ -107,13 +113,26 @@ namespace VSXtra
     /// otherwise a string representing a missing resource message.
     /// </returns>
     // --------------------------------------------------------------------------------
-    public static string ResolveInResourcesClass(string key)
+    public static string GetStringFromResourcesClass(string key)
     {
-      Type resourceType = GetResourcesClassType();
+      var resourceType = GetResourcesClassType();
       if (resourceType == null) return Resources.ResourceNotFound;
-      PropertyInfo propInfo = resourceType.GetProperty(key, BindingFlags.Static | BindingFlags.NonPublic);
-      if (propInfo == null) return Resources.ResourceNotFound;
-      return propInfo.GetValue(null, null).ToString();
+      var propInfo = 
+        resourceType.GetProperty(key, BindingFlags.Static | BindingFlags.NonPublic);
+      return propInfo == null 
+        ? Resources.ResourceNotFound 
+        : propInfo.GetValue(null, null).ToString();
+    }
+
+    private static Bitmap GetBitmapFromResourcesClass(string key)
+    {
+      var resourceType = GetResourcesClassType();
+      if (resourceType == null) return null;
+      var propInfo =
+        resourceType.GetProperty(key, BindingFlags.Static | BindingFlags.NonPublic);
+      return propInfo == null
+        ? null
+        : propInfo.GetValue(null, null) as Bitmap;
     }
 
     // --------------------------------------------------------------------------------
@@ -128,12 +147,12 @@ namespace VSXtra
     // --------------------------------------------------------------------------------
     public static bool ExistsInPackageResources(string key)
     {
-      Guid packageGuid = GetPackageGuid();
+      var packageGuid = GetPackageGuid();
       string resourceString;
-      IVsResourceManager resourceManager =
+      var resourceManager =
         PackageBase.GetGlobalService<SVsResourceManager, IVsResourceManager>();
       if (resourceManager == null) return false;
-      int result = resourceManager.LoadResourceString(ref packageGuid, -1, key, 
+      var result = resourceManager.LoadResourceString(ref packageGuid, -1, key, 
         out resourceString);
       return result == VSConstants.S_OK;
     }
@@ -148,18 +167,21 @@ namespace VSXtra
     /// otherwise a string representing a missing resource message.
     /// </returns>
     // --------------------------------------------------------------------------------
-    public static string ResolveInPackageResources(string key)
+    public static string GetStringFromPackageResources(string key)
     {
-      Guid packageGuid = GetPackageGuid();
+      var packageGuid = GetPackageGuid();
       string resourceString;
-      IVsResourceManager resourceManager =
+      var resourceManager =
         PackageBase.GetGlobalService<SVsResourceManager, IVsResourceManager>();
       if (resourceManager == null) return Resources.PackageNotFound;
-      int result = resourceManager.LoadResourceString(ref packageGuid, -1, key, 
+      var result = resourceManager.LoadResourceString(ref packageGuid, -1, key, 
         out resourceString);
-      if (result != VSConstants.S_OK) return Resources.PackageNotFound;
-      return resourceString;
+      return result != VSConstants.S_OK ? Resources.PackageNotFound : resourceString;
     }
+
+    #endregion
+
+    #region Private methods
 
     // --------------------------------------------------------------------------------
     /// <summary>
@@ -170,7 +192,7 @@ namespace VSXtra
     /// Resources type if found; otherwise, false.
     /// </returns>
     // --------------------------------------------------------------------------------
-    public static Type GetResourcesClassType()
+    private static Type GetResourcesClassType()
     {
       Assembly callingAsm = typeof(TPackage).Assembly;
 
@@ -193,10 +215,6 @@ namespace VSXtra
       }
       return null;
     }
-
-    #endregion
-
-    #region Private methods
 
     // --------------------------------------------------------------------------------
     /// <summary>

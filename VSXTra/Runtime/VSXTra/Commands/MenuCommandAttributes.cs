@@ -111,6 +111,31 @@ namespace VSXtra.Commands
 
   #endregion
 
+  #region HierarchyCommandIdAttribute
+
+  // ================================================================================================
+  /// <summary>
+  /// This attribute class defines the Command Id of a menu command belonging to standard Hierarchy 
+  /// window commands.
+  /// </summary>
+  // ================================================================================================
+  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
+  public sealed class HierarchyCommandIdAttribute : CommandIdAttribute
+  {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new instance of the attribute with the specified initial value.
+    /// </summary>
+    /// <param name="id">Command identifier.</param>
+    // --------------------------------------------------------------------------------------------
+    public HierarchyCommandIdAttribute(uint id)
+      : base(VSConstants.GUID_VsUIHierarchyWindowCmds, id)
+    {
+    }
+  }
+
+  #endregion
+
   #region ListCommandIdAttribute
 
   // ================================================================================================

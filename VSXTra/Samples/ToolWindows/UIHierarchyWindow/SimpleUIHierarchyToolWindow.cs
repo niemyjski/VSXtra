@@ -3,22 +3,25 @@
 //
 // Created: 2008.09.02, by Istvan Novak (DeepDiver)
 // ================================================================================================
-using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Hierarchy;
 using VSXtra.Windows;
 
 namespace DeepDiver.UIHierarchyWindow
 {
+  // ================================================================================================
+  /// <summary>
+  /// This class implements a simple hierarchy window
+  /// </summary>
+  // ================================================================================================
   [InitialCaption("Simple UI Hierarchy window")]
   [BitmapResourceId(301)]
-  [DoNotSortRootNodes]
   [LinesAtRoot]
   [RouteCmdidDelete]
-//  [ActAsProjectTypeWindow]
   public class SimpleUIHierarchyToolWindow : UIHierarchyToolWindow<UIHierarchyWindowPackage>
   {
-    protected override IVsUIHierarchy InitialHierarchy
+    protected override HierarchyManager<UIHierarchyWindowPackage> HierarchyManager
     {
-      get { return FileHierarchyNode.CreateRoot("C:\\"); }
+      get { return new FileHierarchyManager("C:\\"); }
     }
   }
 }

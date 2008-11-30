@@ -9,6 +9,7 @@ using System.Drawing;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra.Package;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace VSXtra.Windows
 {
@@ -137,6 +138,17 @@ namespace VSXtra.Windows
         Guid guid;
         _Frame.GetGuidProperty((int)__VSFPROPID.VSFPROPID_GuidPersistenceSlot, out guid);
         return guid;
+      }
+    }
+
+    public IOleServiceProvider OleServiceProvider
+    {
+      get
+      {
+        object result;
+        ErrorHandler.ThrowOnFailure(_Frame.GetProperty(
+                                      (int)__VSFPROPID.VSFPROPID_SPFrame, out result));
+        return result as IOleServiceProvider;
       }
     }
 

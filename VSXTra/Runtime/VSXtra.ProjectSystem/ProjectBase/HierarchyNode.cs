@@ -1269,7 +1269,7 @@ namespace VSXtra.ProjectSystem
 		}
 
 		/// <summary>
-		/// Factory method for the Document Manager object
+		/// Factory method for the Document ManagerNode object
 		/// </summary>
 		/// <returns>null object, since a hierarchy node does not know its kind of document</returns>
 		/// <remarks>Must be overriden by derived node classes if a document manager is needed</remarks>

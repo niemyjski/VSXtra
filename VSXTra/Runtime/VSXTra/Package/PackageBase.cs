@@ -871,10 +871,9 @@ namespace VSXtra.Package
           NativeMethods.ThrowOnFailure(
             toolBarHost.AddToolbar((VSTWT_LOCATION) window.ToolBarLocation, ref toolBarCommandSet,
                                    (uint) window.ToolBar.ID));
+          window.OnToolBarAdded();
         }
       }
-
-      window.OnToolBarAdded();
 
       // --- If the ToolWindow was created successfully, keep track of it
       VsDebug.Assert(window != null, "At this point window assumed to be non-null.");

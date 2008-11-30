@@ -75,6 +75,9 @@
     <Compile Include="..\..\Master\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Hierarchy\HierarchyAttributes.cs" />
+    <Compile Include="Hierarchy\HierarchyCommand.cs" />
+    <Compile Include="Utility\Attributes\Int32Attribute.cs" />
     <Compile Include="Utility\ImageHandler.cs" />
     <Compile Include="Utility\Exceptions\WindowPaneNotFoundException.cs" />
     <Compile Include="Hierarchy\HierarchyId.cs" />
@@ -82,11 +85,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\ItemMap.cs" />
-    <Compile Include="Hierarchy\HierarchyBase.cs" />
+    <Compile Include="Hierarchy\HierarchyNode.cs" />
     <Compile Include="Hierarchy\HierarchyNodeEventArgs.cs" />
-    <Compile Include="Hierarchy\HierarchyRootBase.cs" />
+    <Compile Include="Hierarchy\HierarchyManager.cs" />
     <Compile Include="Hierarchy\HierarchyProperty.cs" />
-    <Compile Include="Hierarchy\SimpleHierarchyItem.cs" />
     <Compile Include="Utility\SimpleOleServiceProvider.cs" />
     <Compile Include="Package\PackageBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -112,7 +114,7 @@
     <Compile Include="Utility\CommonExtensions.cs" />
     <Compile Include="Utility\HelpService.cs" />
     <Compile Include="Utility\NativeMethods.cs" />
-    <Compile Include="Utility\StringResolver.cs" />
+    <Compile Include="Utility\ResourceResolver.cs" />
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
     <Compile Include="Shell\VSCommands\FileCommands.cs" />

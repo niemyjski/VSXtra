@@ -56,17 +56,20 @@
     <Compile Include="..\..\..\Master\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="FileHierarchyManager.cs" />
     <Compile Include="FileHierarchyNode.cs" />
     <Compile Include="FileNode.cs" />
     <Compile Include="FolderNode.cs" />
     <Compile Include="Guids.cs" />
-    <Compile Include="NotLoadedNode.cs" />
+    <Compile Include="NotLoadedNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SHResources.Designer.cs" />
+    <Compile Include="RootNode.cs" />
     <Compile Include="SimpleUIHierarchyToolWindow.cs" />
     <Compile Include="UIHierarchyWindowPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,7 +81,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SHResources.resx" />
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
     </EmbeddedResource>
@@ -98,7 +100,6 @@
     <Content Include="Resources\Package.ico" />
     <Content Include="Resources\page.png" />
     <Content Include="Resources\page_lightning.png" />
-    <Content Include="SimpleHierarchyImages.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Runtime\VSXTra\VSXtra.csproj">
