@@ -5,9 +5,9 @@
 // ================================================================================================
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using VSXtra.Hierarchy;
 using VSXtra.Package;
 
 namespace VSXtra.Windows
@@ -69,7 +69,13 @@ namespace VSXtra.Windows
       // ReSharper restore AccessToModifiedClosure
       SetUIWindowStyle(ref flags);
       object unkObj;
-      HierarchyWindow.Init(InitialHierarchy, (uint)flags, out unkObj);
+      var manager = HierarchyManager;
+      HierarchyWindow.Init(manager, (uint)flags, out unkObj);
+      var oleSp = Frame.OleServiceProvider;
+      if (oleSp != null)
+      {
+        manager.SetSite(oleSp);
+      }
     }
 
     #endregion
@@ -94,10 +100,7 @@ namespace VSXtra.Windows
     /// Override this method to set up the initial hierarchy.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    protected virtual IVsUIHierarchy InitialHierarchy
-    {
-      get { return null; }
-    }
+    protected abstract HierarchyManager<TPackage> HierarchyManager { get; }
 
     #endregion
 

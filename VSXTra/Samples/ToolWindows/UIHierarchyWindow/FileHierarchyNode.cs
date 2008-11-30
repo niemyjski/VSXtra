@@ -1,106 +1,76 @@
-using System;
-using System.IO;
-using VSXtra;
+// ================================================================================================
+// FileHierarchyNode.cs
+//
+// Created: 2008.11.28, by Istvan Novak (DeepDiver)
+// ================================================================================================
 using VSXtra.Hierarchy;
 
 namespace DeepDiver.UIHierarchyWindow
 {
-  public class FileHierarchyNode: HierarchyRoot<FileHierarchyNode>
+  // ================================================================================================
+  /// <summary>
+  /// This class represents an abstract hierarchy node.
+  /// </summary>
+  // ================================================================================================
+  public class FileHierarchyNode : HierarchyNode<UIHierarchyWindowPackage>
   {
     #region Private fields
 
-    private string _Caption;
-    private bool _Loaded;
-
-    #endregion
-
-    #region Image indexes
-
-    protected class ImageName
-    {
-      public const int Home = 0;
-      public const int Folder = 1;
-      public const int File = 2;
-      public const int NotLoaded = 3;
-    }
+    /// <summary>Caption of the node</summary>
+    private readonly string _Caption;
+    /// <summary>Object responsible for managing the node</summary>
+    private readonly FileHierarchyManager _Manager;
 
     #endregion
 
     #region Lifecycle methods
 
-    private FileHierarchyNode() {}
-
-    public FileHierarchyNode(FileHierarchyNode root) : base(root)
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileHierarchyNode"/> class.
+    /// </summary>
+    /// <param name="manager">The manager responsible for this node.</param>
+    // --------------------------------------------------------------------------------------------
+    protected FileHierarchyNode(FileHierarchyManager manager)
+      : base(manager)
     {
-      _Loaded = false;
+      Loaded = false;
+      _Manager = manager;
     }
 
-    public FileHierarchyNode(string fullPath, string caption, FileHierarchyNode root): base(root)
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileHierarchyNode"/> class.
+    /// </summary>
+    /// <param name="manager">The manager responsible for this node.</param>
+    /// <param name="fullPath">The full path of the node.</param>
+    /// <param name="caption">The caption to display about the node.</param>
+    // --------------------------------------------------------------------------------------------
+    public FileHierarchyNode(FileHierarchyManager manager, string fullPath, string caption) : 
+      base(manager)
     {
       FullPath = fullPath;
       _Caption = caption;
-    }
-
-    public static FileHierarchyNode CreateRoot(string fullPath)
-    {
-      var root = CreateRoot();
-      root.FullPath = fullPath;
-      root._Caption = fullPath;
-      root.ScanContent(fullPath, root);
-      return root;
-    }
-
-    private void ScanContent(string basePath, FileHierarchyNode root)
-    {
-      try
-      {
-        foreach (var dir in Directory.GetDirectories(basePath))
-        {
-          var dirName = dir.Substring(basePath.Length + (basePath.EndsWith("\\") ? 0 : 1));
-          var folderNode = new FolderNode(dir, dirName, root);
-          AddChild(folderNode);
-          folderNode.AddChild(new NotLoadedNode(root));
-        }
-        foreach (var file in Directory.GetFiles(basePath))
-        {
-          var fileNode = new FileNode(file, Path.GetFileName(file), root);
-          AddChild(fileNode);
-        }
-        _Loaded = true;
-      }
-      catch (SystemException)
-      {
-      }
+      _Manager = manager;
     }
 
     #endregion
 
     #region Public Properties
 
+    public bool Loaded { get; set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets or sets the full path representing the node.
+    /// </summary>
+    /// <value>The full path.</value>
+    // --------------------------------------------------------------------------------------------
     public string FullPath { get; private set; }
 
     #endregion
 
     #region Overridden Properties and methods
-
-    public override int ImageIndex
-    {
-      get { return ImageName.Home; }
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Defines the list of items that can be used is icon images.
-    /// </summary>
-    // --------------------------------------------------------------------------------------------
-    protected override ImageHandler InitImageHandler()
-    {
-      return ImageHandler.CreateImageList(
-        Resources.HomeImage,
-        Resources.FolderImage,
-        Resources.FileImage,
-        Resources.NotLoaded);
-    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -112,18 +82,20 @@ namespace DeepDiver.UIHierarchyWindow
       get { return _Caption; }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Responds to the event when the node is about to be expanded.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     protected override void OnBeforeExpanded()
     {
-      if (!_Loaded)
+      if (!Loaded && FirstChild is NotLoadedNode)
       {
-        if (FirstChild is NotLoadedNode)
-        {
-          RemoveChild(FirstChild);
-          ScanContent(FullPath, ManagerNode);
-          InvalidateItem();
-        }
+        RemoveChild(FirstChild);
+        _Manager.ScanContent(this);
+        InvalidateItem();
       }
-      _Loaded = true;
+      Loaded = true;
     }
 
     #endregion

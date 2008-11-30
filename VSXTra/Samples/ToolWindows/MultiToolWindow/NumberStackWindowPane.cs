@@ -48,13 +48,7 @@ namespace DeepDiver.MultiToolWindow
     [CommandId(CmdIDs.cmdidAdd1)]
     protected void AddExec()
     {
-      UIControl.Operation((x, y) =>
-                            {
-                              checked
-                              {
-                                return x + y;
-                              }
-                            });
+      UIControl.Operation((x, y) => { checked { return x + y; } });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -66,13 +60,7 @@ namespace DeepDiver.MultiToolWindow
     [CommandId(CmdIDs.cmdidSubtract1)]
     protected void SubtractExec()
     {
-      UIControl.Operation((x, y) =>
-                            {
-                              checked
-                              {
-                                return x - y;
-                              }
-                            });
+      UIControl.Operation((x, y) => { checked { return x - y; } });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -84,13 +72,7 @@ namespace DeepDiver.MultiToolWindow
     [CommandId(CmdIDs.cmdidMultiply1)]
     protected void MultiplyExec()
     {
-      UIControl.Operation((x, y) =>
-                            {
-                              checked
-                              {
-                                return x*y;
-                              }
-                            });
+      UIControl.Operation((x, y) => { checked { return x*y; } });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -102,13 +84,7 @@ namespace DeepDiver.MultiToolWindow
     [CommandId(CmdIDs.cmdidDivide1)]
     protected void DivideExec()
     {
-      UIControl.Operation((x, y) =>
-                            {
-                              checked
-                              {
-                                return x/y;
-                              }
-                            });
+      UIControl.Operation((x, y) => { checked { return x/y; } });
     }
 
     // --------------------------------------------------------------------------------------------
@@ -133,7 +109,7 @@ namespace DeepDiver.MultiToolWindow
     // --------------------------------------------------------------------------------------------
     [CommandStatusMethod]
     [VsCommandId(VSConstants.VSStd97CmdID.Paste)]
-    protected void PasteStatus(OleMenuCommand command)
+    protected static void PasteStatus(OleMenuCommand command)
     {
       command.Enabled = Clipboard.ContainsText();
     }

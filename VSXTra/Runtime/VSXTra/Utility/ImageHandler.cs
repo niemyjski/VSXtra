@@ -106,6 +106,20 @@ namespace VSXtra
 
     #endregion
 
+    #region Public properties
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the index of the last available image in the list
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public int LastImageIndex
+    {
+      get { return _ImageList == null ? -1 : _ImageList.Images.Count - 1; }
+    }
+
+    #endregion
+
     #region Public methods
 
     // --------------------------------------------------------------------------------------------

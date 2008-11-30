@@ -1,20 +1,35 @@
+// ================================================================================================
+// NotLoadedNode.cs
+//
+// Created: 2008.11.28, by Istvan Novak (DeepDiver)
+// ================================================================================================
+using VSXtra.Hierarchy;
+
 namespace DeepDiver.UIHierarchyWindow
 {
-  public class NotLoadedNode: FileHierarchyNode
+  // ================================================================================================
+  /// <summary>
+  /// This node represents that its parent's content has not been loaded.
+  /// </summary>
+  // ================================================================================================
+  [HierarchyBitmap("NotLoaded")]
+  [SortPriority(10)]
+  public class NotLoadedNode : FileHierarchyNode
   {
-    public NotLoadedNode(FileHierarchyNode root) : base(root)
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NotLoadedNode"/> class.
+    /// </summary>
+    /// <param name="manager">The manager responsible for this node.</param>
+    // --------------------------------------------------------------------------------------------
+    public NotLoadedNode(FileHierarchyManager manager)
+      : base(manager)
     {
-      SortPriority = 10;
     }
 
     public override string Caption
     {
       get { return "Loading..."; }
-    }
-
-    public override int ImageIndex
-    {
-      get { return ImageName.NotLoaded; }
     }
   }
 }

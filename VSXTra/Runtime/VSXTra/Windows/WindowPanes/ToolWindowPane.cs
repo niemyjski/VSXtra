@@ -122,8 +122,6 @@ namespace VSXtra.Windows
     /// <summary>Index of the bitmap</summary>
     private int _BitmapIndex;
 
-    private Guid _ToolClsid;
-
     #endregion
 
     #region Lifecycle methods
@@ -135,7 +133,6 @@ namespace VSXtra.Windows
     // --------------------------------------------------------------------------------------------
     protected ToolWindowPane()
     {
-      _ToolClsid = Guid.Empty;
       _BitmapIndex = -1;
       _BitmapResourceID = -1;
       _ToolBarLocation = ToolbarLocation.Top;
@@ -146,7 +143,7 @@ namespace VSXtra.Windows
         var captionAttr = attr as InitialCaptionAttribute;
         if (captionAttr != null)
         {
-          Caption = StringResolver<TPackage>.Resolve(captionAttr.Value);
+          Caption = ResourceResolver<TPackage>.GetString(captionAttr.Value);
           continue;
         }
         var resIdAttr = attr as BitmapResourceIdAttribute;

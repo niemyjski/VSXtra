@@ -91,7 +91,7 @@ namespace VSXtra.Windows
 
     /// <summary>Service provider obtained when the pane instance has been created.</summary>
     private IServiceProvider _ParentServiceProvider;
-    
+
     /// <summary>Service provider obtained when the pane has been sited.</summary>
     private ServiceProvider _ServiceProvider;
 
@@ -117,9 +117,6 @@ namespace VSXtra.Windows
     /// Object responsible to translate command methods to OleMenuCommand instances
     /// </summary>
     private CommandDispatcher<TPackage> _CommandDispatcher;
-
-    /// <summary>Object responsible for the selection tracking.</summary>
-    private SelectionTracker _SelectionTracker;
 
     #endregion
 
@@ -177,10 +174,12 @@ namespace VSXtra.Windows
       }
     }
 
-    public SelectionTracker SelectionTracker
-    {
-      get { return _SelectionTracker; }
-    }
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the SelectionTracker object owned by this window pane.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public SelectionTracker SelectionTracker { get; private set; }
 
     #endregion
 
@@ -406,11 +405,11 @@ namespace VSXtra.Windows
       _CommandDispatcher.RegisterCommandHandlers(localService, parentService);
       
       // --- Create the selection tracker for the window
-      _SelectionTracker = new SelectionTracker(this);
+      SelectionTracker = new SelectionTracker(this);
       var container = CreateSelectionContainer();
       if (container != null)
       {
-        _SelectionTracker.Container = container;
+        SelectionTracker.Container = container;
       }
     }
 
