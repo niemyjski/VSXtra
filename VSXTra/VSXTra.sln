@@ -76,6 +76,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra.Test.Functional", "U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropIDEnumerator", "Tools\PropIDEnumerator\PropIDEnumerator.csproj", "{2F532842-9FB0-4DC2-B315-0F77B116C8E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicHierarchy", "Samples\Hierarchy\BasicHierarchy\BasicHierarchy.csproj", "{24AE417E-BEE4-4896-B32E-F645219F6E51}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 25
@@ -280,6 +282,10 @@ Global
 		{2F532842-9FB0-4DC2-B315-0F77B116C8E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F532842-9FB0-4DC2-B315-0F77B116C8E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F532842-9FB0-4DC2-B315-0F77B116C8E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24AE417E-BEE4-4896-B32E-F645219F6E51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24AE417E-BEE4-4896-B32E-F645219F6E51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24AE417E-BEE4-4896-B32E-F645219F6E51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24AE417E-BEE4-4896-B32E-F645219F6E51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -317,5 +323,6 @@ Global
 		{F81AB5EB-B21C-4AAD-98BB-48BC15B50596} = {38ACB0C3-2640-417A-941C-6CBCBBD64C17}
 		{E9BC0BC9-B898-4961-BAE4-BC541C92092F} = {1E641972-38FC-45F0-8BB9-A0D9E98DAD13}
 		{1D3EC074-3275-43A9-95C9-F7BD299C61D9} = {5CBD6F09-AFD4-492B-960B-D33229FC5882}
+		{24AE417E-BEE4-4896-B32E-F645219F6E51} = {5CBD6F09-AFD4-492B-960B-D33229FC5882}
 	EndGlobalSection
 EndGlobal

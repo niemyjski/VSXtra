@@ -4,31 +4,30 @@
   <Extern href="vsshlids.h"/>
   <Extern href="msobtnid.h"/>
 
-  <Commands package="guidUIHierarchyWindowPkg">
+  <Commands package="guidBasicHierarchyPkg">
     <Groups>
-      <Group guid="guidUIHierarchyWindowCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Group guid="guidBasicHierarchyCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidVSXtraCmdSet" id="HierarchySubMenu"/>
       </Group>
     </Groups>
-    
+
     <Buttons>
-      <Button guid="guidUIHierarchyWindowCmdSet" id="cmdidShowUIHierarchy" priority="0x0100" type="Button">
-        <Parent guid="guidUIHierarchyWindowCmdSet" id="MyMenuGroup" />
+      <Button guid="guidBasicHierarchyCmdSet" id="cmdidShowBasicUIHierarchy" priority="0x0100" type="Button">
+        <Parent guid="guidBasicHierarchyCmdSet" id="MyMenuGroup" />
         <Icon guid="guidOfficeIcon" id="msotcidOutlineView" />
         <Strings>
-          <CommandName>cmdidShowUIHierarchy</CommandName>
-          <ButtonText>Display UI Hierarchy Window</ButtonText>
+          <CommandName>cmdidShowBasicUIHierarchy</CommandName>
+          <ButtonText>Basic UI Hierarchy</ButtonText>
         </Strings>
       </Button>
     </Buttons>
   </Commands>
 
   <Symbols>
-    <GuidSymbol name="guidUIHierarchyWindowPkg" value="{9176a015-55e8-4bfe-afe0-f48a81f81570}" />
-    <GuidSymbol name="guidUIHierarchyWindowCmdSet" value="{0a41bc9f-53cd-4299-8d23-123721a25093}">
+    <GuidSymbol name="guidBasicHierarchyPkg" value="{16c30255-4d84-44d8-9dd1-41de570bf984}" />
+    <GuidSymbol name="guidBasicHierarchyCmdSet" value="{1a665013-9484-4f8e-8a7c-aeeea9abc910}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
-      <IDSymbol name="HierWindowToolbar" value="0x1021" />
-      <IDSymbol name="cmdidShowUIHierarchy" value="0x0100" />
+      <IDSymbol name="cmdidShowBasicUIHierarchy" value="0x0100" />
     </GuidSymbol>
 
     <!-- Symbols for the VSXtra menus -->

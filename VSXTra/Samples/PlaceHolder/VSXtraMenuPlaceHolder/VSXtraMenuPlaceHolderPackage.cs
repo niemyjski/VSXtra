@@ -13,7 +13,7 @@ namespace DeepDiver.VSXtraMenuPlaceHolder
   [DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\9.0")]
   [InstalledProductRegistration(false, "#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideLoadKey("Standard", "1.0", "VSXtraMenuPlaceHolder", "DeepDiver", 1)]
-  [ProvideMenuResource(1000, 1)]
+  [ProvideMenuResource(1000, 2)]
   [Guid(GuidList.guidVSXtraMenuPlaceHolderPkgString)]
   public sealed class VSXtraMenuPlaceHolderPackage : PackageBase
   {

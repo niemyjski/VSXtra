@@ -17,6 +17,7 @@ using VSXtra.Commands;
 using VSXtra.Package;
 using VSXtra.Properties;
 using VSXtra.Shell;
+using VSXtra.Windows;
 using IServiceProvider = System.IServiceProvider;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using OleConstants = Microsoft.VisualStudio.OLE.Interop.Constants;
@@ -25,14 +26,121 @@ namespace VSXtra.Hierarchy
 {
   // ================================================================================================
   /// <summary>
+  /// This interface defines the responsibilities of a hierarchy manager.
+  /// </summary>
+  // ================================================================================================
+  public interface IHierarchyManager :
+    // --- The manager represents a hierarchy, so implements IVsUIHierarchy
+    IVsUIHierarchy
+  {
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the root node of the hierarchy.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    HierarchyNode HierarchyRoot { get; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the handle of the image list used by this manager node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    IntPtr ImageListHandle { get; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raises the hierarchy events according to the specified action.
+    /// </summary>
+    /// <param name="sinkAction">Action to execute</param>
+    // --------------------------------------------------------------------------------------------
+    void RaiseHierarchyEvent(Func<IVsHierarchyEvents, int> sinkAction);
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Returns the node specified by itemId
+    /// </summary>
+    /// <param name="id">Item of the node managed by this root node.</param>
+    /// <returns>
+    /// Node specified by itemId
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    HierarchyNode this[HierarchyId id] { get; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the number of items handled by this manager
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    int ItemCount { get; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Adds a subordinate node to this hierarchy.
+    /// </summary>
+    /// <param name="node">Node to add as a subordinate</param>
+    // --------------------------------------------------------------------------------------------
+    uint AddSubordinate(HierarchyNode node);
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets the node at the specified ID.
+    /// </summary>
+    /// <param name="id">ID to set the node at</param>
+    /// <param name="node">Node to set</param>
+    // --------------------------------------------------------------------------------------------
+    void SetNodeAtId(HierarchyId id, HierarchyNode node);
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Compares the sort order of the specified nodes.
+    /// </summary>
+    /// <param name="node1">First node</param>
+    /// <param name="node2">Second node</param>
+    // --------------------------------------------------------------------------------------------
+    int CompareNodes(HierarchyNode node1, HierarchyNode node2);
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Removes the specified node from the hierarchy.
+    /// </summary>
+    /// <param name="node">Node to remove</param>
+    // --------------------------------------------------------------------------------------------
+    void RemoveNode(HierarchyNode node);
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the parent hierarchy of this hierarchy
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    IHierarchyManager ParentHierarchy { get; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the parent hierarchy of this hierarchy
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    HierarchyId IdInParentHierarchy { get; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the parent hierarchy of this hierarchy
+    /// </summary>
+    /// <param name="parent">The parent hierarchy.</param>
+    /// <param name="id">The id of the item in the parent hierarchy.</param>
+    // --------------------------------------------------------------------------------------------
+    void SetParentHierarchy(IHierarchyManager parent, HierarchyId id);
+  }
+
+  // ================================================================================================
+  /// <summary>
   /// This class is responsible to organize and manage a set of hierarchy items to form an 
   /// IVsUIHierarchy. Hierarchy management is the responsibility of this type while events and 
   /// certain services are delgated down to the hierarchy items.
   /// </summary>
   // ================================================================================================
   public abstract class HierarchyManager<TPackage> : 
-    // --- The manager represents a hierarchy, so implements IVsUIHierarchy
-    IVsUIHierarchy,
+    // --- Hierarchy manager behavior
+    IHierarchyManager,
     // --- Commands coming from the IDE are processed by the hierarchy manager
     IOleCommandTarget,
     // --- Cleaning up resources is the responsibility of this object
@@ -45,11 +153,11 @@ namespace VSXtra.Hierarchy
     private readonly TPackage _Package;
 
     /// <summary>Root node of the hierarchy</summary>
-    private HierarchyNode<TPackage> _HierarchyRoot;
+    private HierarchyNode _HierarchyRoot;
 
     /// <summary>Stores the hierarchy items managed by this instance</summary>
-    private readonly ItemMap<HierarchyNode<TPackage>> _ManagedItems =
-      new ItemMap<HierarchyNode<TPackage>>();
+    private readonly ItemMap<HierarchyNode> _ManagedItems =
+      new ItemMap<HierarchyNode>();
 
     /// <summary>Stores the map for event sink subscribers</summary>
     private readonly ItemMap<IVsHierarchyEvents> _EventSinks =
@@ -72,7 +180,14 @@ namespace VSXtra.Hierarchy
     /// <summary>Service instance processing commands</summary>
     private OleMenuCommandService _OleMenuCommandService;
 
+    /// <summary>Object holding images for this hierarchy</summary>
     private ImageHandler _ImageHandler;
+
+    /// <summary>Parent hierarchy of this manager</summary>
+    private IHierarchyManager _ParentHierarchy;
+
+    /// <summary>Item ID in Parent hierarchy</summary>
+    private HierarchyId _IdInParentHierarchy;
 
     /// <summary>Has the object been disposed.</summary>
     /// <remarks>
@@ -126,6 +241,16 @@ namespace VSXtra.Hierarchy
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the number of items handled by this manager
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public int ItemCount
+    {
+      get { return ManagedItems.Count; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Gets the flag indicating if the manager is closed or not.
     /// </summary>
     // --------------------------------------------------------------------------------------------
@@ -147,22 +272,46 @@ namespace VSXtra.Hierarchy
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the hierarchy window hosting this hierarchy.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public IVsUIHierarchyWindow UIHierarchyWindow { get; protected internal set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the UI hierarchy tool window hosting this hierarchy.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public UIHierarchyToolWindow<TPackage> UIHierarchyToolWindow { get; protected internal set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Gets the root node of the hierarchy.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public HierarchyNode<TPackage> HierarchyRoot
+    public HierarchyNode HierarchyRoot
     {
       get
       {
-        if (_HierarchyRoot == null)
-        {
-          _HierarchyRoot = CreateHierarchyRoot();
-          _HierarchyRoot.ManagerNode = this;
-          _HierarchyRoot.HierarchyId = HierarchyId.Root;
-          SetDefaultImage(_HierarchyRoot);
-          InitializeHierarchyRoot(_HierarchyRoot);
-        }
+        EnsureHierarchyRoot();
         return _HierarchyRoot;
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Provides a root object for this hierarchy.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public void EnsureHierarchyRoot()
+    {
+      if (_HierarchyRoot == null)
+      {
+        _HierarchyRoot = CreateHierarchyRoot();
+        _HierarchyRoot.ManagerNode = this;
+        _HierarchyRoot.HierarchyId = HierarchyId.Root;
+        SetDefaultImage(_HierarchyRoot);
+        InitializeHierarchyRoot(_HierarchyRoot);
       }
     }
 
@@ -172,7 +321,7 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <value>The item event sinks.</value>
     // --------------------------------------------------------------------------------------------
-    public ItemMap<HierarchyNode<TPackage>> ManagedItems
+    public ItemMap<HierarchyNode> ManagedItems
     {
       get { return _ManagedItems; }
     }
@@ -218,6 +367,26 @@ namespace VSXtra.Hierarchy
       }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the parent hierarchy of this hierarchy
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public IHierarchyManager ParentHierarchy
+    {
+      get { return _ParentHierarchy; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the parent hierarchy of this hierarchy
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public HierarchyId IdInParentHierarchy
+    {
+      get { return _IdInParentHierarchy; }
+    }
+
     #endregion
 
     #region Public methods
@@ -231,7 +400,7 @@ namespace VSXtra.Hierarchy
     /// Node specified by itemId
     /// </returns>
     // --------------------------------------------------------------------------------------------
-    public HierarchyNode<TPackage> this[uint itemId]
+    public HierarchyNode this[uint itemId]
     {
       get
       {
@@ -249,7 +418,7 @@ namespace VSXtra.Hierarchy
     /// Node specified by itemId
     /// </returns>
     // --------------------------------------------------------------------------------------------
-    public HierarchyNode<TPackage> this[HierarchyId id]
+    public HierarchyNode this[HierarchyId id]
     {
       get { return this[(uint) id]; }
     }
@@ -280,6 +449,22 @@ namespace VSXtra.Hierarchy
     {
       ppHierarchyNested = IntPtr.Zero;
       pitemidNested = 0;
+      var node = this[itemId];
+      if (node != null && node.NestedHierarchy != null)
+      {
+        // --- At this point we have a nested hierarchy node. Check if it supports the specified
+        // --- interface.
+        var hierarchy = ComHelper.GetComObject(node.NestedHierarchy, iidHierarchyNested);
+        if (hierarchy != IntPtr.Zero)
+        {
+          ppHierarchyNested = hierarchy;
+          pitemidNested = (uint)HierarchyId.Root;
+          Console.WriteLine("GetNestedHierarchy {0}, {1}", 
+            node.Caption, node.NestedHierarchy.HierarchyRoot.Caption);
+          return VSConstants.S_OK;
+        }
+      }
+      Console.WriteLine("GetNestedHierarchy {0}, <none>", node == null ? "<unknown>" : node.Caption);
       return VSConstants.E_FAIL;
     }
 
@@ -289,24 +474,11 @@ namespace VSXtra.Hierarchy
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Adds a subordinate node to this hierarchy.
-    /// </summary>
-    /// <param name="node">Node to add as a subordinate</param>
-    // --------------------------------------------------------------------------------------------
-    protected internal uint AddSubordinate(HierarchyNode<TPackage> node)
-    {
-      if (node == null) throw new ArgumentNullException("node");
-      SetDefaultImage(node);
-      return _ManagedItems.Add(node);
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
     /// Sets the default image of the specified node.
     /// </summary>
     /// <param name="node">Node to set the default image for.</param>
     // --------------------------------------------------------------------------------------------
-    protected internal void SetDefaultImage(HierarchyNode<TPackage> node)
+    protected internal void SetDefaultImage(HierarchyNode node)
     {
       int imageIndex;
       if (_ImageIndexes.TryGetValue(node.GetType(), out imageIndex))
@@ -338,27 +510,9 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <param name="node">Node to remove from hierarchy</param>
     // --------------------------------------------------------------------------------------------
-    protected internal void RemoveSubordinate(HierarchyNode<TPackage> node)
+    protected internal void RemoveSubordinate(HierarchyNode node)
     {
       _ManagedItems.Remove(node);
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Raises the hierarchy events according to the specified action.
-    /// </summary>
-    /// <param name="sinkAction">Action to execute</param>
-    // --------------------------------------------------------------------------------------------
-    protected internal void RaiseHierarchyEvent(Func<IVsHierarchyEvents, int> sinkAction)
-    {
-      foreach (var sink in _EventSinks)
-      {
-        int result = sinkAction(sink);
-        if (ErrorHandler.Failed(result) && result != VSConstants.E_NOTIMPL)
-        {
-          ErrorHandler.ThrowOnFailure(result);
-        }
-      }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -368,7 +522,7 @@ namespace VSXtra.Hierarchy
     /// <param name="node1">First node</param>
     /// <param name="node2">Second node</param>
     // --------------------------------------------------------------------------------------------
-    public virtual int CompareNodes(HierarchyNode<TPackage> node1, HierarchyNode<TPackage> node2)
+    public virtual int CompareNodes(HierarchyNode node1, HierarchyNode node2)
     {
       if (node1 == null)
         throw new ArgumentNullException("node1");
@@ -396,7 +550,7 @@ namespace VSXtra.Hierarchy
     /// initialization of the root node.
     /// </remarks>
     // --------------------------------------------------------------------------------------------
-    protected abstract HierarchyNode<TPackage> CreateHierarchyRoot();
+    protected abstract HierarchyNode CreateHierarchyRoot();
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -405,7 +559,7 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <param name="root">Root node instance.</param>
     // --------------------------------------------------------------------------------------------
-    protected virtual void InitializeHierarchyRoot(HierarchyNode<TPackage> root)
+    protected virtual void InitializeHierarchyRoot(HierarchyNode root)
     {
     }
 
@@ -513,10 +667,18 @@ namespace VSXtra.Hierarchy
       return VSConstants.S_OK;
     }
 
-    int IVsHierarchy.GetGuidProperty(uint itemid, int propid, out Guid pguid)
+    int IVsHierarchy.GetGuidProperty(uint itemId, int propId, out Guid pguid)
     {
+      // --- Obtain the node by the specified ID
       pguid = Guid.Empty;
-      return VSConstants.S_OK;
+      var node = this[itemId];
+      if (node != null)
+      {
+        node.GetGuidProperty(propId, out pguid);
+      }
+      return pguid == Guid.Empty
+        ? VSConstants.DISP_E_MEMBERNOTFOUND
+        : VSConstants.S_OK;
     }
 
     int IVsHierarchy.SetGuidProperty(uint itemid, int propid, ref Guid rguid)
@@ -538,7 +700,6 @@ namespace VSXtra.Hierarchy
     int IVsHierarchy.GetProperty(uint itemId, int propId, out object propVal)
     {
       propVal = null;
-
       // --- IconImgList is available only for the root item
       if (itemId != VSConstants.VSITEMID_ROOT && propId == (int)__VSHPROPID.VSHPROPID_IconImgList)
       {
@@ -710,8 +871,23 @@ namespace VSXtra.Hierarchy
         switch (nCmdID)
         {
           case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_DoubleClick:
-            VsMessageBox.Show("DoubleClick for " + itemid);
+            var node = this[itemid];
+            VsMessageBox.Show("Hierarchy: " + _HierarchyRoot.Caption);
             break;
+          case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_EnterKey:
+            var nodeB = this[itemid];
+            if (nodeB != null)
+            {
+              UIHierarchyToolWindow.AddSelectNode(nodeB);
+            }
+            return VSConstants.S_FALSE;
+          case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_RightClick:
+            var nodeUB = this[itemid];
+            if (nodeUB != null)
+            {
+              UIHierarchyToolWindow.EditNodeLabel(nodeUB);
+            }
+            return VSConstants.S_OK;
         }
         return VSConstants.S_OK; // return S_FALSE to avoid the exec of the original function
       }
@@ -1048,6 +1224,77 @@ namespace VSXtra.Hierarchy
       //  return VSConstants.S_OK;
       //}
       return (int) OleConstants.OLECMDERR_E_NOTSUPPORTED;
+    }
+
+    #endregion
+
+    #region IHierarchyManager explicit implementation
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets the node at the specified ID.
+    /// </summary>
+    /// <param name="id">ID to set the node at</param>
+    /// <param name="node">Node to set</param>
+    // --------------------------------------------------------------------------------------------
+    void IHierarchyManager.SetNodeAtId(HierarchyId id, HierarchyNode node)
+    {
+      ManagedItems.SetAt(id, node);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Raises the hierarchy events according to the specified action.
+    /// </summary>
+    /// <param name="sinkAction">Action to execute</param>
+    // --------------------------------------------------------------------------------------------
+    void IHierarchyManager.RaiseHierarchyEvent(Func<IVsHierarchyEvents, int> sinkAction)
+    {
+      foreach (var sink in _EventSinks)
+      {
+        int result = sinkAction(sink);
+        if (ErrorHandler.Failed(result) && result != VSConstants.E_NOTIMPL)
+        {
+          ErrorHandler.ThrowOnFailure(result);
+        }
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Removes the specified node from the hierarchy.
+    /// </summary>
+    /// <param name="node">Node to remove</param>
+    // --------------------------------------------------------------------------------------------
+    void IHierarchyManager.RemoveNode(HierarchyNode node)
+    {
+      ManagedItems.Remove(node);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Adds a subordinate node to this hierarchy.
+    /// </summary>
+    /// <param name="node">Node to add as a subordinate</param>
+    // --------------------------------------------------------------------------------------------
+    uint IHierarchyManager.AddSubordinate(HierarchyNode node)
+    {
+      if (node == null) throw new ArgumentNullException("node");
+      SetDefaultImage(node);
+      return _ManagedItems.Add(node);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the parent hierarchy of this hierarchy
+    /// </summary>
+    /// <param name="parent">The parent hierarchy.</param>
+    /// <param name="id">The id of the item in the parent hierarchy.</param>
+    // --------------------------------------------------------------------------------------------
+    void IHierarchyManager.SetParentHierarchy(IHierarchyManager parent, HierarchyId id)
+    {
+      _ParentHierarchy = parent;
+      _IdInParentHierarchy = id;
     }
 
     #endregion

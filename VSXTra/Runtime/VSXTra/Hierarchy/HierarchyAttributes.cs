@@ -32,6 +32,7 @@ namespace VSXtra.Hierarchy
   /// This attribute is used to set the sort priority used by a hierarchy node
   /// </summary>
   // ================================================================================================
+  [AttributeUsage(AttributeTargets.Class)]
   public sealed class SortPriorityAttribute : Int32Attribute
   {
     // --------------------------------------------------------------------------------------------
@@ -45,4 +46,22 @@ namespace VSXtra.Hierarchy
     {
     }
   }
+
+  // ================================================================================================
+  /// <summary>
+  /// This attribute signs that the node should use the images of the nested hierarchy if the
+  /// node has a shortcut to another hierarchy.
+  /// </summary>
+  // ================================================================================================
+  [AttributeUsage(AttributeTargets.Class)]
+  public sealed class UseInnerHierarchyImagesAttribute : Attribute { }
+
+  // ================================================================================================
+  /// <summary>
+  /// This attribute signs that the node should use the caption of the nested hierarchy if the
+  /// node has a shortcut to another hierarchy.
+  /// </summary>
+  // ================================================================================================
+  [AttributeUsage(AttributeTargets.Class)]
+  public sealed class UseInnerHierarchyCaptionAttribute : Attribute { }
 }

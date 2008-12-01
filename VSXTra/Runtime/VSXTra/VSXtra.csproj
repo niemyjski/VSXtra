@@ -115,6 +115,7 @@
     <Compile Include="Utility\HelpService.cs" />
     <Compile Include="Utility\NativeMethods.cs" />
     <Compile Include="Utility\ResourceResolver.cs" />
+    <Compile Include="Utility\UIHierarchyWindowExtensions.cs" />
     <Compile Include="Utility\UnsafeNativeMethods.cs" />
     <Compile Include="Utility\VsxConverter.cs" />
     <Compile Include="Shell\VSCommands\FileCommands.cs" />

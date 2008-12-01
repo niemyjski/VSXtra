@@ -1,35 +1,31 @@
 // ================================================================================================
-// NotLoadedNode.cs
+// RootNode.cs
 //
 // Created: 2008.11.28, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using VSXtra.Hierarchy;
 
-namespace DeepDiver.UIHierarchyWindow
+namespace DeepDiver.BasicHierarchy
 {
   // ================================================================================================
   /// <summary>
-  /// This node represents that its parent's content has not been loaded.
+  /// This hierarchy node represents a file hierarchy root.
   /// </summary>
   // ================================================================================================
-  [HierarchyBitmap("NotLoaded")]
-  [SortPriority(10)]
-  public class NotLoadedNode : FileHierarchyNode
+  [HierarchyBitmap("HomeImage")]
+  public sealed class RootNode : FileHierarchyNode
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Initializes a new instance of the <see cref="NotLoadedNode"/> class.
+    /// Initializes a new instance of the <see cref="RootNode"/> class.
     /// </summary>
+    /// <param name="fullPath">The full path of the node.</param>
+    /// <param name="caption">The caption to display about the node.</param>
     /// <param name="manager">The manager responsible for this node.</param>
     // --------------------------------------------------------------------------------------------
-    public NotLoadedNode(FileHierarchyManager manager)
-      : base(manager)
+    public RootNode(FileHierarchyManager manager, string fullPath, string caption) : 
+      base(manager, fullPath, caption)
     {
-    }
-
-    public override string Caption
-    {
-      get { return "Loading..."; }
     }
   }
 }

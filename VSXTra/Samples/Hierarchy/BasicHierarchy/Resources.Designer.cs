@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DeepDiver.UIHierarchyWindow {
+namespace DeepDiver.BasicHierarchy {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DeepDiver.UIHierarchyWindow {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeepDiver.UIHierarchyWindow.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeepDiver.BasicHierarchy.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,20 +60,6 @@ namespace DeepDiver.UIHierarchyWindow {
             }
         }
         
-        internal static System.Drawing.Bitmap ComputerImage {
-            get {
-                object obj = ResourceManager.GetObject("ComputerImage", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap DriveImage {
-            get {
-                object obj = ResourceManager.GetObject("DriveImage", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap FileImage {
             get {
                 object obj = ResourceManager.GetObject("FileImage", resourceCulture);
@@ -91,20 +77,6 @@ namespace DeepDiver.UIHierarchyWindow {
         internal static System.Drawing.Bitmap HomeImage {
             get {
                 object obj = ResourceManager.GetObject("HomeImage", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap NotLoadedImage {
-            get {
-                object obj = ResourceManager.GetObject("NotLoadedImage", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap SystemFolderImage {
-            get {
-                object obj = ResourceManager.GetObject("SystemFolderImage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

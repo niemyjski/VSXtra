@@ -5,20 +5,16 @@
 // ================================================================================================
 using System;
 using System.IO;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell;
-using VSXtra.Commands;
 using VSXtra.Hierarchy;
-using VSXtra.Shell;
 
-namespace DeepDiver.UIHierarchyWindow
+namespace DeepDiver.BasicHierarchy
 {
   // ================================================================================================
   /// <summary>
   /// This class is repsonsible the File Hierarchy
   /// </summary>
   // ================================================================================================
-  public class FileHierarchyManager : HierarchyManager<UIHierarchyWindowPackage>
+  public class FileHierarchyManager : HierarchyManager<BasicHierarchyPackage>
   {
     #region Private fields
     
@@ -52,9 +48,9 @@ namespace DeepDiver.UIHierarchyWindow
     /// Newly created root node.
     /// </returns>
     // --------------------------------------------------------------------------------------------
-    protected override HierarchyNode<UIHierarchyWindowPackage> CreateHierarchyRoot()
+    protected override HierarchyNode CreateHierarchyRoot()
     {
-      return new RootNode(_FullPath, _FullPath, null);
+      return new RootNode(null, _FullPath, _FullPath);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -63,9 +59,10 @@ namespace DeepDiver.UIHierarchyWindow
     /// </summary>
     /// <param name="root">Root hierachy node to initialize</param>
     // --------------------------------------------------------------------------------------------
-    protected override void InitializeHierarchyRoot(HierarchyNode<UIHierarchyWindowPackage> root)
+    protected override void InitializeHierarchyRoot(HierarchyNode root)
     {
       var fileRoot = root as FileHierarchyNode;
+      if (fileRoot == null) return;
       ScanContent(fileRoot);
     }
 
@@ -88,14 +85,11 @@ namespace DeepDiver.UIHierarchyWindow
         foreach (var dir in Directory.GetDirectories(node.FullPath))
         {
           var dirName = dir.Substring(path.Length + (path.EndsWith("\\") ? 0 : 1));
-          var folderNode = new FolderNode(this, dir, dirName);
-          node.AddChild(folderNode);
-          folderNode.AddChild(new NotLoadedNode(this));
-          folderNode.IsExpanded = false;
+          node.AddChild(new FolderNode(this, dir, dirName));
         }
         foreach (var file in Directory.GetFiles(path))
         {
-          var fileNode = new FileNode(file, Path.GetFileName(file), this);
+          var fileNode = new FileNode(this, file, Path.GetFileName(file));
           node.AddChild(fileNode);
         }
       }
@@ -103,24 +97,6 @@ namespace DeepDiver.UIHierarchyWindow
       {
         // --- This exception is intentionally supressed.
       }
-    }
-
-    #endregion
-
-    #region Command methods
-
-    [CommandStatusMethod]
-    [VsCommandId(VSConstants.VSStd97CmdID.Paste)]
-    private static void CanPaste(OleMenuCommand command)
-    {
-      command.Enabled = true;
-    }
-
-    [CommandExecMethod]
-    [VsCommandId(VSConstants.VSStd97CmdID.Paste)]
-    private static void ExecPaste()
-    {
-      VsMessageBox.Show("Paste command executed");
     }
 
     #endregion
