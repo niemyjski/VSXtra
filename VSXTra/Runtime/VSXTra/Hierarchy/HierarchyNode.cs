@@ -5,10 +5,10 @@
 // ================================================================================================
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
-using VSXtra.Package;
 
 namespace VSXtra.Hierarchy
 {
@@ -21,8 +21,7 @@ namespace VSXtra.Hierarchy
   /// element.
   /// </remarks>
   // ================================================================================================
-  public abstract class HierarchyNode<TPackage>
-    where TPackage : PackageBase 
+  public abstract class HierarchyNode
   {
     #region Constant values
 
@@ -32,43 +31,74 @@ namespace VSXtra.Hierarchy
 
     #region Private Fields
 
-    private HierarchyNode<TPackage> _ParentNode;
-    private HierarchyNode<TPackage> _NextSibling;
-    private HierarchyNode<TPackage> _FirstChild;
-    private HierarchyNode<TPackage> _LastChild;
-    private EventHandler<HierarchyNodeEventArgs<TPackage>> _OnChildAdded;
-    private EventHandler<HierarchyNodeEventArgs<TPackage>> _OnChildRemoved;
+    private HierarchyNode _ParentNode;
+    private HierarchyNode _NextSibling;
+    private HierarchyNode _FirstChild;
+    private HierarchyNode _LastChild;
+    private EventHandler<HierarchyNodeEventArgs> _OnChildAdded;
+    private EventHandler<HierarchyNodeEventArgs> _OnChildRemoved;
+    private IHierarchyManager _NestedHierarchy;
+    private string _DefaultCaption;
 
     #endregion
 
     #region Lifecycle methods
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HierarchyNode"/> class.
+    /// </summary>
+    /// <remarks>
+    /// Sets up the default values and parses decorating attributes.
+    /// </remarks>
+    // --------------------------------------------------------------------------------------------
     protected HierarchyNode()
     {
       IsExpanded = true;
       SortPriority = 1000;
       DefaultImageIndex = NoImageIndex;
+
+      // --- Check for the SortOrder attribute
+      var spAttr = GetType().GetAttribute<SortPriorityAttribute>();
+      if (spAttr != null) SortPriority = spAttr.Value;
+
+      // --- Check for the UseInnerHierarchyImages attribute
+      var uihAttr = GetType().GetAttribute<UseInnerHierarchyImagesAttribute>();
+      UseInnerHierarchyImages = uihAttr != null;
+
+      // --- Check for the UseInnerHierarchyCaption attribute
+      var uicAttr = GetType().GetAttribute<UseInnerHierarchyCaptionAttribute>();
+      UseInnerHierarchyCaption = uicAttr != null;
     }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Initializes a new instance of the <see cref="HierarchyNode{TPackage}"/> class.
+    /// Initializes a new instance of the <see cref="HierarchyNode"/> class.
     /// </summary>
     /// <param name="manager">The manager object responsible for this node.</param>
     // --------------------------------------------------------------------------------------------
-    protected HierarchyNode(HierarchyManager<TPackage> manager): this()
+    protected HierarchyNode(IHierarchyManager manager): this()
     {
-      // --- manager is set to null indicating that this node is a root node as is assigned to 
+      // --- Manager is set to null indicating that this node is a root node as is assigned to 
       // --- its manager node later
       ManagerNode = manager;
       if (manager != null)
       {
         HierarchyId = ManagerNode.AddSubordinate(this);
       }
+    }
 
-      // --- Check for the SortOrder attribute
-      var attr = GetType().GetAttribute<SortPriorityAttribute>();
-      if (attr != null) SortPriority = attr.Value;
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HierarchyNode"/> class.
+    /// </summary>
+    /// <param name="manager">The manager object responsible for this node.</param>
+    /// <param name="caption">The caption of the node.</param>
+    // --------------------------------------------------------------------------------------------
+    protected HierarchyNode(IHierarchyManager manager, string caption)
+      : this(manager)
+    {
+      _DefaultCaption = caption;
     }
 
     #endregion
@@ -88,7 +118,7 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <value>The parent node.</value>
     // --------------------------------------------------------------------------------------------
-    public HierarchyNode<TPackage> ParentNode
+    public HierarchyNode ParentNode
     {
       get { return _ParentNode; }
     }
@@ -99,7 +129,7 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <value>The manager node.</value>
     // --------------------------------------------------------------------------------------------
-    public HierarchyManager<TPackage> ManagerNode { get; protected internal set; }
+    public IHierarchyManager ManagerNode { get; protected internal set; }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -107,8 +137,8 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <value>The next sibling.</value>
     // --------------------------------------------------------------------------------------------
-    [System.ComponentModel.BrowsableAttribute(false)]
-    public HierarchyNode<TPackage> NextSibling
+    [Browsable(false)]
+    public HierarchyNode NextSibling
     {
       get { return _NextSibling; }
     }
@@ -118,13 +148,13 @@ namespace VSXtra.Hierarchy
     /// Gets the previous sibling.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    [System.ComponentModel.BrowsableAttribute(false)]
-    public HierarchyNode<TPackage> PreviousSibling
+    [BrowsableAttribute(false)]
+    public HierarchyNode PreviousSibling
     {
       get
       {
         if (_ParentNode == null) return null;
-        HierarchyNode<TPackage> prev = null;
+        HierarchyNode prev = null;
         foreach (var child in Children)
         {
           if (child == this)
@@ -141,7 +171,7 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <value>The first child.</value>
     // --------------------------------------------------------------------------------------------
-    public HierarchyNode<TPackage> FirstChild
+    public HierarchyNode FirstChild
     {
       get { return _FirstChild; }
     }
@@ -152,7 +182,7 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <value>The last child.</value>
     // --------------------------------------------------------------------------------------------
-    public HierarchyNode<TPackage> LastChild
+    public HierarchyNode LastChild
     {
       get { return _LastChild; }
     }
@@ -209,7 +239,7 @@ namespace VSXtra.Hierarchy
     /// Event raised when a child has been added to this node.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    internal event EventHandler<HierarchyNodeEventArgs<TPackage>> OnChildAdded
+    internal event EventHandler<HierarchyNodeEventArgs> OnChildAdded
     {
       add { _OnChildAdded += value; }
       remove { _OnChildAdded -= value; }
@@ -220,7 +250,7 @@ namespace VSXtra.Hierarchy
     /// Event raised when a child has been removed from this node.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    internal event EventHandler<HierarchyNodeEventArgs<TPackage>> OnChildRemoved
+    internal event EventHandler<HierarchyNodeEventArgs> OnChildRemoved
     {
       add { _OnChildRemoved += value; }
       remove { _OnChildRemoved -= value; }
@@ -270,6 +300,32 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     public bool IsClosed { get; private set; }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the shortcut to a nested hierarchy in this node.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public IHierarchyManager NestedHierarchy
+    {
+      get { return _NestedHierarchy; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Signs if the node should use the images of the nested hierarchy if the node has a shortcut 
+    /// to another hierarchy.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool UseInnerHierarchyImages { get; protected set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Signs if the node should use the caption of the nested hierarchy if the node has a shortcut 
+    /// to another hierarchy.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool UseInnerHierarchyCaption { get; protected set; }
+
     #endregion
 
     #region Virtual and abstract methods 
@@ -279,7 +335,11 @@ namespace VSXtra.Hierarchy
     /// Gets the caption of the node.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public abstract string Caption { get; }
+    public virtual string Caption
+    {
+      get { return _DefaultCaption; }
+      set { _DefaultCaption = value; }
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -301,23 +361,37 @@ namespace VSXtra.Hierarchy
     /// </returns>
     // --------------------------------------------------------------------------------------------
     public virtual object GetProperty(int propId)
-		{
+    {
       object result = null;
-      switch ((__VSHPROPID)propId)
+      switch ((__VSHPROPID) propId)
       {
+        // --- A node is expandable only if it has a child or it has a nested hierarchy with a
+        // --- non-empty root node (a root node having at least one child)
         case __VSHPROPID.VSHPROPID_Expandable:
-          result = (_FirstChild != null);
+          result =
+            (_FirstChild != null) ||
+            (_FirstChild == null && _NestedHierarchy != null && _NestedHierarchy.HierarchyRoot.FirstChild != null);
           break;
 
+        // --- Gets the caption of the node. This property is used as the name of the node as well 
+        // --- as the name used for saving the document behind. We can declare by the UseInnerHierarchyCaption
+        // --- flag to use the caption of the nested hierarchy's root node, if this node has a shortcut
+        // --- to a nested hierarchy at all.
         case __VSHPROPID.VSHPROPID_Caption:
         case __VSHPROPID.VSHPROPID_Name:
         case __VSHPROPID.VSHPROPID_SaveName:
-          result = Caption;
+          result = UseInnerHierarchyCaption && _NestedHierarchy != null
+                     ? (_NestedHierarchy.HierarchyRoot == null
+                          ? Caption
+                          : _NestedHierarchy.HierarchyRoot.Caption)
+                     : Caption;
           break;
 
+        // --- This property tells if the node is expanded by default or not.
         case __VSHPROPID.VSHPROPID_ExpandByDefault:
           result = ExpandByDefault;
           break;
+
 
         case __VSHPROPID.VSHPROPID_IconImgList:
           result = ManagerNode.ImageListHandle;
@@ -331,47 +405,49 @@ namespace VSXtra.Hierarchy
           break;
 
         case __VSHPROPID.VSHPROPID_StateIconIndex:
-          //result = (int)this.StateIconIndex;
           break;
 
         case __VSHPROPID.VSHPROPID_IconHandle:
-          //result = GetIconHandle(false);
+          result = ManagerNode.ImageListHandle;
           break;
 
         case __VSHPROPID.VSHPROPID_OpenFolderIconHandle:
-          //result = GetIconHandle(true);
+          result = ManagerNode.ImageListHandle;
           break;
 
         case __VSHPROPID.VSHPROPID_NextVisibleSibling:
         case __VSHPROPID.VSHPROPID_NextSibling:
-          result = (int)((_NextSibling != null) ? _NextSibling.HierarchyId : VSConstants.VSITEMID_NIL);
+          result = (int) ((_NextSibling != null) ? _NextSibling.HierarchyId : VSConstants.VSITEMID_NIL);
           break;
 
         case __VSHPROPID.VSHPROPID_FirstChild:
         case __VSHPROPID.VSHPROPID_FirstVisibleChild:
-          result = (int)((_FirstChild != null) ? _FirstChild.HierarchyId : VSConstants.VSITEMID_NIL);
+          result = (int) ((_FirstChild != null) ? _FirstChild.HierarchyId : VSConstants.VSITEMID_NIL);
           break;
 
         case __VSHPROPID.VSHPROPID_Parent:
           if (_ParentNode == null)
           {
-            unchecked { result = new IntPtr((int)VSConstants.VSITEMID_NIL); }
+            unchecked
+            {
+              result = new IntPtr((int) VSConstants.VSITEMID_NIL);
+            }
           }
           else
           {
-            result = new IntPtr((int)_ParentNode.HierarchyId);
+            result = new IntPtr((int) _ParentNode.HierarchyId);
           }
           break;
 
         case __VSHPROPID.VSHPROPID_ParentHierarchyItemid:
-          //if (parentHierarchy != null)
-          //{
-          //  result = (IntPtr)parentHierarchyItemId; // VS requires VT_I4 | VT_INT_PTR
-          //}
+          if (ManagerNode.ParentHierarchy != null)
+          {
+            result = (IntPtr) ((uint) ManagerNode.IdInParentHierarchy);
+          }
           break;
 
         case __VSHPROPID.VSHPROPID_ParentHierarchy:
-          //result = parentHierarchy;
+          result = ManagerNode.ParentHierarchy;
           break;
 
         case __VSHPROPID.VSHPROPID_Root:
@@ -402,7 +478,46 @@ namespace VSXtra.Hierarchy
           //result = GetAutomationObject();
           break;
       }
+      __VSHPROPID2 id2 = (__VSHPROPID2) propId;
+      switch (id2)
+      {
+        case __VSHPROPID2.VSHPROPID_NoDefaultNestedHierSorting:
+          result = false;
+          break;
+        // We are doing the sorting ourselves through VSHPROPID_FirstChild and VSHPROPID_NextSibling
+        case __VSHPROPID2.VSHPROPID_UseInnerHierarchyIconList:
+          result = UseInnerHierarchyImages;
+          break;
+      }
+      var propName = Enum.GetName(typeof (__VSHPROPID), propId);
+      if (String.IsNullOrEmpty(propName))
+        propName = Enum.GetName(typeof (__VSHPROPID2), propId);
+      if (String.IsNullOrEmpty(propName))
+        propName = Enum.GetName(typeof (__VSHPROPID3), propId);
+      Console.WriteLine("{0}:{1} = {2}", Caption, propName, result ?? "<null>");
       return result;
+    }
+
+    public virtual int GetGuidProperty(int propId, out Guid guid)
+    {
+      guid = Guid.Empty;
+      //if (propid == (int)__VSHPROPID.VSHPROPID_TypeGuid)
+      //{
+      //  guid = this.ItemTypeGuid;
+      //}
+
+      var propName = Enum.GetName(typeof(__VSHPROPID), propId);
+      if (String.IsNullOrEmpty(propName))
+        propName = Enum.GetName(typeof(__VSHPROPID2), propId);
+      if (String.IsNullOrEmpty(propName))
+        propName = Enum.GetName(typeof(__VSHPROPID3), propId);
+      Console.WriteLine("{0}:{1} = {2}", Caption, propName, guid);
+
+      if (guid.CompareTo(Guid.Empty) == 0)
+      {
+        return VSConstants.DISP_E_MEMBERNOTFOUND;
+      }
+      return VSConstants.S_OK;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -417,6 +532,13 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     public virtual int SetProperty(int propId, object value)
     {
+      var propName = Enum.GetName(typeof(__VSHPROPID), propId);
+      if (String.IsNullOrEmpty(propName))
+        propName = Enum.GetName(typeof(__VSHPROPID2), propId);
+      if (String.IsNullOrEmpty(propName))
+        propName = Enum.GetName(typeof(__VSHPROPID3), propId);
+      Console.WriteLine("SetProperty {0}:{1} = {2}", Caption, propName, value ?? "<null>");
+
       var id = (__VSHPROPID)propId;
       switch (id)
       {
@@ -488,7 +610,7 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <param name="node">The child node to add to this node.</param>
     // --------------------------------------------------------------------------------------------
-    public virtual void AddChild(HierarchyNode<TPackage> node)
+    public virtual void AddChild(HierarchyNode node)
     {
       if (node == null)
       {
@@ -499,9 +621,9 @@ namespace VSXtra.Hierarchy
       var nodeWithSameID = ManagerNode[node.HierarchyId];
       if (!ReferenceEquals(node, nodeWithSameID))
       {
-        if (nodeWithSameID == null && (int)node.HierarchyId <= ManagerNode.ManagedItems.Count)
+        if (nodeWithSameID == null && (int)node.HierarchyId <= ManagerNode.ItemCount)
         { 
-          ManagerNode.ManagedItems.SetAt(node.HierarchyId, this);
+          ManagerNode.SetNodeAtId(node.HierarchyId, this);
         }
         else
         {
@@ -509,7 +631,7 @@ namespace VSXtra.Hierarchy
         }
       }
 
-      HierarchyNode<TPackage> previous = null;
+      HierarchyNode previous = null;
       foreach (var n in Children)
       {
         if (ManagerNode.CompareNodes(node, n) > 0) break;
@@ -545,11 +667,11 @@ namespace VSXtra.Hierarchy
     /// <param name="parent">Parent of the node.</param>
     /// <param name="child">Child node added.</param>
     // --------------------------------------------------------------------------------------------
-    protected void OnItemAdded(HierarchyNode<TPackage> parent, HierarchyNode<TPackage> child)
+    protected void OnItemAdded(HierarchyNode parent, HierarchyNode child)
     {
       if (null != parent._OnChildAdded)
       {
-        var args = new HierarchyNodeEventArgs<TPackage>(child);
+        var args = new HierarchyNodeEventArgs(child);
         parent._OnChildAdded(parent, args);
       }
       if (parent == null) throw new ArgumentNullException("parent");
@@ -568,13 +690,13 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <param name="node">The node to remove.</param>
     // --------------------------------------------------------------------------------------------
-    public virtual void RemoveChild(HierarchyNode<TPackage> node)
+    public virtual void RemoveChild(HierarchyNode node)
     {
       if (node == null)
         throw new ArgumentNullException("node");
 
-      ManagerNode.ManagedItems.Remove(node);
-      HierarchyNode<TPackage> last = null;
+      ManagerNode.RemoveNode(node);
+      HierarchyNode last = null;
       foreach (var n in Children)
       {
         if (n == node)
@@ -598,6 +720,18 @@ namespace VSXtra.Hierarchy
       throw new InvalidOperationException("Node not found");
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Nests the specified hierarchy into this hierarchy node.
+    /// </summary>
+    /// <param name="nestedHierachy">The nested hierachy.</param>
+    // --------------------------------------------------------------------------------------------
+    public void NestHierarchy(IHierarchyManager nestedHierachy)
+    {
+      _NestedHierarchy = nestedHierachy;
+      _NestedHierarchy.SetParentHierarchy(ManagerNode, HierarchyId);
+    }
+
     #endregion
 
     #region Iterators
@@ -607,7 +741,7 @@ namespace VSXtra.Hierarchy
     /// Gets the enumerable list of node items.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public IEnumerable<HierarchyNode<TPackage>> Children
+    public IEnumerable<HierarchyNode> Children
     {
       get
       {

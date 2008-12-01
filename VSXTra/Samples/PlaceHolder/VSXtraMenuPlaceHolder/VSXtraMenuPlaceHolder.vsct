@@ -51,8 +51,17 @@
           <CommandName>Tool Window Samples</CommandName>
         </Strings>
       </Menu>
+
+      <!-- "Hierarchy Samples" submenu placed into the "VSXtra" menu -->
+      <Menu guid="guidVSXtraCmdSet" id="HierarchySubMenu" priority="0x200" type="Menu">
+        <Parent guid="guidVSXtraCmdSet" id="TopLevelMenuGroup" />
+        <Strings>
+          <ButtonText>Hierarchy Samples</ButtonText>
+          <CommandName>Hierarchy Samples</CommandName>
+        </Strings>
+      </Menu>
     </Menus>
-    
+
     <Groups>
       <!-- Logical group for holding the submenus of the "VSXtra" top level menu -->
       <Group guid="guidVSXtraCmdSet" id="TopLevelMenuGroup" priority="0x0100">
@@ -78,6 +87,11 @@
       <Group guid="guidVSXtraCmdSet" id="ToolWindowMenuGroup" priority="0x0200">
         <Parent guid="guidVSXtraCmdSet" id="ToolWindowSubMenu"/>
       </Group>
+
+      <!-- Logical group for holding items in the "Hierarchy Samples" submenus -->
+      <Group guid="guidVSXtraCmdSet" id="HierarchyMenuGroup" priority="0x0200">
+        <Parent guid="guidVSXtraCmdSet" id="HierarchySubMenu"/>
+      </Group>
     </Groups>
     
   </Commands>
@@ -93,10 +107,12 @@
       <IDSymbol name="MenusSubMenu" value="0x1003" />
       <IDSymbol name="OutputWindowSubMenu" value="0x1004" />
       <IDSymbol name="ToolWindowSubMenu" value="0x1005" />
+      <IDSymbol name="HierarchySubMenu" value="0x1006" />
       <IDSymbol name="PackageMenuGroup" value="0x1102" />
       <IDSymbol name="MenusMenuGroup" value="0x1103" />
       <IDSymbol name="OutputWindowMenuGroup" value="0x1104" />
       <IDSymbol name="ToolWindowMenuGroup" value="0x1105" />
+      <IDSymbol name="HierarchyMenuGroup" value="0x1106" />
     </GuidSymbol>
   </Symbols>
 

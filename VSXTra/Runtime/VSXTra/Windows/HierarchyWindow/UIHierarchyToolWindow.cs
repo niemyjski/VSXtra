@@ -71,16 +71,12 @@ namespace VSXtra.Windows
       object unkObj;
       var manager = HierarchyManager;
       HierarchyWindow.Init(manager, (uint)flags, out unkObj);
-      var oleSp = Frame.OleServiceProvider;
-      if (oleSp != null)
-      {
-        manager.SetSite(oleSp);
-      }
+      Site(manager);
     }
 
     #endregion
 
-    #region Virtual methods
+    #region Virtual properties and methods
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -126,6 +122,208 @@ namespace VSXtra.Windows
         }
         return null;
       }
+    }
+
+    #endregion
+
+    #region Public methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Adds a new hierachy to the hierarchy window
+    /// </summary>
+    /// <param name="hierarchy">Hierarchy to add to the window</param>
+    /// <param name="dontSelectNew">
+    /// Flag indicating if the the new hierarchy should not be selected.
+    /// </param>
+    // --------------------------------------------------------------------------------------------
+    public void AddUIHierarchy(HierarchyManager<TPackage> hierarchy, bool dontSelectNew)
+    {
+      if (HierarchyWindow != null)
+      {
+        ErrorHandler.ThrowOnFailure(
+          HierarchyWindow.AddUIHierarchy(hierarchy,
+                                         dontSelectNew
+                                           ? (uint)__VSADDHIEROPTIONS.ADDHIEROPT_DontSelectNewHierarchy
+                                           : 0));
+        Site(hierarchy);
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Adds a new hierachy to the hierarchy window
+    /// </summary>
+    /// <param name="hierarchy">Hierarchy to add to the window</param>
+    // --------------------------------------------------------------------------------------------
+    public void AddUIHierarchy(HierarchyManager<TPackage> hierarchy)
+    {
+      AddUIHierarchy(hierarchy, true);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Expands the specified hierarchy node.
+    /// </summary>
+    /// <param name="node">Node to expand</param>
+    // --------------------------------------------------------------------------------------------
+    public void ExpandNode(HierarchyNode node)
+    {
+      ExpandNode(node, false);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Expands the specified hierarchy node.
+    /// </summary>
+    /// <param name="node">Node to expand</param>
+    /// <param name="recursive">Set true to expand the node recursively</param>
+    // --------------------------------------------------------------------------------------------
+    public void ExpandNode(HierarchyNode node, bool recursive)
+    {
+      HierarchyWindow.ExpandNode(node.ManagerNode, (uint)node.HierarchyId, recursive);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Expands the specified hierarchy node.
+    /// </summary>
+    /// <param name="node">Node to expand</param>
+    // --------------------------------------------------------------------------------------------
+    public void CollapseNode(HierarchyNode node)
+    {
+      HierarchyWindow.CollapseNode(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Expands the specified hierarchy node.
+    /// </summary>
+    /// <param name="node">Node to expand</param>
+    // --------------------------------------------------------------------------------------------
+    public void ExpandParents(HierarchyNode node)
+    {
+      HierarchyWindow.ExpandParents(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Selects the specified node.
+    /// </summary>
+    /// <param name="node">Node to select</param>
+    // --------------------------------------------------------------------------------------------
+    public void SelectNode(HierarchyNode node)
+    {
+      HierarchyWindow.BoldNode(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Adds a new node to the current selection.
+    /// </summary>
+    /// <param name="node">Node to select</param>
+    // --------------------------------------------------------------------------------------------
+    public void AddSelectNode(HierarchyNode node)
+    {
+      HierarchyWindow.AddSelectNode(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Extends the current selection into a range with the specified node.
+    /// </summary>
+    /// <param name="node">Node to select</param>
+    // --------------------------------------------------------------------------------------------
+    public void ExtendSelectNode(HierarchyNode node)
+    {
+      HierarchyWindow.ExtendSelectNode(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Higlights the specified node with bold font.
+    /// </summary>
+    /// <param name="node">Node to highlight with bold font</param>
+    // --------------------------------------------------------------------------------------------
+    public void BoldNode(HierarchyNode node)
+    {
+      HierarchyWindow.BoldNode(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Removes the bold higlights from the specified node with.
+    /// </summary>
+    /// <param name="node">Node to remove the highlight from</param>
+    // --------------------------------------------------------------------------------------------
+    public void UnBoldNode(HierarchyNode node)
+    {
+      HierarchyWindow.UnBoldNode(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets Cut highlighting to the specified node.
+    /// </summary>
+    /// <param name="node">Node to remove the highlight from</param>
+    // --------------------------------------------------------------------------------------------
+    public void CutHighlightNode(HierarchyNode node)
+    {
+      HierarchyWindow.CutHighlightNode(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Adds Cut highlighting to the specified node.
+    /// </summary>
+    /// <param name="node">Node to remove the highlight from</param>
+    // --------------------------------------------------------------------------------------------
+    public void AddCutHighlightNode(HierarchyNode node)
+    {
+      HierarchyWindow.CutHighlightNode(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Removes Cut highlighting from the specified node.
+    /// </summary>
+    /// <param name="node">Node to remove the highlight from</param>
+    // --------------------------------------------------------------------------------------------
+    public void UnCutHighlightNode(HierarchyNode node)
+    {
+      HierarchyWindow.CutHighlightNode(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Starts editing of the specified node label.
+    /// </summary>
+    /// <param name="node">Node to remove the highlight from</param>
+    // --------------------------------------------------------------------------------------------
+    public void EditNodeLabel(HierarchyNode node)
+    {
+      HierarchyWindow.EditNodeLabel(node.ManagerNode, (uint)node.HierarchyId);
+    }
+
+    #endregion
+
+    #region Helper methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sites the specified hierarchy
+    /// </summary>
+    /// <param name="hierarchy">Hierarchy to site</param>
+    // --------------------------------------------------------------------------------------------
+    private void Site(HierarchyManager<TPackage> hierarchy)
+    {
+      var oleSp = Frame.OleServiceProvider;
+      if (oleSp != null)
+      {
+        hierarchy.SetSite(oleSp);
+      }
+      hierarchy.UIHierarchyWindow = HierarchyWindow;
+      hierarchy.UIHierarchyToolWindow = this;
     }
 
     #endregion

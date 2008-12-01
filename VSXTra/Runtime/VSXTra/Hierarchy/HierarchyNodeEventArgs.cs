@@ -4,7 +4,6 @@
 // Created: 2008.09.09, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
-using VSXtra.Package;
 
 namespace VSXtra.Hierarchy
 {
@@ -13,8 +12,7 @@ namespace VSXtra.Hierarchy
   /// Event argument for hierarchy nodes.
   /// </summary>
   // ================================================================================================
-  public class HierarchyNodeEventArgs<TPackage> : EventArgs
-    where TPackage : PackageBase
+  public class HierarchyNodeEventArgs : EventArgs
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -22,15 +20,15 @@ namespace VSXtra.Hierarchy
     /// </summary>
     /// <value>The child node.</value>
     // --------------------------------------------------------------------------------------------
-    public HierarchyNode<TPackage> ChildNode { get; private set; }
+    public HierarchyNode ChildNode { get; private set; }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Initializes a new instance of the <see cref="HierarchyNodeEventArgs{TPackage}"/> class.
+    /// Initializes a new instance of the <see cref="HierarchyNodeEventArgs"/> class.
     /// </summary>
     /// <param name="childNode">The child node.</param>
     // --------------------------------------------------------------------------------------------
-    public HierarchyNodeEventArgs(HierarchyNode<TPackage> childNode)
+    public HierarchyNodeEventArgs(HierarchyNode childNode)
     {
       ChildNode = childNode;
     }

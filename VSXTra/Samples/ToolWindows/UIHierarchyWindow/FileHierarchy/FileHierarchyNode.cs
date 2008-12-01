@@ -12,12 +12,10 @@ namespace DeepDiver.UIHierarchyWindow
   /// This class represents an abstract hierarchy node.
   /// </summary>
   // ================================================================================================
-  public class FileHierarchyNode : HierarchyNode<UIHierarchyWindowPackage>
+  public class FileHierarchyNode : HierarchyNode
   {
     #region Private fields
 
-    /// <summary>Caption of the node</summary>
-    private readonly string _Caption;
     /// <summary>Object responsible for managing the node</summary>
     private readonly FileHierarchyManager _Manager;
 
@@ -30,9 +28,10 @@ namespace DeepDiver.UIHierarchyWindow
     /// Initializes a new instance of the <see cref="FileHierarchyNode"/> class.
     /// </summary>
     /// <param name="manager">The manager responsible for this node.</param>
+    /// <param name="caption">The caption.</param>
     // --------------------------------------------------------------------------------------------
-    protected FileHierarchyNode(FileHierarchyManager manager)
-      : base(manager)
+    protected FileHierarchyNode(FileHierarchyManager manager, string caption)
+      : base(manager, caption)
     {
       Loaded = false;
       _Manager = manager;
@@ -47,10 +46,9 @@ namespace DeepDiver.UIHierarchyWindow
     /// <param name="caption">The caption to display about the node.</param>
     // --------------------------------------------------------------------------------------------
     public FileHierarchyNode(FileHierarchyManager manager, string fullPath, string caption) : 
-      base(manager)
+      base(manager, caption)
     {
       FullPath = fullPath;
-      _Caption = caption;
       _Manager = manager;
     }
 
@@ -74,16 +72,6 @@ namespace DeepDiver.UIHierarchyWindow
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Gets the caption of the node.
-    /// </summary>
-    // --------------------------------------------------------------------------------------------
-    public override string Caption
-    {
-      get { return _Caption; }
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
     /// Responds to the event when the node is about to be expanded.
     /// </summary>
     // --------------------------------------------------------------------------------------------
@@ -92,7 +80,7 @@ namespace DeepDiver.UIHierarchyWindow
       if (!Loaded && FirstChild is NotLoadedNode)
       {
         RemoveChild(FirstChild);
-        _Manager.ScanContent(this);
+        if (_Manager != null) _Manager.ScanContent(this);
         InvalidateItem();
       }
       Loaded = true;

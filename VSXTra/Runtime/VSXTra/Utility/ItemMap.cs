@@ -195,7 +195,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     private IEnumerable<T> GetNonNullItems()
     {
-      foreach(var item in _Map)
+      foreach(var item in GetMap())
         if (item !=null) yield return item;
     }
 
