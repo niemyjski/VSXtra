@@ -5,7 +5,7 @@
 // ================================================================================================
 using VSXtra.Hierarchy;
 
-namespace DeepDiver.BasicHierarchy
+namespace DeepDiver.DynamicHierarchy
 {
   // ================================================================================================
   /// <summary>
@@ -14,7 +14,28 @@ namespace DeepDiver.BasicHierarchy
   // ================================================================================================
   public abstract class FileHierarchyNode : HierarchyNode
   {
+    #region Private fields
+
+    /// <summary>Object responsible for managing the node</summary>
+    private readonly FileHierarchyManager _Manager;
+
+    #endregion
+
     #region Lifecycle methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileHierarchyNode"/> class.
+    /// </summary>
+    /// <param name="manager">The manager responsible for this node.</param>
+    /// <param name="caption">The caption.</param>
+    // --------------------------------------------------------------------------------------------
+    protected FileHierarchyNode(FileHierarchyManager manager, string caption)
+      : base(manager, caption)
+    {
+      Loaded = false;
+      _Manager = manager;
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -28,11 +49,14 @@ namespace DeepDiver.BasicHierarchy
       base(manager, caption)
     {
       FullPath = fullPath;
+      _Manager = manager;
     }
 
     #endregion
 
     #region Public Properties
+
+    public bool Loaded { get; set; }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -41,6 +65,26 @@ namespace DeepDiver.BasicHierarchy
     /// <value>The full path.</value>
     // --------------------------------------------------------------------------------------------
     public string FullPath { get; private set; }
+
+    #endregion
+
+    #region Overridden Properties and methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Responds to the event when the node is about to be expanded.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    protected override void OnBeforeExpanded()
+    {
+      if (!Loaded && FirstChild is NotLoadedNode)
+      {
+        RemoveChild(FirstChild);
+        if (_Manager != null) _Manager.ScanContent(this);
+        InvalidateItem();
+      }
+      Loaded = true;
+    }
 
     #endregion
   }

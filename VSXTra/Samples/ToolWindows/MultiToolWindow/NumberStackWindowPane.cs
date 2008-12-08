@@ -46,7 +46,7 @@ namespace DeepDiver.MultiToolWindow
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [CommandId(CmdIDs.cmdidAdd1)]
-    protected void AddExec()
+    protected void AddExec(OleMenuCommand command, CommandContext context)
     {
       UIControl.Operation((x, y) => { checked { return x + y; } });
     }
@@ -58,7 +58,7 @@ namespace DeepDiver.MultiToolWindow
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [CommandId(CmdIDs.cmdidSubtract1)]
-    protected void SubtractExec()
+    protected void SubtractExec(CommandContext context)
     {
       UIControl.Operation((x, y) => { checked { return x - y; } });
     }

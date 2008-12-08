@@ -1,30 +1,30 @@
-// ================================================================================================
-// BasicUIHierarchyToolWindow.cs
+﻿// ================================================================================================
+// DynamicUIHierarchyWindow.cs
 //
-// Created: 2008.12.01, by Istvan Novak (DeepDiver)
+// Created: 2008.12.07, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using VSXtra.Hierarchy;
 using VSXtra.Windows;
 
-namespace DeepDiver.BasicHierarchy
+namespace DeepDiver.DynamicHierarchy
 {
   // ================================================================================================
   /// <summary>
-  /// This class represents a Basic UI hierarchy window
+  /// Sample dynamic hierarchy window
   /// </summary>
   // ================================================================================================
-  [InitialCaption("Basic UI Hierarchy window")]
+  [InitialCaption("Dynamic Hierarchy Window")]
   [BitmapResourceId(301)]
   [LinesAtRoot]
   [DoNotSortRootNodes]
-  public class BasicUIHierarchyToolWindow: UIHierarchyToolWindow<BasicHierarchyPackage>
+  public sealed class DynamicUIHierarchyWindow : UIHierarchyToolWindow<DynamicHierarchyPackage>
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Sets up the initial hierarchy.
+    /// Override this method to set up the initial hierarchy.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    protected override HierarchyManager<BasicHierarchyPackage> HierarchyManager
+    protected override HierarchyManager<DynamicHierarchyPackage> HierarchyManager
     {
       get { return new FileHierarchyManager("C:\\"); }
     }

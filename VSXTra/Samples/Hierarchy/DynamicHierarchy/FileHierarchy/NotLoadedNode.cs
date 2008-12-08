@@ -1,32 +1,30 @@
 // ================================================================================================
-// BasicUIHierarchyToolWindow.cs
+// NotLoadedNode.cs
 //
-// Created: 2008.12.01, by Istvan Novak (DeepDiver)
+// Created: 2008.11.28, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using VSXtra.Hierarchy;
-using VSXtra.Windows;
 
-namespace DeepDiver.BasicHierarchy
+namespace DeepDiver.DynamicHierarchy
 {
   // ================================================================================================
   /// <summary>
-  /// This class represents a Basic UI hierarchy window
+  /// This node represents that its parent's content has not been loaded.
   /// </summary>
   // ================================================================================================
-  [InitialCaption("Basic UI Hierarchy window")]
-  [BitmapResourceId(301)]
-  [LinesAtRoot]
-  [DoNotSortRootNodes]
-  public class BasicUIHierarchyToolWindow: UIHierarchyToolWindow<BasicHierarchyPackage>
+  [HierarchyBitmap("NotLoadedImage")]
+  [SortPriority(10)]
+  public sealed class NotLoadedNode : FileHierarchyNode
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Sets up the initial hierarchy.
+    /// Initializes a new instance of the <see cref="NotLoadedNode"/> class.
     /// </summary>
+    /// <param name="manager">The manager responsible for this node.</param>
     // --------------------------------------------------------------------------------------------
-    protected override HierarchyManager<BasicHierarchyPackage> HierarchyManager
+    public NotLoadedNode(FileHierarchyManager manager)
+      : base(manager, "The content of the node has not been loaded yet")
     {
-      get { return new FileHierarchyManager("C:\\"); }
     }
   }
 }

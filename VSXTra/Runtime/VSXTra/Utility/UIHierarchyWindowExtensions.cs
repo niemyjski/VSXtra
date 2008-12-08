@@ -191,6 +191,22 @@ namespace VSXtra
       ExpandItem(window, node, id, EXPANDFLAGS.EXPF_EditItemLabel);
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Returns the state or appearance of the hierarchy.
+    /// </summary>
+    /// <param name="window">The hierarchy window.</param>
+    /// <param name="hier">The hierarchy instance.</param>
+    /// <param name="id">The id of the hierarchy node.</param>
+    /// <param name="statemask">The mask to check the state.</param>
+    /// <param name="result">The state flags of the specified item.</param>
+    // --------------------------------------------------------------------------------------------
+    public static void GetNodeState(this IVsUIHierarchyWindow window,
+      IVsUIHierarchy hier, uint id, uint statemask, out uint result)
+    {
+      window.GetItemState(hier, id, statemask, out result);
+    }
+
     #endregion
 
     #region Private methods

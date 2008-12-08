@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VSXtra.Windows.UIHierarchyToolWindow&lt;TPackage&gt;" Collapsed="true">
+    <Position X="0.5" Y="1" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="HierarchyManager" Type="VSXtra.Hierarchy.HierarchyManager&lt;TPackage&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="3" Y="1.312" />
+        <Point X="4.75" Y="1.312" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAQgUAACAAAgAAAAAAAABCABVAQAECCoAAQAACAAAA=</HashCode>
+      <FileName>Windows\HierarchyWindow\UIHierarchyToolWindow.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HierarchyManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VSXtra.Hierarchy.HierarchyManager&lt;TPackage&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="1" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="UIHierarchyToolWindow" Type="VSXtra.Windows.UIHierarchyToolWindow&lt;TPackage&gt;" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.062" Y="1.562" />
+        <Point X="5.062" Y="2.241" />
+        <Point X="1.625" Y="2.241" />
+        <Point X="1.625" Y="1.691" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.915" Y="0.168" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="HierarchyRoot" Type="VSXtra.Hierarchy.HierarchyNode">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.19" Y="0.168" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ManagedItems" Type="VSXtra.Hierarchy.HierarchyNode" FixedFromPoint="true">
+      <Path>
+        <Point X="5.562" Y="1.562" />
+        <Point X="5.562" Y="3.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.168" Y="0.127" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ParentHierarchy" Type="VSXtra.Hierarchy.IHierarchyManager" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.25" Y="1.562" />
+        <Point X="5.25" Y="2.846" />
+        <Point X="3" Y="2.846" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>VoBgEIWII+YM0DowKQA5KDATBITER2EgAAAgLIyQqCg=</HashCode>
+      <FileName>Hierarchy\HierarchyManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UIHierarchyToolWindow" />
+      <Property Name="HierarchyRoot" />
+      <Property Name="ParentHierarchy" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ManagedItems" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="VSXtra.Hierarchy.HierarchyNode" Collapsed="true">
+    <Position X="4.75" Y="3.5" Width="2.25" />
+    <AssociationLine Name="ManagerNode" Type="VSXtra.Hierarchy.IHierarchyManager">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-2.823" Y="0.66" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EAIiAQAABAAEGCgIAQRGlMIgIIshAEiACYAABACQQIA=</HashCode>
+      <FileName>Hierarchy\HierarchyNode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ManagerNode" />
+    </ShowAsAssociation>
+  </Class>
+  <Interface Name="VSXtra.Hierarchy.IHierarchyManager" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAEAAAAIAAkAKAAAAAACAAAAAAABQAAgAAAQAAg=</HashCode>
+      <FileName>Hierarchy\HierarchyManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

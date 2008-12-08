@@ -78,9 +78,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropIDEnumerator", "Tools\P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicHierarchy", "Samples\Hierarchy\BasicHierarchy\BasicHierarchy.csproj", "{24AE417E-BEE4-4896-B32E-F645219F6E51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicHierarchy", "Samples\Hierarchy\DynamicHierarchy\DynamicHierarchy.csproj", "{A89EDF45-FE2C-4B47-A04D-9EDE9DA64225}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 25
+		SccNumberOfProjects = 27
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs02.codeplex.com/
 		SccLocalPath0 = .
@@ -180,6 +182,14 @@ Global
 		SccProjectTopLevelParentUniqueName24 = VSXTra.sln
 		SccProjectName24 = Tools/PropIDEnumerator
 		SccLocalPath24 = Tools\\PropIDEnumerator
+		SccProjectUniqueName25 = Samples\\Hierarchy\\BasicHierarchy\\BasicHierarchy.csproj
+		SccProjectTopLevelParentUniqueName25 = VSXTra.sln
+		SccProjectName25 = Samples/Hierarchy/BasicHierarchy
+		SccLocalPath25 = Samples\\Hierarchy\\BasicHierarchy
+		SccProjectUniqueName26 = Samples\\Hierarchy\\DynamicHierarchy\\DynamicHierarchy.csproj
+		SccProjectTopLevelParentUniqueName26 = VSXTra.sln
+		SccProjectName26 = Samples/Hierarchy/DynamicHierarchy
+		SccLocalPath26 = Samples\\Hierarchy\\DynamicHierarchy
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -286,6 +296,10 @@ Global
 		{24AE417E-BEE4-4896-B32E-F645219F6E51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24AE417E-BEE4-4896-B32E-F645219F6E51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24AE417E-BEE4-4896-B32E-F645219F6E51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A89EDF45-FE2C-4B47-A04D-9EDE9DA64225}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A89EDF45-FE2C-4B47-A04D-9EDE9DA64225}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A89EDF45-FE2C-4B47-A04D-9EDE9DA64225}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A89EDF45-FE2C-4B47-A04D-9EDE9DA64225}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -324,5 +338,6 @@ Global
 		{E9BC0BC9-B898-4961-BAE4-BC541C92092F} = {1E641972-38FC-45F0-8BB9-A0D9E98DAD13}
 		{1D3EC074-3275-43A9-95C9-F7BD299C61D9} = {5CBD6F09-AFD4-492B-960B-D33229FC5882}
 		{24AE417E-BEE4-4896-B32E-F645219F6E51} = {5CBD6F09-AFD4-492B-960B-D33229FC5882}
+		{A89EDF45-FE2C-4B47-A04D-9EDE9DA64225} = {5CBD6F09-AFD4-492B-960B-D33229FC5882}
 	EndGlobalSection
 EndGlobal

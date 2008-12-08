@@ -7,14 +7,14 @@ using System;
 using System.IO;
 using VSXtra.Hierarchy;
 
-namespace DeepDiver.BasicHierarchy
+namespace DeepDiver.DynamicHierarchy
 {
   // ================================================================================================
   /// <summary>
   /// This class is repsonsible the File Hierarchy
   /// </summary>
   // ================================================================================================
-  public sealed class FileHierarchyManager : HierarchyManager<BasicHierarchyPackage>
+  public sealed class FileHierarchyManager : HierarchyManager<DynamicHierarchyPackage>
   {
     #region Private fields
     
@@ -84,8 +84,21 @@ namespace DeepDiver.BasicHierarchy
         var path = node.FullPath;
         foreach (var dir in Directory.GetDirectories(node.FullPath))
         {
+          var dirInfo = new DirectoryInfo(dir);
           var dirName = dir.Substring(path.Length + (path.EndsWith("\\") ? 0 : 1));
-          node.AddChild(new FolderNode(this, dir, dirName));
+          FolderNode folderNode;
+          if ((dirInfo.Attributes & FileAttributes.System) != 0)
+          {
+            folderNode = new SystemFolderNode(this, dir, dirName);
+            folderNode.NestHierarchy(new FileHierarchyManager(dir));
+          }
+          else
+          {
+            folderNode = new FolderNode(this, dir, dirName);
+            folderNode.AddChild(new NotLoadedNode(this));
+          }
+          node.AddChild(folderNode);
+          folderNode.IsExpanded = false;
         }
         foreach (var file in Directory.GetFiles(path))
         {

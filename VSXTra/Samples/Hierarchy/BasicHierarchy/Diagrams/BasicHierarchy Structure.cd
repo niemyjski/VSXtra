@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeepDiver.BasicHierarchy.BasicUIHierarchyToolWindow" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="3" />
+    <AssociationLine Name="HierarchyManager" Type="VSXtra.Hierarchy.HierarchyManager&lt;TPackage&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="2.688" Y="1.191" />
+        <Point X="2.688" Y="2.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.415" Y="0.568" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BasicUIHierarchyToolWindow.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="HierarchyManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DeepDiver.BasicHierarchy.FileHierarchyManager" Collapsed="true">
+    <Position X="4" Y="2.25" Width="2.75" />
+    <InheritanceLine Type="VSXtra.Hierarchy.HierarchyManager&lt;TPackage&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="3.25" Y="2.562" />
+        <Point X="4" Y="2.562" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAAAAAAAAQAEA=</HashCode>
+      <FileName>Hierarchy\FileHierarchyManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VSXtra.Hierarchy.HierarchyManager&lt;TPackage&gt;" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="2.75" />
+    <AssociationLine Name="HierarchyRoot" Type="VSXtra.Hierarchy.HierarchyNode">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-1.357" Y="0.118" Height="0.182" Width="1.262" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="HierarchyRoot" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeepDiver.BasicHierarchy.FileHierarchyNode" Collapsed="true">
+    <Position X="4" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hierarchy\FileHierarchyNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VSXtra.Hierarchy.HierarchyNode" Collapsed="true">
+    <Position X="1" Y="3.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DeepDiver.BasicHierarchy.RootNode" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hierarchy\RootNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeepDiver.BasicHierarchy.FolderNode" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hierarchy\FolderNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeepDiver.BasicHierarchy.FileNode" Collapsed="true">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hierarchy\FileNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

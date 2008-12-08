@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+  <Commands package="guidDynamicHierarchyPkg">
+    <Groups>
+      <Group guid="guidDynamicHierarchyCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidVSXtraCmdSet" id="HierarchySubMenu"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidDynamicHierarchyCmdSet" id="cmdidShowDynamicHierarchy" priority="0x0100" type="Button">
+        <Parent guid="guidDynamicHierarchyCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidOfficeIcon" id="msotcidOutlineView" />
+        <Strings>
+          <CommandName>cmdidShowDynamicHierarchy</CommandName>
+          <ButtonText>Dynamic Hierarchy</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidDynamicHierarchyPkg" value="{b8b54f67-13eb-459c-9a9f-c607da68145a}" />
+    <GuidSymbol name="guidDynamicHierarchyCmdSet" value="{c2e1ca95-7185-4b07-bb77-7603a21cb802}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidShowDynamicHierarchy" value="0x0100" />
+    </GuidSymbol>
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="HierarchySubMenu" value="0x1006" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

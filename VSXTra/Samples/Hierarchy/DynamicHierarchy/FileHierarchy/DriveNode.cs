@@ -1,32 +1,31 @@
-// ================================================================================================
-// BasicUIHierarchyToolWindow.cs
+﻿// ================================================================================================
+// DriveNode.cs
 //
 // Created: 2008.12.01, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using VSXtra.Hierarchy;
-using VSXtra.Windows;
 
-namespace DeepDiver.BasicHierarchy
+namespace DeepDiver.DynamicHierarchy
 {
   // ================================================================================================
   /// <summary>
-  /// This class represents a Basic UI hierarchy window
+  /// This node represents a nested hierarchy under a DriveHierarchyRootNode
   /// </summary>
   // ================================================================================================
-  [InitialCaption("Basic UI Hierarchy window")]
-  [BitmapResourceId(301)]
-  [LinesAtRoot]
-  [DoNotSortRootNodes]
-  public class BasicUIHierarchyToolWindow: UIHierarchyToolWindow<BasicHierarchyPackage>
+  [HierarchyBitmap("DriveImage")]
+  [UseInnerHierarchyCaption]
+  public sealed class DriveNode : HierarchyNode 
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Sets up the initial hierarchy.
+    /// Initializes a new instance of the <see cref="DriveNode"/> class.
     /// </summary>
+    /// <param name="manager">The manager of this node.</param>
+    /// <param name="caption">The caption.</param>
     // --------------------------------------------------------------------------------------------
-    protected override HierarchyManager<BasicHierarchyPackage> HierarchyManager
+    public DriveNode(IHierarchyManager manager, string caption)
+      : base(manager, caption)
     {
-      get { return new FileHierarchyManager("C:\\"); }
     }
   }
 }

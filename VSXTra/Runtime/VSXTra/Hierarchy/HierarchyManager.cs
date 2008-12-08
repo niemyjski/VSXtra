@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -15,7 +16,6 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra.Commands;
 using VSXtra.Package;
-using VSXtra.Properties;
 using VSXtra.Shell;
 using VSXtra.Windows;
 using IServiceProvider = System.IServiceProvider;
@@ -129,6 +129,22 @@ namespace VSXtra.Hierarchy
     /// <param name="id">The id of the item in the parent hierarchy.</param>
     // --------------------------------------------------------------------------------------------
     void SetParentHierarchy(IHierarchyManager parent, HierarchyId id);
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the list of hierarchies nested into this hierarchy.
+    /// </summary>
+    /// <param name="recursive">Should the nested hierarchies recursively traversed?</param>
+    /// <returns>List of nested hierarchies</returns>
+    // --------------------------------------------------------------------------------------------
+    IEnumerable<IHierarchyManager> GetNestedHierarchies(bool recursive);
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Provides a root object for this hierarchy.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    void EnsureHierarchyRoot();
   }
 
   // ================================================================================================
@@ -533,6 +549,21 @@ namespace VSXtra.Hierarchy
                : node2.SortPriority - node1.SortPriority;
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the list of hierarchy nodes currently selected in the hosting hierarchy window.
+    /// </summary>
+    /// <returns>
+    /// List of selected hierarchy nodes.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    public virtual IEnumerable<HierarchyNode> GetSelectedNodes()
+    {
+      return from node in _ManagedItems
+             where MaskItemByState(node, __VSHIERARCHYITEMSTATE.HIS_Selected)
+             select node;
+    }
+
     #endregion
 
     #region Abstract and virtual members
@@ -626,6 +657,35 @@ namespace VSXtra.Hierarchy
     protected virtual string ImageResourceStreamName
     {
       get { return null; }
+    }
+
+    #endregion
+
+    #region Iterators
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the list of hierarchies nested into this hierarchy.
+    /// </summary>
+    /// <param name="recursive">Should the nested hierarchies recursively traversed?</param>
+    /// <returns>List of nested hierarchies</returns>
+    // --------------------------------------------------------------------------------------------
+    public IEnumerable<IHierarchyManager> GetNestedHierarchies(bool recursive)
+    {
+      foreach (var node in _ManagedItems)
+      {
+        if (node.NestedHierarchy != null)
+        {
+          yield return node.NestedHierarchy;
+          if (recursive)
+          {
+            foreach (var hierarchy in node.NestedHierarchy.GetNestedHierarchies(true))
+            {
+              yield return hierarchy;
+            }
+          }
+        }
+      }
     }
 
     #endregion
@@ -837,21 +897,28 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     public virtual int SetSite(IOleServiceProvider site)
     {
-      if (_Site != null)
+      // --- Clean up resources used previously
+      if (_OleMenuCommandService != null)
       {
-        throw new InvalidOperationException(String.Format(Resources.Hierarchy_SiteAlreadySet,
-          GetType().Name));
+        _OleMenuCommandService.Dispose();
+        _OleMenuCommandService = null;
       }
 
-      _Site = new ServiceProvider(site);
+      // --- No more work if we do not site the hierarchy
+      if (site != null)
+      {
+        // --- Set up command dispatching
+        _Site = new ServiceProvider(site);
+        _CommandDispatcher = new CommandDispatcher<TPackage>(this);
 
-      // --- Set up command dispatching
-      _CommandDispatcher = new CommandDispatcher<TPackage>(this);
+        // --- Register command handlers
+        var parentService = Package.GetService<IMenuCommandService, OleMenuCommandService>();
+        _OleMenuCommandService = new OleMenuCommandService(_Site, parentService);
+        _CommandDispatcher.RegisterCommandHandlers(_OleMenuCommandService, parentService);
+      }
 
-      // --- Register command handlers
-      var parentService = Package.GetService<IMenuCommandService, OleMenuCommandService>();
-      _OleMenuCommandService = new OleMenuCommandService(_Site, parentService);
-      _CommandDispatcher.RegisterCommandHandlers(_OleMenuCommandService, parentService);
+      // --- Site nested hierarchies
+      GetNestedHierarchies(true).ForEach(h => h.SetSite(site));
       return VSConstants.S_OK;
     }
 
@@ -871,23 +938,23 @@ namespace VSXtra.Hierarchy
         switch (nCmdID)
         {
           case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_DoubleClick:
-            var node = this[itemid];
-            VsMessageBox.Show("Hierarchy: " + _HierarchyRoot.Caption);
+            string caption = (itemid == (uint)HierarchyId.Selection)
+                               ? "<Selection>"
+                               : this[itemid].Caption;
+            VsMessageBox.Show("Double click on: " + caption);
             break;
           case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_EnterKey:
-            var nodeB = this[itemid];
-            if (nodeB != null)
-            {
-              UIHierarchyToolWindow.AddSelectNode(nodeB);
-            }
-            return VSConstants.S_FALSE;
+            string caption1 = (itemid == (uint) HierarchyId.Selection)
+                               ? "<Selection>"
+                               : this[itemid].Caption;
+            VsMessageBox.Show("Enter on: " + caption1);
+            break;
           case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_RightClick:
-            var nodeUB = this[itemid];
-            if (nodeUB != null)
-            {
-              UIHierarchyToolWindow.EditNodeLabel(nodeUB);
-            }
-            return VSConstants.S_OK;
+            string caption2 = (itemid == (uint)HierarchyId.Selection)
+                               ? "<Selection>"
+                               : this[itemid].Caption;
+            VsMessageBox.Show("Right click on: " + caption2);
+            break;
         }
         return VSConstants.S_OK; // return S_FALSE to avoid the exec of the original function
       }
@@ -1061,6 +1128,20 @@ namespace VSXtra.Hierarchy
       var result = new ImageHandler();
       result.AddImage(bitmap);
       return result;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Checks if the visual state of the specified node complies witht the state mask.
+    /// </summary>
+    /// <param name="node">Node to check</param>
+    /// <param name="state">Visual state mask</param>
+    /// <returns>True, if the node's state complies with the mask.</returns>
+    // --------------------------------------------------------------------------------------------
+    private bool MaskItemByState(HierarchyNode node, __VSHIERARCHYITEMSTATE state)
+    {
+      return (UIHierarchyToolWindow.GetNodeState(this, 
+        (uint) node.HierarchyId, state) & state) != 0;
     }
 
     #endregion
