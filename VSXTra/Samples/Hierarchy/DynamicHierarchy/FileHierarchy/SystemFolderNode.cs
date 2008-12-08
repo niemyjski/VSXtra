@@ -1,47 +1,31 @@
 // ================================================================================================
-// FileHierarchyNode.cs
+// SystemFolderNode.cs
 //
-// Created: 2008.11.28, by Istvan Novak (DeepDiver)
+// Created: 2008.11.30, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using VSXtra.Hierarchy;
 
-namespace DeepDiver.BasicHierarchy
+namespace DeepDiver.DynamicHierarchy
 {
   // ================================================================================================
   /// <summary>
-  /// This class represents an abstract hierarchy node.
+  /// This hierarchy node represents a folder.
   /// </summary>
   // ================================================================================================
-  public abstract class FileHierarchyNode : HierarchyNode
+  [HierarchyBitmap("SystemFolderImage")]
+  public sealed class SystemFolderNode : FolderNode
   {
-    #region Lifecycle methods
-
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Initializes a new instance of the <see cref="FileHierarchyNode"/> class.
+    /// Initializes a new instance of the <see cref="SystemFolderNode"/> class.
     /// </summary>
     /// <param name="manager">The manager responsible for this node.</param>
     /// <param name="fullPath">The full path of the node.</param>
     /// <param name="caption">The caption to display about the node.</param>
     // --------------------------------------------------------------------------------------------
-    public FileHierarchyNode(FileHierarchyManager manager, string fullPath, string caption) : 
-      base(manager, caption)
+    public SystemFolderNode(FileHierarchyManager manager, string fullPath, string caption) : 
+      base(manager, fullPath, caption)
     {
-      FullPath = fullPath;
     }
-
-    #endregion
-
-    #region Public Properties
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Gets or sets the full path representing the node.
-    /// </summary>
-    /// <value>The full path.</value>
-    // --------------------------------------------------------------------------------------------
-    public string FullPath { get; private set; }
-
-    #endregion
   }
 }

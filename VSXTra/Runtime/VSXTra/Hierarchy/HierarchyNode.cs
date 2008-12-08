@@ -728,7 +728,9 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     public void NestHierarchy(IHierarchyManager nestedHierachy)
     {
+      if (nestedHierachy == null) return;
       _NestedHierarchy = nestedHierachy;
+      _NestedHierarchy.EnsureHierarchyRoot();
       _NestedHierarchy.SetParentHierarchy(ManagerNode, HierarchyId);
     }
 

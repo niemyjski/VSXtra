@@ -14,7 +14,7 @@ namespace DeepDiver.BasicHierarchy
   // ================================================================================================
   [HierarchyBitmap("FileImage")]
   [SortPriority(30)]
-  public class FileNode : FileHierarchyNode
+  public sealed class FileNode : FileHierarchyNode
   {
     // --------------------------------------------------------------------------------------------
     /// <summary>

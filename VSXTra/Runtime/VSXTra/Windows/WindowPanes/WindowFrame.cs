@@ -141,6 +141,11 @@ namespace VSXtra.Windows
       }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the OleServiceProvider of this window frame.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
     public IOleServiceProvider OleServiceProvider
     {
       get

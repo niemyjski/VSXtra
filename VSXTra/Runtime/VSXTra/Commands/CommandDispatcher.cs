@@ -48,10 +48,17 @@ namespace VSXtra.Commands
   {
     #region Private fields
 
+    /// <summary>Cache for command target information</summary>
     private static readonly Dictionary<Type, CommandTargetInfo> _Targets =
       new Dictionary<Type, CommandTargetInfo>();
+
+    /// <summary>Package hosting the command dispatcher</summary>
     private readonly TPackage _Package;
 
+    /// <summary>Temporarily stores command contexts</summary>
+    private readonly Stack<CommandContext> _ContextStack =
+      new Stack<CommandContext>();
+      
     #endregion
 
     #region Lifecycle methods
@@ -160,6 +167,17 @@ namespace VSXtra.Commands
       }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Pushes context information to the context stack
+    /// </summary>
+    /// <param name="context">Context information to be pushed to the stack.</param>
+    // --------------------------------------------------------------------------------------------
+    public void PushContext(CommandContext context)
+    {
+      _ContextStack.Push(context);
+    }
+
     #endregion
 
     #region Private methods
@@ -200,12 +218,31 @@ namespace VSXtra.Commands
             BindingFlags.Instance | BindingFlags.Static)
           where method.ReturnType == typeof (void) &&
                 (
+                  // --- void MyCommandExec()
                   method.GetParameters().Count() == 0 &&
                   Attribute.IsDefined(method, typeof(CommandExecMethodAttribute))
                   ||
+                  // --- void MyCommandExec(CommandContext)
+                  method.GetParameters().Count() == 1 &&
+                  (
+                    method.GetParameters()[0].ParameterType == typeof(CommandContext) ||
+                    method.GetParameters()[0].ParameterType.IsSubclassOf(typeof(CommandContext))
+                  ) &&
+                  Attribute.IsDefined(method, typeof(CommandExecMethodAttribute))
+                  ||
+                  // --- void MyCommandMethod(OleMenuCommand)
                   method.GetParameters().Count() == 1 &&
                   method.GetParameters()[0].ParameterType == typeof (OleMenuCommand) &&
                   Attribute.IsDefined(method, typeof (CommandMethodAttribute))
+                  ||
+                  // --- void MyCommandMethod(OleMenuCommand, CommandExec)
+                  method.GetParameters().Count() == 2 &&
+                  method.GetParameters()[0].ParameterType == typeof(OleMenuCommand) &&
+                  (
+                    method.GetParameters()[1].ParameterType == typeof(CommandContext) ||
+                    method.GetParameters()[1].ParameterType.IsSubclassOf(typeof(CommandContext))
+                  ) &&
+                  Attribute.IsDefined(method, typeof(CommandMethodAttribute))
                 ) &&
                 Attribute.IsDefined(method, typeof(CommandIdAttribute))
           select method;
@@ -419,10 +456,20 @@ namespace VSXtra.Commands
       }
 
       // --- Execute the command
-      var parameters = 
-        commandMethod.GetParameters().Count() == 0
-        ? new object[0]
-        : new object[] {command};
+      var paramCount = commandMethod.GetParameters().Count();
+      var parameters = new object[paramCount];
+      CommandContext context = null;
+      if (_ContextStack.Count > 0) context = _ContextStack.Pop();
+      if (paramCount == 1)
+      {
+        parameters[0] = 
+          commandMethod.GetParameters()[0].ParameterType == typeof(OleMenuCommand)
+            ? (object)command : context;
+      }
+      if (paramCount == 2)
+      {
+        parameters[1] = context;
+      }
       commandMethod.Invoke(EventTarget, parameters);
     }
 

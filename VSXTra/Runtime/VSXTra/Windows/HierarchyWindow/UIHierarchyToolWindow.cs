@@ -305,6 +305,23 @@ namespace VSXtra.Windows
       HierarchyWindow.EditNodeLabel(node.ManagerNode, (uint)node.HierarchyId);
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the state of the item.
+    /// </summary>
+    /// <param name="manager">The manager.</param>
+    /// <param name="id">The id.</param>
+    /// <param name="stateMask">The state mask.</param>
+    /// <returns></returns>
+    // --------------------------------------------------------------------------------------------
+    public __VSHIERARCHYITEMSTATE GetNodeState(IHierarchyManager manager, HierarchyId id, 
+      __VSHIERARCHYITEMSTATE stateMask)
+    {
+      uint result;
+      HierarchyWindow.GetNodeState(manager, (uint)id, (uint)stateMask, out result);
+      return (__VSHIERARCHYITEMSTATE) (result);
+    }
+
     #endregion
 
     #region Helper methods
@@ -317,6 +334,9 @@ namespace VSXtra.Windows
     // --------------------------------------------------------------------------------------------
     private void Site(HierarchyManager<TPackage> hierarchy)
     {
+      // --- We do not site "null" hierarchies
+      if (hierarchy == null) return;
+
       var oleSp = Frame.OleServiceProvider;
       if (oleSp != null)
       {

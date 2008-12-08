@@ -6,16 +6,16 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeepDiver.BasicHierarchy</RootNamespace>
-    <AssemblyName>BasicHierarchy</AssemblyName>
+    <RootNamespace>DeepDiver.DynamicHierarchy</RootNamespace>
+    <AssemblyName>DynamicHierarchy</AssemblyName>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ProjectGuid>{24AE417E-BEE4-4896-B32E-F645219F6E51}</ProjectGuid>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <ProjectGuid>{A89EDF45-FE2C-4B47-A04D-9EDE9DA64225}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,19 +53,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicUIHierarchyToolWindow.cs" />
-    <Compile Include="Hierarchy\FileHierarchyManager.cs" />
-    <Compile Include="Hierarchy\FileHierarchyNode.cs" />
+    <Compile Include="DynamicUIHierarchyWindow.cs" />
+    <Compile Include="FileHierarchy\DriveNode.cs" />
+    <Compile Include="FileHierarchy\FileHierarchyManager.cs" />
+    <Compile Include="FileHierarchy\FileHierarchyNode.cs" />
+    <Compile Include="FileHierarchy\FileNode.cs" />
+    <Compile Include="FileHierarchy\FolderNode.cs" />
+    <Compile Include="FileHierarchy\NotLoadedNode.cs" />
+    <Compile Include="FileHierarchy\RootNode.cs" />
+    <Compile Include="FileHierarchy\SystemFolderNode.cs" />
     <Compile Include="Guids.cs" />
-    <Compile Include="Hierarchy\FileNode.cs" />
-    <Compile Include="Hierarchy\FolderNode.cs" />
-    <Compile Include="Hierarchy\RootNode.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="BasicHierarchyPackage.cs" />
+    <Compile Include="DynamicHierarchyPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
   </ItemGroup>
@@ -80,20 +83,23 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="BasicHierarchy.vsct">
+    <VSCTCompile Include="DynamicHierarchy.vsct">
       <ResourceName>1000</ResourceName>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Diagrams\BasicHierarchy Structure.cd" />
     <None Include="Key.snk" />
     <None Include="Resources\Images_32bit.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\computer.png" />
+    <Content Include="Resources\drive.png" />
     <Content Include="Resources\folder.png" />
+    <Content Include="Resources\folder_delete.png" />
     <Content Include="Resources\house.png" />
     <Content Include="Resources\Package.ico" />
     <Content Include="Resources\page.png" />
+    <Content Include="Resources\page_lightning.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Runtime\VSXTra\VSXtra.csproj">

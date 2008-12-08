@@ -75,6 +75,7 @@
     <Compile Include="..\..\Master\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Commands\CommandContext.cs" />
     <Compile Include="Hierarchy\HierarchyAttributes.cs" />
     <Compile Include="Hierarchy\HierarchyCommand.cs" />
     <Compile Include="Utility\Attributes\Int32Attribute.cs" />
@@ -180,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="VSXtraFakeKey.snk" />
+    <None Include="_Diagrams\Hierarchy Structure.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
