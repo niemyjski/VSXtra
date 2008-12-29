@@ -38,7 +38,7 @@ namespace DeepDiver.BasicHierarchy
 
     #endregion
 
-    #region Overrides of HierarchyManager
+    #region Overrides of InitialHierarchy
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -50,7 +50,7 @@ namespace DeepDiver.BasicHierarchy
     // --------------------------------------------------------------------------------------------
     protected override HierarchyNode CreateHierarchyRoot()
     {
-      return new RootNode(null, _FullPath, _FullPath);
+      return new RootNode(this, _FullPath, _FullPath);
     }
 
     // --------------------------------------------------------------------------------------------

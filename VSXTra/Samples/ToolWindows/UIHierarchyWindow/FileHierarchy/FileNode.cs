@@ -24,7 +24,7 @@ namespace DeepDiver.UIHierarchyWindow
     /// <param name="caption">The caption to display about the node.</param>
     /// <param name="manager">The manager responsible for this node.</param>
     // --------------------------------------------------------------------------------------------
-    public FileNode(string fullPath, string caption, FileHierarchyManager manager) : 
+    public FileNode(FileHierarchyManager manager, string fullPath, string caption) : 
       base(manager, fullPath, caption)
     {
     }

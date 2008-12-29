@@ -5,7 +5,7 @@
   <Extern href="msobtnid.h"/>
   <Commands package="guidDynamicHierarchyPkg">
     <Groups>
-      <Group guid="guidDynamicHierarchyCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Group guid="guidDynamicHierarchyCmdSet" id="MyMenuGroup" priority="0x0200">
         <Parent guid="guidVSXtraCmdSet" id="HierarchySubMenu"/>
       </Group>
     </Groups>

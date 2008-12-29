@@ -6,16 +6,12 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeepDiver.DynamicHierarchy</RootNamespace>
-    <AssemblyName>DynamicHierarchy</AssemblyName>
+    <RootNamespace>Deepdiver.HierarchySort</RootNamespace>
+    <AssemblyName>HierarchySort</AssemblyName>
     <SignAssembly>False</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <ProjectGuid>{A89EDF45-FE2C-4B47-A04D-9EDE9DA64225}</ProjectGuid>
+    <ProjectGuid>{7579D71F-F9B4-42F8-9171-EEAA47A7D057}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,23 +49,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DynamicUIHierarchyWindow.cs" />
-    <Compile Include="FileHierarchy\FileHierarchyManager.cs" />
-    <Compile Include="FileHierarchy\FileHierarchyNode.cs" />
-    <Compile Include="FileHierarchy\FileNode.cs" />
-    <Compile Include="FileHierarchy\FolderNode.cs" />
-    <Compile Include="FileHierarchy\NotLoadedNode.cs" />
-    <Compile Include="FileHierarchy\RootNode.cs" />
-    <Compile Include="FileHierarchy\SystemFolderNode.cs" />
+    <Compile Include="CommandGroup.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="Hierarchy\FirstLevelNode.cs" />
+    <Compile Include="Hierarchy\NumberHierarchyManager.cs" />
+    <Compile Include="Hierarchy\NumberHierarchyNode.cs" />
+    <Compile Include="Hierarchy\SecondLevelNode.cs" />
+    <Compile Include="Hierarchy\SingleNumberNode.cs" />
+    <Compile Include="Hierarchy\TopLevelNode.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="DynamicHierarchyPackage.cs" />
+    <Compile Include="HierarchySortPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="SortedUIHierarchyWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -82,7 +78,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="DynamicHierarchy.vsct">
+    <VSCTCompile Include="HierarchySort.vsct">
       <ResourceName>1000</ResourceName>
     </VSCTCompile>
   </ItemGroup>
@@ -91,14 +87,11 @@
     <None Include="Resources\Images_32bit.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\computer.png" />
-    <Content Include="Resources\drive.png" />
-    <Content Include="Resources\folder.png" />
-    <Content Include="Resources\folder_delete.png" />
-    <Content Include="Resources\house.png" />
+    <Content Include="Resources\bullet_red.png" />
+    <Content Include="Resources\chart_bar.png" />
+    <Content Include="Resources\chart_pie.png" />
     <Content Include="Resources\Package.ico" />
-    <Content Include="Resources\page.png" />
-    <Content Include="Resources\page_lightning.png" />
+    <Content Include="Resources\shape_square.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Runtime\VSXTra\VSXtra.csproj">
