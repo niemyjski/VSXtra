@@ -207,6 +207,20 @@ namespace VSXtra
       window.GetItemState(hier, id, statemask, out result);
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Finds the common selection.
+    /// </summary>
+    /// <param name="window">The window.</param>
+    /// <param name="commonHier">The common hier.</param>
+    // --------------------------------------------------------------------------------------------
+    public static int FindCommonSelectionRoot(this IVsUIHierarchyWindow window,
+      out IVsUIHierarchy commonHier)
+    {
+      return window.FindCommonSelectedHierarchy(
+        (uint)__VSCOMHIEROPTIONS.COMHIEROPT_AllowHiddenRoot, out commonHier);
+    }
+
     #endregion
 
     #region Private methods

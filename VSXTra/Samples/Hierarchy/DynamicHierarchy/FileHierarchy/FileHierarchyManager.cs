@@ -38,7 +38,7 @@ namespace DeepDiver.DynamicHierarchy
 
     #endregion
 
-    #region Overrides of HierarchyManager
+    #region Overrides of InitialHierarchy
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -50,7 +50,7 @@ namespace DeepDiver.DynamicHierarchy
     // --------------------------------------------------------------------------------------------
     protected override HierarchyNode CreateHierarchyRoot()
     {
-      return new RootNode(null, _FullPath, _FullPath);
+      return new RootNode(this, _FullPath, _FullPath);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -81,26 +81,25 @@ namespace DeepDiver.DynamicHierarchy
       if (node == null) throw new ArgumentNullException("node");
       try
       {
-        var path = node.FullPath;
-        foreach (var dir in Directory.GetDirectories(node.FullPath))
+        var dirInfo = new DirectoryInfo(node.FullPath);
+        foreach (var dir in dirInfo.GetDirectories())
         {
-          var dirInfo = new DirectoryInfo(dir);
-          var dirName = dir.Substring(path.Length + (path.EndsWith("\\") ? 0 : 1));
+          var dirName = dir.Name;
           FolderNode folderNode;
-          if ((dirInfo.Attributes & FileAttributes.System) != 0)
+          if ((dir.Attributes & FileAttributes.System) != 0)
           {
-            folderNode = new SystemFolderNode(this, dir, dirName);
-            folderNode.NestHierarchy(new FileHierarchyManager(dir));
+            folderNode = new SystemFolderNode(this, dir.FullName, dirName);
+            folderNode.NestHierarchy(new FileHierarchyManager(dir.FullName));
           }
           else
           {
-            folderNode = new FolderNode(this, dir, dirName);
+            folderNode = new FolderNode(this, dir.FullName, dirName);
             folderNode.AddChild(new NotLoadedNode(this));
           }
           node.AddChild(folderNode);
           folderNode.IsExpanded = false;
         }
-        foreach (var file in Directory.GetFiles(path))
+        foreach (var file in Directory.GetFiles(node.FullPath))
         {
           var fileNode = new FileNode(this, file, Path.GetFileName(file));
           node.AddChild(fileNode);

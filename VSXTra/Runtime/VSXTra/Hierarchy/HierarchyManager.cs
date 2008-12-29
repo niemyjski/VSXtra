@@ -10,13 +10,14 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra.Commands;
+using VSXtra.Diagnostics;
 using VSXtra.Package;
-using VSXtra.Shell;
 using VSXtra.Windows;
 using IServiceProvider = System.IServiceProvider;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
@@ -24,6 +25,8 @@ using OleConstants = Microsoft.VisualStudio.OLE.Interop.Constants;
 
 namespace VSXtra.Hierarchy
 {
+  #region IHierarchyManager
+
   // ================================================================================================
   /// <summary>
   /// This interface defines the responsibilities of a hierarchy manager.
@@ -145,7 +148,30 @@ namespace VSXtra.Hierarchy
     /// </summary>
     // --------------------------------------------------------------------------------------------
     void EnsureHierarchyRoot();
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the hierarchy window hosting this hierarchy
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    IVsUIHierarchyWindow UIHierarchyWindow { get; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets the hierarchy window hosting this hierarchy
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    void SetUIHierarchyWindow(IVsUIHierarchyWindow window);
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets the hierarchy tool window hosting this hierarchy
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    void SetUIHierarchyToolWindow(object window);
   }
+
+  #endregion
 
   // ================================================================================================
   /// <summary>
@@ -212,6 +238,12 @@ namespace VSXtra.Hierarchy
     /// class's dipose is not called because a child sets the flag through the property.
     /// </remarks>
     private bool _IsDisposed;
+
+    /// <summary>UI hierarchy window of the hierarchy</summary>
+    private IVsUIHierarchyWindow _UIHierarchyWindow;
+
+    /// <summary>VSXtra UI hierarchy window of the hierarchy</summary>
+    private UIHierarchyToolWindow<TPackage> _UIHierarchyToolWindow;
 
     #endregion
 
@@ -291,14 +323,45 @@ namespace VSXtra.Hierarchy
     /// Gets the hierarchy window hosting this hierarchy.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public IVsUIHierarchyWindow UIHierarchyWindow { get; protected internal set; }
+    public IVsUIHierarchyWindow UIHierarchyWindow
+    {
+      get { return _UIHierarchyWindow; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets the hierarchy window hosting this hierarchy
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    void IHierarchyManager.SetUIHierarchyWindow(IVsUIHierarchyWindow window)
+    {
+      _UIHierarchyWindow = window;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets the hierarchy window hosting this hierarchy
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    void IHierarchyManager.SetUIHierarchyToolWindow(object window)
+    {
+      _UIHierarchyToolWindow = window as UIHierarchyToolWindow<TPackage>;
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
     /// Gets the UI hierarchy tool window hosting this hierarchy.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public UIHierarchyToolWindow<TPackage> UIHierarchyToolWindow { get; protected internal set; }
+    public UIHierarchyToolWindow<TPackage> UIHierarchyToolWindow
+    {
+      get { return _UIHierarchyToolWindow; }
+      protected internal set
+      {
+        _UIHierarchyWindow = value == null ? null : value.HierarchyWindow;
+        _UIHierarchyToolWindow = value;
+      }
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -480,7 +543,6 @@ namespace VSXtra.Hierarchy
           return VSConstants.S_OK;
         }
       }
-      Console.WriteLine("GetNestedHierarchy {0}, <none>", node == null ? "<unknown>" : node.Caption);
       return VSConstants.E_FAIL;
     }
 
@@ -547,21 +609,6 @@ namespace VSXtra.Hierarchy
       return node1.SortPriority == node2.SortPriority
                ? String.Compare(node2.Caption, node1.Caption, true, CultureInfo.CurrentCulture)
                : node2.SortPriority - node1.SortPriority;
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Gets the list of hierarchy nodes currently selected in the hosting hierarchy window.
-    /// </summary>
-    /// <returns>
-    /// List of selected hierarchy nodes.
-    /// </returns>
-    // --------------------------------------------------------------------------------------------
-    public virtual IEnumerable<HierarchyNode> GetSelectedNodes()
-    {
-      return from node in _ManagedItems
-             where MaskItemByState(node, __VSHIERARCHYITEMSTATE.HIS_Selected)
-             select node;
     }
 
     #endregion
@@ -933,30 +980,31 @@ namespace VSXtra.Hierarchy
 
     int IVsUIHierarchy.ExecCommand(uint itemid, ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
     {
+      Console.WriteLine("{0}({1}):{2}:{3}", GetType(), itemid, pguidCmdGroup, nCmdID);
       if (pguidCmdGroup.Equals(VSConstants.GUID_VsUIHierarchyWindowCmds))
       {
-        switch (nCmdID)
-        {
-          case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_DoubleClick:
-            string caption = (itemid == (uint)HierarchyId.Selection)
-                               ? "<Selection>"
-                               : this[itemid].Caption;
-            VsMessageBox.Show("Double click on: " + caption);
-            break;
-          case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_EnterKey:
-            string caption1 = (itemid == (uint) HierarchyId.Selection)
-                               ? "<Selection>"
-                               : this[itemid].Caption;
-            VsMessageBox.Show("Enter on: " + caption1);
-            break;
-          case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_RightClick:
-            string caption2 = (itemid == (uint)HierarchyId.Selection)
-                               ? "<Selection>"
-                               : this[itemid].Caption;
-            VsMessageBox.Show("Right click on: " + caption2);
-            break;
-        }
-        return VSConstants.S_OK; // return S_FALSE to avoid the exec of the original function
+        //switch (nCmdID)
+        //{
+        //  case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_DoubleClick:
+        //    string caption = (itemid == (uint)HierarchyId.Selection)
+        //                       ? "<Selection>"
+        //                       : this[itemid].Caption;
+        //    VsMessageBox.Show("Double click on: " + caption);
+        //    break;
+        //  case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_EnterKey:
+        //    string caption1 = (itemid == (uint) HierarchyId.Selection)
+        //                       ? "<Selection>"
+        //                       : this[itemid].Caption;
+        //    VsMessageBox.Show("Enter on: " + caption1);
+        //    break;
+        //  case (uint)VSConstants.VsUIHierarchyWindowCmdIds.UIHWCMDID_RightClick:
+        //    string caption2 = (itemid == (uint)HierarchyId.Selection)
+        //                       ? "<Selection>"
+        //                       : this[itemid].Caption;
+        //    VsMessageBox.Show("Right click on: " + caption2);
+        //    break;
+        //}
+        //return VSConstants.S_OK; // return S_FALSE to avoid the exec of the original function
       }
       return (int)OleConstants.OLECMDERR_E_NOTSUPPORTED;
     }
@@ -1185,6 +1233,16 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     int IOleCommandTarget.QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
     {
+      // --- Let the related tool window to handle command status request first
+      if (UIHierarchyWindow != null)
+      {
+        IOleCommandTarget oleTarget = UIHierarchyToolWindow;
+        var result = oleTarget.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
+        if (result != (int)OleConstants.OLECMDERR_E_NOTSUPPORTED ||
+          result != (int)OleConstants.OLECMDERR_E_UNKNOWNGROUP) return result;
+      }
+
+      // --- The related tool window does not handle the command status request
       IOleCommandTarget target = _OleMenuCommandService;
       return target.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
     }
@@ -1239,6 +1297,16 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     int IOleCommandTarget.Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
     {
+      // --- Let the related tool window to handle hierarchy commands first
+      if (UIHierarchyWindow != null)
+      {
+        IOleCommandTarget oleTarget = UIHierarchyToolWindow;
+        var result = oleTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+        if (result != (int)OleConstants.OLECMDERR_E_NOTSUPPORTED ||
+          result != (int)OleConstants.OLECMDERR_E_UNKNOWNGROUP) return result;
+      }
+
+      // --- The related tool window does not handle the command
       IOleCommandTarget target = _OleMenuCommandService;
       return target.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
     }
@@ -1379,11 +1447,107 @@ namespace VSXtra.Hierarchy
     }
 
     #endregion
+
+    #region Methods related to command handling
+
+    /// <summary>
+    /// Gets the list of selected HierarchyNode objects
+    /// </summary>
+    /// <returns>A list of HierarchyNode objects</returns>
+    protected internal virtual IList<HierarchyNode> GetSelectedNodes()
+    {
+      // Retrieve shell interface in order to get current selection
+      var monitorSelection = Package.GetService<IVsMonitorSelection>();
+      if (monitorSelection == null)
+      {
+        throw new InvalidOperationException();
+      }
+      var selectedNodes = new List<HierarchyNode>();
+      var hierarchyPtr = IntPtr.Zero;
+      var selectionContainer = IntPtr.Zero;
+      try
+      {
+        // --- Get the current project hierarchy, project item, and selection container for the 
+        // --- current selection. If the selection spans multiple hierachies, hierarchyPtr is Zero
+        uint itemid;
+        IVsMultiItemSelect multiItemSelect;
+        ErrorHandler.ThrowOnFailure(monitorSelection.GetCurrentSelection(out hierarchyPtr, out itemid, 
+          out multiItemSelect, out selectionContainer));
+
+        // --- We only care if there are one ore more nodes selected in the tree
+        if (itemid != VSConstants.VSITEMID_NIL && hierarchyPtr != IntPtr.Zero)
+        {
+          var hierarchy = Marshal.GetObjectForIUnknown(hierarchyPtr) as IVsHierarchy;
+          if (itemid != VSConstants.VSITEMID_SELECTION)
+          {
+            // --- This is a single selection. Compare hierarchy with our hierarchy and get node from itemid
+            if (ComHelper.IsSameComObject(this, hierarchy))
+            {
+              // --- The selection is in our hierarchy
+              var node = this[itemid];
+              if (node != null)
+              {
+                selectedNodes.Add(node);
+              }
+            }
+            else
+            {
+              // --- The selection is a nested hierarchy somewhere in our hierarchy
+              foreach (var childNode in _ManagedItems)
+              {
+                if (ComHelper.IsSameComObject(childNode.NestedHierarchy, hierarchy))
+                {
+                  selectedNodes.Add(childNode);
+                  break;
+                }
+              }
+            }
+          }
+          else if (multiItemSelect != null)
+          {
+            // --- This is a multiple item selection.
+            // --- Get number of items selected and also determine if the items are located in more than one hierarchy
+            uint numberOfSelectedItems;
+            int isSingleHierarchyInt;
+            ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectionInfo(out numberOfSelectedItems, out isSingleHierarchyInt));
+            bool isSingleHierarchy = (isSingleHierarchyInt != 0);
+
+            // Now loop all selected items and add to the list only those that are selected within this hierarchy
+            if (!isSingleHierarchy || (isSingleHierarchy && ComHelper.IsSameComObject(this, hierarchy)))
+            {
+              VsDebug.Assert(numberOfSelectedItems > 0, "Bad number of selected itemd");
+              var vsItemSelections = new VSITEMSELECTION[numberOfSelectedItems];
+              var flags = (isSingleHierarchy) ? (uint)__VSGSIFLAGS.GSI_fOmitHierPtrs : 0;
+              ErrorHandler.ThrowOnFailure(multiItemSelect.GetSelectedItems(flags, numberOfSelectedItems, vsItemSelections));
+              foreach (var vsItemSelection in vsItemSelections)
+              {
+                if (isSingleHierarchy || ComHelper.IsSameComObject(this, vsItemSelection.pHier))
+                {
+                  var node = this[vsItemSelection.itemid];
+                  if (node != null)
+                  {
+                    selectedNodes.Add(node);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      finally
+      {
+        if (hierarchyPtr != IntPtr.Zero) Marshal.Release(hierarchyPtr);
+        if (selectionContainer != IntPtr.Zero) Marshal.Release(selectionContainer);
+      }
+      return selectedNodes;
+    }
+
+    #endregion
   }
 
   // ================================================================================================
   /// <summary>
-  /// This enum is used in HierarchyManager to declare if the command raised is coming from the 
+  /// This enum is used in InitialHierarchy to declare if the command raised is coming from the 
   /// hierarchy itself or from the related OleCommandTarget.
   /// </summary>
   // ================================================================================================

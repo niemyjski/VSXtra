@@ -24,9 +24,9 @@ namespace DeepDiver.DynamicHierarchy
     /// Override this method to set up the initial hierarchy.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    protected override HierarchyManager<DynamicHierarchyPackage> HierarchyManager
+    protected override HierarchyManager<DynamicHierarchyPackage> CreateInitialHierarchy()
     {
-      get { return new FileHierarchyManager("C:\\"); }
+      return new FileHierarchyManager("C:\\");
     }
   }
 }

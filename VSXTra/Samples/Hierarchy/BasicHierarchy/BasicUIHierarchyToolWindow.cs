@@ -24,9 +24,9 @@ namespace DeepDiver.BasicHierarchy
     /// Sets up the initial hierarchy.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    protected override HierarchyManager<BasicHierarchyPackage> HierarchyManager
+    protected override HierarchyManager<BasicHierarchyPackage> CreateInitialHierarchy()
     {
-      get { return new FileHierarchyManager("C:\\"); }
+      return new FileHierarchyManager("C:\\");
     }
   }
 }

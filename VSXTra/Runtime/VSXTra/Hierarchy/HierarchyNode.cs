@@ -52,40 +52,26 @@ namespace VSXtra.Hierarchy
     /// Sets up the default values and parses decorating attributes.
     /// </remarks>
     // --------------------------------------------------------------------------------------------
-    protected HierarchyNode()
+    protected HierarchyNode(IHierarchyManager manager)
     {
+      if (manager == null) throw new ArgumentNullException();
+      ManagerNode = manager;
       IsExpanded = true;
-      SortPriority = 1000;
+      SortPriority = -1;
       DefaultImageIndex = NoImageIndex;
 
       // --- Check for the SortOrder attribute
-      var spAttr = GetType().GetAttribute<SortPriorityAttribute>();
+      var spAttr = GetType().GetAttribute<SortPriorityAttribute>(true);
       if (spAttr != null) SortPriority = spAttr.Value;
 
       // --- Check for the UseInnerHierarchyImages attribute
-      var uihAttr = GetType().GetAttribute<UseInnerHierarchyImagesAttribute>();
+      var uihAttr = GetType().GetAttribute<UseInnerHierarchyImagesAttribute>(true);
       UseInnerHierarchyImages = uihAttr != null;
 
       // --- Check for the UseInnerHierarchyCaption attribute
-      var uicAttr = GetType().GetAttribute<UseInnerHierarchyCaptionAttribute>();
+      var uicAttr = GetType().GetAttribute<UseInnerHierarchyCaptionAttribute>(true);
       UseInnerHierarchyCaption = uicAttr != null;
-    }
-
-    // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HierarchyNode"/> class.
-    /// </summary>
-    /// <param name="manager">The manager object responsible for this node.</param>
-    // --------------------------------------------------------------------------------------------
-    protected HierarchyNode(IHierarchyManager manager): this()
-    {
-      // --- Manager is set to null indicating that this node is a root node as is assigned to 
-      // --- its manager node later
-      ManagerNode = manager;
-      if (manager != null)
-      {
-        HierarchyId = ManagerNode.AddSubordinate(this);
-      }
+      HierarchyId = ManagerNode.AddSubordinate(this);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -261,7 +247,9 @@ namespace VSXtra.Hierarchy
     /// Defines the hierarchy (sort) order.
     /// </summary>
     /// <remarks>
-    /// This value is used when a new child node is added to the hierarchy.
+    /// This value is used when a new child node is added to the hierarchy. If this value is less
+    /// than zero, we do not sort child nodes, we always add them to the parent node in their 
+    /// physical order.
     /// </remarks>
     // --------------------------------------------------------------------------------------------
     public int SortPriority { get; set; }
@@ -387,6 +375,11 @@ namespace VSXtra.Hierarchy
                      : Caption;
           break;
 
+        // --- Sort priority used in the UIHierarchyWindow where this hierarchy is hosted.
+        case __VSHPROPID.VSHPROPID_SortPriority:
+          result = SortPriority;
+          break;
+
         // --- This property tells if the node is expanded by default or not.
         case __VSHPROPID.VSHPROPID_ExpandByDefault:
           result = ExpandByDefault;
@@ -478,7 +471,7 @@ namespace VSXtra.Hierarchy
           //result = GetAutomationObject();
           break;
       }
-      __VSHPROPID2 id2 = (__VSHPROPID2) propId;
+      var id2 = (__VSHPROPID2) propId;
       switch (id2)
       {
         case __VSHPROPID2.VSHPROPID_NoDefaultNestedHierSorting:
@@ -489,12 +482,6 @@ namespace VSXtra.Hierarchy
           result = UseInnerHierarchyImages;
           break;
       }
-      var propName = Enum.GetName(typeof (__VSHPROPID), propId);
-      if (String.IsNullOrEmpty(propName))
-        propName = Enum.GetName(typeof (__VSHPROPID2), propId);
-      if (String.IsNullOrEmpty(propName))
-        propName = Enum.GetName(typeof (__VSHPROPID3), propId);
-      Console.WriteLine("{0}:{1} = {2}", Caption, propName, result ?? "<null>");
       return result;
     }
 
@@ -532,13 +519,6 @@ namespace VSXtra.Hierarchy
     // --------------------------------------------------------------------------------------------
     public virtual int SetProperty(int propId, object value)
     {
-      var propName = Enum.GetName(typeof(__VSHPROPID), propId);
-      if (String.IsNullOrEmpty(propName))
-        propName = Enum.GetName(typeof(__VSHPROPID2), propId);
-      if (String.IsNullOrEmpty(propName))
-        propName = Enum.GetName(typeof(__VSHPROPID3), propId);
-      Console.WriteLine("SetProperty {0}:{1} = {2}", Caption, propName, value ?? "<null>");
-
       var id = (__VSHPROPID)propId;
       switch (id)
       {
@@ -561,13 +541,13 @@ namespace VSXtra.Hierarchy
           }
           break;
 
-        //case __VSHPROPID.VSHPROPID_ParentHierarchy:
-        //  parentHierarchy = (IVsHierarchy)value;
-        //  break;
+        case __VSHPROPID.VSHPROPID_ParentHierarchy:
+          //parentHierarchy = (IVsHierarchy)value;
+          break;
 
-        //case __VSHPROPID.VSHPROPID_ParentHierarchyItemid:
-        //  parentHierarchyItemId = (int)value;
-        //  break;
+        case __VSHPROPID.VSHPROPID_ParentHierarchyItemid:
+          //parentHierarchyItemId = (int)value;
+          break;
 
         //case __VSHPROPID.VSHPROPID_EditLabel:
         //  return SetEditLabel((string)value);
@@ -632,10 +612,17 @@ namespace VSXtra.Hierarchy
       }
 
       HierarchyNode previous = null;
-      foreach (var n in Children)
+      if (SortPriority >= 0)
       {
-        if (ManagerNode.CompareNodes(node, n) > 0) break;
-        previous = n;
+        foreach (var n in Children)
+        {
+          if (ManagerNode.CompareNodes(node, n) > 0) break;
+          previous = n;
+        }
+      }
+      else
+      {
+        previous = _LastChild;
       }
       // --- Insert "node" after "previous".
       if (previous != null)

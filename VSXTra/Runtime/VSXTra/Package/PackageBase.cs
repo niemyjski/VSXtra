@@ -850,6 +850,7 @@ namespace VSXtra.Package
         component = (IComponent) windowPane;
       if (component != null)
       {
+        // --- This is a managed component window
         if (_ComponentToolWindows == null)
           _ComponentToolWindows = new PackageContainer(this);
         _ComponentToolWindows.Add(component);

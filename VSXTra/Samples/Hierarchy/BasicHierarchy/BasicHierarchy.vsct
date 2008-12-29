@@ -6,7 +6,7 @@
 
   <Commands package="guidBasicHierarchyPkg">
     <Groups>
-      <Group guid="guidBasicHierarchyCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Group guid="guidBasicHierarchyCmdSet" id="MyMenuGroup" priority="0x0100">
         <Parent guid="guidVSXtraCmdSet" id="HierarchySubMenu"/>
       </Group>
     </Groups>

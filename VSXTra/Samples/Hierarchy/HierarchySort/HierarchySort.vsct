@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+  <Commands package="guidHierarchySortPkg">
+    <Menus>
+      <Menu guid="guidHierarchySortCmdSet" id="HierarchyWindowToolbar" priority="0x0000" type="ToolWindowToolbar">
+        <Parent guid="guidHierarchySortCmdSet" id="HierarchyWindowToolbar"/>
+        <Strings>
+          <ButtonText>HierarchyWindowToolBar</ButtonText>
+          <CommandName>Hierarchy Window Toolbar</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Groups>
+      <Group guid="guidHierarchySortCmdSet" id="MyMenuGroup" priority="0x0200">
+        <Parent guid="guidVSXtraCmdSet" id="HierarchySubMenu"/>
+      </Group>
+      <Group guid="guidHierarchySortCmdSet" id="HierarchyWindowToolbarGroup" priority="0x0500">
+        <Parent guid="guidHierarchySortCmdSet" id="HierarchyWindowToolbar"/>
+      </Group>
+    </Groups>
+    
+    <Buttons>
+      <Button guid="guidHierarchySortCmdSet" id="cmdidShowHierarchyCommand" priority="0x0100" type="Button">
+        <Parent guid="guidHierarchySortCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidOfficeIcon" id="msotcidOutlineView" />
+        <Strings>
+          <CommandName>cmdidShowHierarchySortCommand</CommandName>
+          <ButtonText>Sorted Hierarchy</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHierarchySortCmdSet" id="AddHierarchy" priority="0x100" type="Button">
+        <Parent guid="guidHierarchySortCmdSet" id="HierarchyWindowToolbarGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidPlus"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Add a new hierarchy</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHierarchySortCmdSet" id="RemoveHierarchy" priority="0x100" type="Button">
+        <Parent guid="guidHierarchySortCmdSet" id="HierarchyWindowToolbarGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidMinus"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Remove the selected hierarchy</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidHierarchySortPkg" value="{edd2d620-224e-4ab5-80cc-0dc277cbee82}" />
+    <GuidSymbol name="guidHierarchySortCmdSet" value="{1538d09f-cb9a-4ed3-b945-16622a506391}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="HierarchyWindowToolbar" value="0x1021" />
+      <IDSymbol name="HierarchyWindowToolbarGroup" value="0x1022" />
+      <IDSymbol name="cmdidShowHierarchyCommand" value="0x0100" />
+      <IDSymbol name="AddHierarchy" value="0x0101" />
+      <IDSymbol name="RemoveHierarchy" value="0x0102" />
+    </GuidSymbol>
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="HierarchySubMenu" value="0x1006" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

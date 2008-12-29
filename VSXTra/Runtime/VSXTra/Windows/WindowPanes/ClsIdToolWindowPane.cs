@@ -4,6 +4,7 @@
 // Created: 2008.09.01, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using Microsoft.VisualStudio.Shell.Interop;
 using VSXtra.Package;
 
 namespace VSXtra.Windows
@@ -33,6 +34,21 @@ namespace VSXtra.Windows
     public override Guid ToolClsid
     {
       get { return ToolWindowClassGuid; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sites the window before setting the frame.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public override WindowFrame Frame
+    {
+      set
+      {
+        if (value != null && value.OleServiceProvider != null)
+          ((IVsWindowPane) this).SetSite(value.OleServiceProvider);
+        base.Frame = value;
+      }
     }
   }
 }

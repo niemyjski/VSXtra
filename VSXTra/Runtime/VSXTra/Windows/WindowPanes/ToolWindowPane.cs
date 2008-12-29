@@ -248,7 +248,7 @@ namespace VSXtra.Windows
     /// Fires the OnToolWindowCreated event when the frame is changed.
     /// </remarks>
     // --------------------------------------------------------------------------------------------
-    public WindowFrame Frame
+    public virtual WindowFrame Frame
     {
       get { return _Frame; }
       set

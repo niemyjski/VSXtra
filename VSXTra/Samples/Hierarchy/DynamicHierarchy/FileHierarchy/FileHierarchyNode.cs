@@ -12,6 +12,7 @@ namespace DeepDiver.DynamicHierarchy
   /// This class represents an abstract hierarchy node.
   /// </summary>
   // ================================================================================================
+  [SortPriority(-1)]
   public abstract class FileHierarchyNode : HierarchyNode
   {
     #region Private fields

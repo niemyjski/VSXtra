@@ -76,6 +76,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Commands\CommandContext.cs" />
+    <Compile Include="Hierarchy\HiddenHierarchyManager.cs" />
     <Compile Include="Hierarchy\HierarchyAttributes.cs" />
     <Compile Include="Hierarchy\HierarchyCommand.cs" />
     <Compile Include="Utility\Attributes\Int32Attribute.cs" />

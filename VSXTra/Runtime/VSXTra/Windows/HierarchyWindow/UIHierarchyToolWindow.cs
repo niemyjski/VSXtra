@@ -25,6 +25,8 @@ namespace VSXtra.Windows
     #region Private Fields
 
     private readonly List<HierarchyWindowAttribute> _Attributes;
+    private readonly List<IHierarchyManager> _Hierarchies = new List<IHierarchyManager>();
+    private IHierarchyManager _InitialHierarchy;
 
     #endregion
 
@@ -69,9 +71,13 @@ namespace VSXtra.Windows
       // ReSharper restore AccessToModifiedClosure
       SetUIWindowStyle(ref flags);
       object unkObj;
-      var manager = HierarchyManager;
-      HierarchyWindow.Init(manager, (uint)flags, out unkObj);
-      Site(manager);
+      _InitialHierarchy = CreateInitialHierarchy();
+      if (_InitialHierarchy != null)
+      {
+        _Hierarchies.Add(_InitialHierarchy);
+      }
+      HierarchyWindow.Init(_InitialHierarchy, (uint)flags, out unkObj);
+      Site(_InitialHierarchy);
     }
 
     #endregion
@@ -96,11 +102,24 @@ namespace VSXtra.Windows
     /// Override this method to set up the initial hierarchy.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    protected abstract HierarchyManager<TPackage> HierarchyManager { get; }
+    protected virtual HierarchyManager<TPackage> CreateInitialHierarchy()
+    {
+      return null;
+    }
 
     #endregion
 
     #region Properties
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the initial hierarchy of the hierarchy window.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public IHierarchyManager InitialHierarchy
+    {
+      get { return _InitialHierarchy; }
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -124,6 +143,16 @@ namespace VSXtra.Windows
       }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the collection of hierarchies hosted in the window.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public IEnumerable<IHierarchyManager> Hierarchies
+    {
+      get { return _Hierarchies; }
+    }
+
     #endregion
 
     #region Public methods
@@ -137,7 +166,7 @@ namespace VSXtra.Windows
     /// Flag indicating if the the new hierarchy should not be selected.
     /// </param>
     // --------------------------------------------------------------------------------------------
-    public void AddUIHierarchy(HierarchyManager<TPackage> hierarchy, bool dontSelectNew)
+    public void AddUIHierarchy(IHierarchyManager hierarchy, bool dontSelectNew)
     {
       if (HierarchyWindow != null)
       {
@@ -146,7 +175,9 @@ namespace VSXtra.Windows
                                          dontSelectNew
                                            ? (uint)__VSADDHIEROPTIONS.ADDHIEROPT_DontSelectNewHierarchy
                                            : 0));
+        _Hierarchies.Add(hierarchy);
         Site(hierarchy);
+        if (_InitialHierarchy != null) _InitialHierarchy = hierarchy;
       }
     }
 
@@ -156,9 +187,24 @@ namespace VSXtra.Windows
     /// </summary>
     /// <param name="hierarchy">Hierarchy to add to the window</param>
     // --------------------------------------------------------------------------------------------
-    public void AddUIHierarchy(HierarchyManager<TPackage> hierarchy)
+    public void AddUIHierarchy(IHierarchyManager hierarchy)
     {
       AddUIHierarchy(hierarchy, true);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Removes the specified hierachy from the hierarchy window
+    /// </summary>
+    /// <param name="hierarchy">Hierarchy to remove from the window</param>
+    // --------------------------------------------------------------------------------------------
+    public void RemoveUIHierarchy(IHierarchyManager hierarchy)
+    {
+      if (HierarchyWindow != null)
+      {
+        ErrorHandler.ThrowOnFailure(HierarchyWindow.RemoveUIHierarchy(hierarchy));
+        _Hierarchies.Remove(hierarchy);
+      }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -322,6 +368,23 @@ namespace VSXtra.Windows
       return (__VSHIERARCHYITEMSTATE) (result);
     }
 
+    public int FindCommonSelectionRoot(out IVsUIHierarchy commonHier)
+    {
+      return HierarchyWindow.FindCommonSelectionRoot(out commonHier);
+    }
+
+    public IHierarchyManager FindCommonSelectionRoot()
+    {
+      IVsUIHierarchy commonRoot;
+      if (FindCommonSelectionRoot(out commonRoot) != VSConstants.S_OK) return null;
+      if (commonRoot == null) return null;
+      foreach (var hier in _Hierarchies)
+      {
+        if (hier == commonRoot) return hier;
+      }
+      return null;
+    }
+
     #endregion
 
     #region Helper methods
@@ -332,7 +395,7 @@ namespace VSXtra.Windows
     /// </summary>
     /// <param name="hierarchy">Hierarchy to site</param>
     // --------------------------------------------------------------------------------------------
-    private void Site(HierarchyManager<TPackage> hierarchy)
+    private void Site(IHierarchyManager hierarchy)
     {
       // --- We do not site "null" hierarchies
       if (hierarchy == null) return;
@@ -342,8 +405,8 @@ namespace VSXtra.Windows
       {
         hierarchy.SetSite(oleSp);
       }
-      hierarchy.UIHierarchyWindow = HierarchyWindow;
-      hierarchy.UIHierarchyToolWindow = this;
+      hierarchy.SetUIHierarchyWindow(HierarchyWindow);
+      hierarchy.SetUIHierarchyToolWindow(this);
     }
 
     #endregion
