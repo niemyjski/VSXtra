@@ -55,10 +55,6 @@ namespace VSXtra.Commands
     /// <summary>Package hosting the command dispatcher</summary>
     private readonly TPackage _Package;
 
-    /// <summary>Temporarily stores command contexts</summary>
-    private readonly Stack<CommandContext> _ContextStack =
-      new Stack<CommandContext>();
-      
     #endregion
 
     #region Lifecycle methods
@@ -132,6 +128,22 @@ namespace VSXtra.Commands
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
+    /// Gets the OleMenuCommand instance registered for the specified command.
+    /// </summary>
+    /// <param name="commandId">ID of the command.</param>
+    /// <returns>
+    /// OleMenuCommand instance, if there is any event handler for the specified command;
+    /// otherwise, null.
+    /// </returns>
+    // --------------------------------------------------------------------------------------------
+    public MenuCommandInfo GetMenuCommandInfo(CommandID commandId)
+    {
+      var targetInfo = GetTargetInfo();
+      return targetInfo == null ? null : targetInfo.FindMenuInfo(commandId);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
     /// Registers command handlers with the appropriate OleMenuCommandService.
     /// </summary>
     /// <param name="local">Local OleMenuCommandService instance.</param>
@@ -143,7 +155,7 @@ namespace VSXtra.Commands
     public void RegisterCommandHandlers(OleMenuCommandService local, 
       OleMenuCommandService parent)
     {
-      CommandTargetInfo targetInfo = GetTargetInfo();
+      var targetInfo = GetTargetInfo();
       foreach (var menuGroup in targetInfo.Values)
       {
         foreach (var menuInfo in menuGroup.Values)
@@ -155,6 +167,7 @@ namespace VSXtra.Commands
             ChangeEventHandler,
             QueryStatusEventHandler,
             id);
+          menuInfo.OleMenuCommand = command;
           local.AddCommand(command);
 
           // --- Promote to the parent OleMenuCommandService, if required.
@@ -169,14 +182,25 @@ namespace VSXtra.Commands
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
-    /// Pushes context information to the context stack
+    /// Gets the status value.
     /// </summary>
-    /// <param name="context">Context information to be pushed to the stack.</param>
+    /// <param name="result">The result returned by the IOleCommandTarget method</param>
+    /// <param name="context">The command context</param>
+    /// <returns>Status value calculated from the input parameters</returns>
     // --------------------------------------------------------------------------------------------
-    public void PushContext(CommandContext context)
+    public int GetStatusValue(int result, CommandContext context)
     {
-      _ContextStack.Push(context);
+      return context != null && context.ExplicitReturnStatusSet
+               ? context.ReturnStatus
+               : result;
     }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets and sets the current command context.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public CommandContext Context { get; set; }
 
     #endregion
 
@@ -442,7 +466,7 @@ namespace VSXtra.Commands
 
       // --- Obtain infiormation for command
       var targetInfo = GetTargetInfo();
-      var menuInfo = targetInfo.FindMenuInfo(command);
+      var menuInfo = targetInfo.FindMenuInfo(command.CommandID);
       if (menuInfo == null) return;
 
       // --- Get the apropriate commmand method
@@ -458,17 +482,18 @@ namespace VSXtra.Commands
       // --- Execute the command
       var paramCount = commandMethod.GetParameters().Count();
       var parameters = new object[paramCount];
-      CommandContext context = null;
-      if (_ContextStack.Count > 0) context = _ContextStack.Pop();
-      if (paramCount == 1)
+
+      // --- Create a simple context if no one exists
+      if (Context == null) Context = new CommandContext(_Package);
+      if (paramCount > 0)
       {
         parameters[0] = 
           commandMethod.GetParameters()[0].ParameterType == typeof(OleMenuCommand)
-            ? (object)command : context;
+            ? (object)command : Context;
       }
       if (paramCount == 2)
       {
-        parameters[1] = context;
+        parameters[1] = Context;
       }
       commandMethod.Invoke(EventTarget, parameters);
     }
@@ -498,15 +523,16 @@ namespace VSXtra.Commands
     /// This class represents the information for a command handler
     /// </summary>
     // ================================================================================================
-    private class MenuCommandInfo
+    public class MenuCommandInfo
     {
-      public Guid Guid;
-      public uint Id;
-      public MethodInfo QueryStatusMethod;
-      public MethodInfo ExecMethod;
-      public MethodInfo ChangeMethod;
-      public ActionAttribute Action;
-      public bool Promote;
+      public Guid Guid { get; internal set; }
+      public uint Id { get; internal set; }
+      public MethodInfo QueryStatusMethod { get; internal set; }
+      public MethodInfo ExecMethod { get; internal set; }
+      public MethodInfo ChangeMethod { get; internal set; }
+      public ActionAttribute Action { get; internal set; }
+      public bool Promote { get; internal set; }
+      public OleMenuCommand OleMenuCommand { get; internal set; }
     }
 
     #endregion
@@ -531,20 +557,20 @@ namespace VSXtra.Commands
       /// <summary>
       /// Finds the command information in the dictionary.
       /// </summary>
-      /// <param name="command">Command to find.</param>
+      /// <param name="commandId">ID of command to find.</param>
       /// <returns>
       /// Menu command information if the command found; otherwise, null
       /// </returns>
       // --------------------------------------------------------------------------------------------
-      public MenuCommandInfo FindMenuInfo(OleMenuCommand command)
+      public MenuCommandInfo FindMenuInfo(CommandID commandId)
       {
         // --- Find the command group
         Dictionary<uint, MenuCommandInfo> commandGroup;
-        if (!TryGetValue(command.CommandID.Guid, out commandGroup)) return null;
+        if (!TryGetValue(commandId.Guid, out commandGroup)) return null;
 
         // --- Find the command within the group
         MenuCommandInfo result;
-        commandGroup.TryGetValue((uint) command.CommandID.ID, out result);
+        commandGroup.TryGetValue((uint) commandId.ID, out result);
         return result;
       }
 

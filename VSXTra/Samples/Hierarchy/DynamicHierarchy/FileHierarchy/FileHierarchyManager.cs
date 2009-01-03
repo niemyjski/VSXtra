@@ -5,6 +5,9 @@
 // ================================================================================================
 using System;
 using System.IO;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using VSXtra.Commands;
 using VSXtra.Hierarchy;
 
 namespace DeepDiver.DynamicHierarchy
@@ -109,6 +112,18 @@ namespace DeepDiver.DynamicHierarchy
       {
         // --- This exception is intentionally supressed.
       }
+    }
+
+    #endregion
+
+    #region Command methods
+
+    [CommandStatusMethod]
+    [VsCommandId(VSConstants.VSStd97CmdID.Cut)]
+    [VsCommandId(VSConstants.VSStd97CmdID.Copy)]
+    public void CutCopyStatus(OleMenuCommand command)
+    {
+      command.Enabled = GetSelectedNodes(true).Count % 2 == 0;
     }
 
     #endregion

@@ -117,6 +117,16 @@ namespace VSXtra.Hierarchy
       get { return _Id == Selection._Id; }
     }
 
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the flag indicating whether the ID represents a concrete ID.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool IsConcrete
+    {
+      get { return !IsSelection && !IsNil; }
+    }
+
     #endregion
 
     #region Cast operators

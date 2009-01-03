@@ -999,7 +999,7 @@ namespace VSXtra.ProjectSystem
 
 		#endregion
 
-		#region SingleFileGenerator Support methods
+		#region SingleFileGenerator MarkSupported methods
 		/// <summary>
 		/// Event handler for the Custom tool property changes
 		/// </summary>
