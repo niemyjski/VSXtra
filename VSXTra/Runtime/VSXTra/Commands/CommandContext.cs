@@ -33,5 +33,31 @@ namespace VSXtra.Commands
     /// <value>The package.</value>
     // --------------------------------------------------------------------------------------------
     public PackageBase Package { get; private set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the flag indicating if the IOleCommandTarget return status was explicitly set or not.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool ExplicitReturnStatusSet { get; private set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the IOleCommandTarget return status.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public int ReturnStatus { get; private set; }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sets the IOleCommandTarget return status.
+    /// </summary>
+    /// <param name="status">The status to set.</param>
+    // --------------------------------------------------------------------------------------------
+    public void SetReturnStatus(int status)
+    {
+      ExplicitReturnStatusSet = true;
+      ReturnStatus = status;
+    }
   }
 }

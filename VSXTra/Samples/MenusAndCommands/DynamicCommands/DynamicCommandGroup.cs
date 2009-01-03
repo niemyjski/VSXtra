@@ -21,12 +21,9 @@ namespace DeepDiver.DynamicCommands
   [Guid(GuidList.guidDynamicCommandsCmdSetString)]
   public sealed class DynamicCommandGroup : CommandGroup<DynamicCommandsPackage>
   {
-    // ================================================================================================
-
-    // ================================================================================================
-
     #region Nested type: DynamicText
 
+    // ================================================================================================
     /// <summary>
     /// This class implements the "VSXtra Dynamic Text Command".
     /// </summary>
@@ -52,6 +49,7 @@ namespace DeepDiver.DynamicCommands
 
     #region Nested type: DynamicVisibility
 
+    // ================================================================================================
     /// <summary>
     /// This abstract class implements the command handlers for dynamic visibility commands.
     /// </summary>
@@ -76,10 +74,9 @@ namespace DeepDiver.DynamicCommands
 
     #endregion
 
-    // ================================================================================================
-
     #region Nested type: DynamicVisibility1
 
+    // ================================================================================================
     /// <summary>
     /// This class implements the command handlers for DynamicVisibility1 command.
     /// </summary>
@@ -92,10 +89,9 @@ namespace DeepDiver.DynamicCommands
 
     #endregion
 
-    // ================================================================================================
-
     #region Nested type: DynamicVisibility2
 
+    // ================================================================================================
     /// <summary>
     /// This class implements the command handlers for DynamicVisibility2 command.
     /// </summary>
@@ -110,6 +106,7 @@ namespace DeepDiver.DynamicCommands
 
     #region Nested type: MyCommand
 
+    // ================================================================================================
     /// <summary>
     /// This class implements the "VSXtra Sample Command".
     /// </summary>
@@ -122,10 +119,9 @@ namespace DeepDiver.DynamicCommands
 
     #endregion
 
-    // ================================================================================================
-
     #region Nested type: MyGraph
 
+    // ================================================================================================
     /// <summary>
     /// This class implements the "VSXtra Graph Command".
     /// </summary>
@@ -138,10 +134,9 @@ namespace DeepDiver.DynamicCommands
 
     #endregion
 
-    // ================================================================================================
-
     #region Nested type: MyZoom
 
+    // ================================================================================================
     /// <summary>
     /// This class implements the "VSXtra Graph Command".
     /// </summary>
@@ -153,7 +148,5 @@ namespace DeepDiver.DynamicCommands
     }
 
     #endregion
-
-    // ================================================================================================
   }
 }
