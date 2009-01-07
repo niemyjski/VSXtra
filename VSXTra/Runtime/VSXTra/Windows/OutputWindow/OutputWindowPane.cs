@@ -6,6 +6,7 @@
 using System.IO;
 using System.Text;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
 
 namespace VSXtra.Windows
 {
@@ -86,6 +87,20 @@ namespace VSXtra.Windows
     #endregion 
 
     #region Public methods
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Output a message with the associated file name and position of the file
+    /// we can use the navigation buttons or double click the line and Visual Studio 
+    /// will open the file and position the caret in the corresponding line an column.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public void Write(String path, int line, int column, string message)
+    {
+        //MASK: FilePath(#Line,#Column) : MessageToDisplay
+        string mask = String.Format("{0}({1},{2}) : {3}{4}", path, line, column, message, Environment.NewLine );
+        this.OutputString(mask);
+    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
