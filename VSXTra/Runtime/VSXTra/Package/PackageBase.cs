@@ -98,7 +98,7 @@ namespace VSXtra.Package
     private static  int _SitedPackageCount;
 
     /// <summary>Service provider for global services.</summary>
-    private static  ServiceProvider _GlobalServiceProvider;
+    private static ServiceProvider _GlobalServiceProvider;
 
     /// <summary>Service provider for local services.</summary>
     private ServiceProvider _ServiceProvider;
@@ -1351,9 +1351,12 @@ namespace VSXtra.Package
           _PackageInstances.Add(GetType(), this);
         }
         // --- Initialize the global service provider
+        SiteManager.SuggestGlobalServiceProvider(_ServiceProvider);
         if (_GlobalServiceProvider == null)
+        {
           _GlobalServiceProvider = _ServiceProvider;
-        
+        }
+
         // --- Increment the number of package that have been sited. This allows us to know 
         // --- when to let go of our _GlobalServiceProvider.
         ++_SitedPackageCount;
