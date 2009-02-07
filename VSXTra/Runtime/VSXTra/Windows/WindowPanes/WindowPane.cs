@@ -154,7 +154,7 @@ namespace VSXtra.Windows
     /// Gets the UI instance of this window pane.
     /// </summary>
     // --------------------------------------------------------------------------------------------
-    public TUIControl UIControl
+    public virtual TUIControl UIControl
     {
       get { return _UIControl; }
     }
@@ -170,7 +170,7 @@ namespace VSXtra.Windows
       {
         return typeof(TUIControl) == typeof(WindowPanePlaceHolderControl)
                  ? null 
-                 : _UIControl;
+                 : UIControl;
       }
     }
 

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Extern href="msobtnid.h"/>
+
+  <Commands package="guidWPFSimpleToolWindowPkg">
+    <Groups>
+      <Group guid="guidWPFSimpleToolWindowCmdSet" id="MyMenuGroup" priority="0x0100">
+        <Parent guid="guidVSXtraCmdSet" id="ToolWindowSubMenu"/>
+      </Group>
+    </Groups>
+    <Buttons>
+      <Button guid="guidWPFSimpleToolWindowCmdSet" id="cmdidShowWPFWindow" priority="0x0100" type="Button">
+        <Parent guid="guidWPFSimpleToolWindowCmdSet" id="MyMenuGroup"/>
+        <Icon guid="guidOfficeIcon" id="msotcidFormView" />
+        <Strings>
+          <CommandName>cmdidShowWPFWindow</CommandName>
+          <ButtonText>WPF Simple Tool Window</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidWPFSimpleToolWindowPkg" value="{46d651b0-6efd-4527-8d8c-f9c3db42e93e}" />
+    <GuidSymbol name="guidWPFSimpleToolWindowCmdSet" value="{438c39ee-bdd6-4cba-bf0d-f0f6181ae9ed}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="cmdidShowWPFWindow" value="0x0101" />
+    </GuidSymbol>
+
+    <!-- Symbols for the VSXtra menus -->
+    <GuidSymbol name="guidVSXtraCmdSet" value="{5DA108D8-4019-4f71-A835-BF6ACD788914}">
+      <IDSymbol name="ToolWindowSubMenu" value="0x1005" />
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>
