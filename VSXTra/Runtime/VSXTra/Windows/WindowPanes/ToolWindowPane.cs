@@ -97,7 +97,7 @@ namespace VSXtra.Windows
     // --- Defines how command GUIDs should be provided for command event dispatchers
     ICommandGuidProvider
     where TPackage : PackageBase
-    where TUIControl : UserControl, new()
+    where TUIControl : Control, new()
   {
     #region Private fields
 
