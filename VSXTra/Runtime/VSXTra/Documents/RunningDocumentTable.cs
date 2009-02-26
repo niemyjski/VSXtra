@@ -37,7 +37,7 @@ namespace VSXtra.Documents
     // --------------------------------------------------------------------------------------------
     static RunningDocumentTable()
     {
-      _Rdt = PackageBase.GetGlobalService<SVsRunningDocumentTable, IVsRunningDocumentTable>();
+      _Rdt = SiteManager.GetGlobalService<SVsRunningDocumentTable, IVsRunningDocumentTable>();
       if (_Rdt == null)
       {
         throw new NotSupportedException(typeof(SVsRunningDocumentTable).FullName);

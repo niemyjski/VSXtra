@@ -150,7 +150,7 @@ namespace VSXtra
       var packageGuid = GetPackageGuid();
       string resourceString;
       var resourceManager =
-        PackageBase.GetGlobalService<SVsResourceManager, IVsResourceManager>();
+        SiteManager.GetGlobalService<SVsResourceManager, IVsResourceManager>();
       if (resourceManager == null) return false;
       var result = resourceManager.LoadResourceString(ref packageGuid, -1, key, 
         out resourceString);
@@ -172,7 +172,7 @@ namespace VSXtra
       var packageGuid = GetPackageGuid();
       string resourceString;
       var resourceManager =
-        PackageBase.GetGlobalService<SVsResourceManager, IVsResourceManager>();
+        SiteManager.GetGlobalService<SVsResourceManager, IVsResourceManager>();
       if (resourceManager == null) return Resources.PackageNotFound;
       var result = resourceManager.LoadResourceString(ref packageGuid, -1, key, 
         out resourceString);

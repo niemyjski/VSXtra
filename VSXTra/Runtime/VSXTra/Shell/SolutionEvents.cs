@@ -34,7 +34,7 @@ namespace VSXtra.Shell
     // --------------------------------------------------------------------------------------------
     static SolutionEvents()
     {
-      _Solution = PackageBase.GetGlobalService<SVsSolution, IVsSolution>();
+      _Solution = SiteManager.GetGlobalService<SVsSolution, IVsSolution>();
       if (_Solution == null)
       {
         throw new NotSupportedException(typeof(SVsSolution).FullName);

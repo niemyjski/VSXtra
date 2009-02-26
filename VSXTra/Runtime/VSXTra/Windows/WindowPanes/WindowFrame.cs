@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
-using VSXtra.Package;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace VSXtra.Windows
@@ -354,14 +353,14 @@ namespace VSXtra.Windows
     {
       get
       {
-        var uiShell = PackageBase.GetGlobalService<SVsUIShell, IVsUIShell>();
+        var uiShell = SiteManager.GetGlobalService<SVsUIShell, IVsUIShell>();
         IEnumWindowFrames windowEnumerator;
         ErrorHandler.ThrowOnFailure(uiShell.GetToolWindowEnum(out windowEnumerator));
         var frame = new IVsWindowFrame[1];
-        uint fetched;
         int hr = VSConstants.S_OK;
         while (hr == VSConstants.S_OK)
         {
+          uint fetched;
           hr = windowEnumerator.Next(1, frame, out fetched);
           ErrorHandler.ThrowOnFailure(hr);
           if (fetched == 1)
