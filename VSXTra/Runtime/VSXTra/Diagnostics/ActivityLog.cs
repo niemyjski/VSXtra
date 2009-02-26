@@ -454,7 +454,7 @@ namespace VSXtra.Diagnostics
 
     private static IVsActivityLog Log
     {
-      get { return PackageBase.GetGlobalService<SVsActivityLog, IVsActivityLog>(); }
+      get { return SiteManager.GetGlobalService<SVsActivityLog, IVsActivityLog>(); }
     }
 
     private static void LogEntry(ActivityLogEntryType type, string source, string message)

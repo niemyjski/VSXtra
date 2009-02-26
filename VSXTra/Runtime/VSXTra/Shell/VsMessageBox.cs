@@ -165,7 +165,7 @@ namespace VSXtra.Shell
     // --------------------------------------------------------------------------------------------
     private static IVsUIShell UIShell
     {
-      get { return PackageBase.GetGlobalService<SVsUIShell, IVsUIShell>(); }
+      get { return SiteManager.GetGlobalService<SVsUIShell, IVsUIShell>(); }
     }
 
     // --------------------------------------------------------------------------------------------

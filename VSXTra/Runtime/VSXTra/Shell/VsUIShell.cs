@@ -89,7 +89,12 @@ namespace VSXtra.Shell
     // --------------------------------------------------------------------------------------------
     private static IVsUIShell UIShell
     {
-      get { return PackageBase.GetGlobalService<SVsUIShell, IVsUIShell>(); }
+      get
+      {
+        if (!SiteManager.HasGlobalServiceProvider)
+          throw new InvalidOperationException("The framework has not been sited!");
+        return SiteManager.GlobalServiceProvider.GetService<SVsUIShell, IVsUIShell>();
+      }
     }
 
     #endregion

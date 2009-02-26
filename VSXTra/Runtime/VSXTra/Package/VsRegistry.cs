@@ -156,7 +156,7 @@ namespace VSXtra.Package
     // --------------------------------------------------------------------------------------------
     private static ILocalRegistry4 LocalRegistry
     {
-      get { return PackageBase.GetGlobalService<SLocalRegistry, ILocalRegistry4>();  }
+      get { return SiteManager.GetGlobalService<SLocalRegistry, ILocalRegistry4>();  }
     }
 
     // --------------------------------------------------------------------------------------------

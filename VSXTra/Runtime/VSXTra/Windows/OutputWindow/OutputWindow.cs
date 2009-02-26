@@ -277,7 +277,6 @@ namespace VSXtra.Windows
     {
       get
       {
-
         if (!SiteManager.HasGlobalServiceProvider)
           throw new InvalidOperationException("The framework has not been sited!");
         return SiteManager.GlobalServiceProvider.GetService<SVsOutputWindow, IVsOutputWindow>();

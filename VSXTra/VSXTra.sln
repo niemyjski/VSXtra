@@ -90,9 +90,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra.RunTime.Test", "Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfSimpleToolWindow", "Samples\ToolWindows\WpfSimpleToolWindow\WpfSimpleToolWindow.csproj", "{326EB49C-7D4F-46C9-BE04-EDC77E39EA2D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AddIns", "AddIns", "{103B67DE-F4A9-418A-BCD7-EE5E6AD71552}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtraMessageBox", "Samples\AddIns\VSXtraMessageBox\VSXtraMessageBox.csproj", "{124C9E38-0045-42D5-B6DE-79907788EBCB}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 30
+		SccNumberOfProjects = 31
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs02.codeplex.com/
 		SccLocalPath0 = .
@@ -212,6 +216,10 @@ Global
 		SccProjectTopLevelParentUniqueName29 = VSXTra.sln
 		SccProjectName29 = Samples/ToolWindows/WpfSimpleToolWindow
 		SccLocalPath29 = Samples\\ToolWindows\\WpfSimpleToolWindow
+		SccProjectUniqueName30 = Samples\\AddIns\\VSXtraMessageBox\\VSXtraMessageBox.csproj
+		SccProjectTopLevelParentUniqueName30 = VSXTra.sln
+		SccProjectName30 = Samples/AddIns/VSXtraMessageBox
+		SccLocalPath30 = Samples\\AddIns\\VSXtraMessageBox
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = VSXTra1.vsmdi
@@ -333,6 +341,10 @@ Global
 		{326EB49C-7D4F-46C9-BE04-EDC77E39EA2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{326EB49C-7D4F-46C9-BE04-EDC77E39EA2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{326EB49C-7D4F-46C9-BE04-EDC77E39EA2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{124C9E38-0045-42D5-B6DE-79907788EBCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{124C9E38-0045-42D5-B6DE-79907788EBCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{124C9E38-0045-42D5-B6DE-79907788EBCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{124C9E38-0045-42D5-B6DE-79907788EBCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -351,6 +363,7 @@ Global
 		{38ACB0C3-2640-417A-941C-6CBCBBD64C17} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
 		{1E641972-38FC-45F0-8BB9-A0D9E98DAD13} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
 		{5CBD6F09-AFD4-492B-960B-D33229FC5882} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
+		{103B67DE-F4A9-418A-BCD7-EE5E6AD71552} = {1FE2D0D1-4B86-4A3F-A790-6FD1912A720C}
 		{24CA4EC7-00E6-439E-83B0-36A94EEB4EA9} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
 		{3DA3CCD0-34F5-40CE-A297-078AB60A1DD6} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
 		{F97ED261-FD37-48CB-86B1-0F70FBBBCF96} = {1D548488-9D1D-4E72-8FA8-A7C86F98FBBA}
@@ -374,5 +387,6 @@ Global
 		{24AE417E-BEE4-4896-B32E-F645219F6E51} = {5CBD6F09-AFD4-492B-960B-D33229FC5882}
 		{A89EDF45-FE2C-4B47-A04D-9EDE9DA64225} = {5CBD6F09-AFD4-492B-960B-D33229FC5882}
 		{7579D71F-F9B4-42F8-9171-EEAA47A7D057} = {5CBD6F09-AFD4-492B-960B-D33229FC5882}
+		{124C9E38-0045-42D5-B6DE-79907788EBCB} = {103B67DE-F4A9-418A-BCD7-EE5E6AD71552}
 	EndGlobalSection
 EndGlobal
