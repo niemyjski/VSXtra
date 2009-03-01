@@ -20,6 +20,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -87,7 +88,10 @@ namespace VSXtra.Package
     IVsUserSettingsMigration,
 
     // Provides the ability to create multiple tool windows.
-    IVsToolWindowFactory
+    IVsToolWindowFactory,
+
+    // Provides handling for Shell property changes.
+    IVsShellPropertyEvents
   {
     #region Private fields
 
@@ -139,6 +143,11 @@ namespace VSXtra.Package
       new Dictionary<Type, EditorFactoryInfo>();
 
     private Hashtable _ProjectFactories;
+
+    /// <summary>
+    /// Stores cookie for the shell property changes events internally
+    /// </summary>
+    private uint _EventSinkCookie;
 
     #endregion
 
@@ -379,6 +388,29 @@ namespace VSXtra.Package
       {
         return VSRegistry.RegistryRoot(_ServiceProvider, 
           __VsLocalRegistryType.RegType_UserSettings, true);
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This flag checks if the package has the ProvideAutoLoad or VSXtraProvideAutoLoad 
+    /// attributes with the NoSolution UI context or not
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public bool IsAutoLoaded
+    {
+      get
+      {
+        var autoLoadAttr = 
+          GetType().AttributesOfType<ProvideAutoLoadAttribute>().FirstOrDefault();
+        if (autoLoadAttr != null && autoLoadAttr.LoadGuid == typeof(UIContext.NoSolution).GUID)
+        {
+          return true;
+        }
+        var xtraAutoLoadAttr =
+          GetType().AttributesOfType<XtraProvideAutoLoadAttribute>().FirstOrDefault();
+        return xtraAutoLoadAttr != null && 
+          xtraAutoLoadAttr.LoadGuid == typeof(UIContext.NoSolution).GUID;
       }
     }
 
@@ -1351,7 +1383,6 @@ namespace VSXtra.Package
           _PackageInstances.Add(GetType(), this);
         }
         // --- Initialize the global service provider
-        SiteManager.SuggestGlobalServiceProvider(_ServiceProvider);
         if (_GlobalServiceProvider == null)
         {
           _GlobalServiceProvider = _ServiceProvider;
@@ -1362,8 +1393,24 @@ namespace VSXtra.Package
         ++_SitedPackageCount;
 
         // --- Now the package is sited, it's time to initialize it.
-        InternalInitialize();
-        Initialize();
+        if (IsAutoLoaded)
+        {
+          // --- Automatically loaded packages has to wait while the Shell gets active
+          // --- So, here we subscribe for shell property changes
+          var shellService = GetService(typeof(SVsShell)) as IVsShell;
+          if (shellService != null)
+          {
+            ErrorHandler.ThrowOnFailure(
+              shellService.AdviseShellPropertyChanges(this, out _EventSinkCookie));
+          }
+        }
+        else
+        {
+          // --- Package is not automatically loaded, so we can initialize it.
+          SiteManager.SuggestGlobalServiceProvider(_ServiceProvider);
+          InternalInitialize();
+          Initialize();
+        }
       }
       // --- Unsite the package if null service provider is used
       else if (_ServiceProvider != null)
@@ -2567,6 +2614,35 @@ namespace VSXtra.Package
         }
       }
       return result;
+    }
+
+    #endregion
+
+    #region Implementation of IVsShellPropertyEvents
+
+    int IVsShellPropertyEvents.OnShellPropertyChange(int propid, object propValue)
+    {
+      // --- We handle the event if zombie state changes from true to false
+      if ((int)__VSSPROPID.VSSPROPID_Zombie == propid)
+      {
+        if ((bool)propValue == false)
+        {
+          // --- Now, we can carry out package initilization.
+          SiteManager.SuggestGlobalServiceProvider(_ServiceProvider);
+          InternalInitialize();
+          Initialize();
+
+          // --- Unsubscribe from events
+          var shellService = GetService(typeof(SVsShell)) as IVsShell;
+          if (shellService != null)
+          {
+            ErrorHandler.ThrowOnFailure(
+              shellService.UnadviseShellPropertyChanges(_EventSinkCookie));
+          }
+          _EventSinkCookie = 0;
+        }
+      }
+      return VSConstants.S_OK;
     }
 
     #endregion

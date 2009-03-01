@@ -89,6 +89,7 @@
     <Compile Include="Hierarchy\HierarchyAttributes.cs" />
     <Compile Include="Hierarchy\HierarchyCommand.cs" />
     <Compile Include="Hierarchy\HierarchyCommandContext.cs" />
+    <Compile Include="Shell\Commands.cs" />
     <Compile Include="SiteManager\SiteManager.cs" />
     <Compile Include="Utility\Attributes\Int32Attribute.cs" />
     <Compile Include="Utility\ImageHandler.cs" />

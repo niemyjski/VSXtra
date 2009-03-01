@@ -1047,7 +1047,6 @@ namespace VSXtra
         if (index != 0)
         {
           b = new byte[buffer.Length - index];
-          buffer.CopyTo(b, 0);
         }
 
         comStream.Read(b, (uint) count, out bytesRead);
