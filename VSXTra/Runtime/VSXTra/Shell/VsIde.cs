@@ -4,6 +4,7 @@
 // Created: 2008.07.26, by Istvan Novak (DeepDiver)
 // ================================================================================================
 using System;
+using System.Collections.Generic;
 using System.IO;
 using EnvDTE;
 using EnvDTE80;
@@ -22,6 +23,7 @@ namespace VSXtra.Shell
     #region Private fields
 
     private static DTE2 _DteInstance;
+    private static CommandCollection _Commands;
 
     #endregion
 
@@ -50,6 +52,23 @@ namespace VSXtra.Shell
     public static ToolWindows ToolWindows
     {
       get { return DteInstance.ToolWindows; }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Gets the commands used within the IDE.
+    /// </summary>
+    // --------------------------------------------------------------------------------------------
+    public static CommandCollection Commands
+    {
+      get
+      {
+        if (_Commands == null)
+        {
+          _Commands = new CommandCollection();
+        }
+        return _Commands;
+      }
     }
 
     #endregion

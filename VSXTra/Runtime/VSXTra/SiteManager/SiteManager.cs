@@ -115,8 +115,6 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     public static void SuggestGlobalServiceProvider(DTE dte)
     {
-      if (dte == null)
-        throw new ArgumentNullException("dte");
       SuggestGlobalServiceProvider(dte as IOleServiceProvider);
     }
 
@@ -128,9 +126,6 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     public static void SuggestGlobalServiceProvider(DTE2 dte2)
     {
-      if (dte2 == null)
-        throw new ArgumentNullException("dte2");
-
       SuggestGlobalServiceProvider(dte2 as IOleServiceProvider);
     }
 
@@ -144,8 +139,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     public static void SuggestGlobalServiceProvider(IServiceProvider serviceProvider)
     {
-      if (serviceProvider == null)
-        throw new ArgumentNullException("serviceProvider");
+      if (serviceProvider == null) return;
       GlobalServiceProvider = serviceProvider;
     }
 
@@ -159,8 +153,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------------------
     public static void SuggestGlobalServiceProvider(IOleServiceProvider oleServiceProvider)
     {
-      if (oleServiceProvider == null)
-        throw new ArgumentNullException("oleServiceProvider");
+      if (oleServiceProvider == null) return;
       GlobalServiceProvider = new ServiceProvider(oleServiceProvider);
     }
 
@@ -215,11 +208,11 @@ namespace VSXtra
       while (enumMoniker.Next(1, moniker, IntPtr.Zero) == 0)
       {
         string displayName;
-        Object oDTE;
         moniker[0].GetDisplayName(ctx, moniker[0], out displayName);
         if (displayName == ideMoniker)
         {
-          // Got the IDE Automation Object
+          // --- Got the IDE Automation Object
+          Object oDTE;
           rot.GetObject(moniker[0], out oDTE);
           dte = oDTE as DTE2;
           if (dte != null) break;
