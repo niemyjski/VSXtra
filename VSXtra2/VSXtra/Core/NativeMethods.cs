@@ -20,7 +20,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using IServiceProvider = System.IServiceProvider;
 
 // ReSharper disable InconsistentNaming
-namespace VSXtra
+namespace VSXtra.Core
 {
   // ================================================================================================
   /// <summary>
@@ -756,6 +756,8 @@ namespace VSXtra
     public static extern bool GetBinaryType([MarshalAs(UnmanagedType.LPWStr)] string lpApplicationName,
                                             out uint lpBinaryType);
 
+    [DllImport("ole32.dll", ExactSpelling = true)]
+    internal static extern int CoRegisterMessageFilter(HandleRef newFilter, ref IntPtr oldMsgFilter);
 
     public static bool Succeeded(int hr)
     {
@@ -1348,6 +1350,15 @@ namespace VSXtra
         // +1 for the null char
         Marshal.WriteInt32((IntPtr)((long)pCmdTextInt + (long)offsetToCwActual), maxChars + 1);
       }
+    }
+
+    #endregion
+
+    #region Nested type: OleComponentUIManager
+
+    [ComImport, Guid("5EFC7974-14BC-11CF-9B2B-00AA00573819")]
+    public class OleComponentUIManager
+    {
     }
 
     #endregion
