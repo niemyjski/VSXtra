@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSXtra", "..\VSXtra\VSXtra.csproj", "{7089CA10-B13C-4938-89DE-4E28046434D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Package", "Package", "{43C91F17-36BF-4C88-B148-C95D6E528E8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloVSXPackage", "Package\HelloVSXPackage\HelloVSXPackage.csproj", "{316564C4-B988-4828-96AF-086260C4BCC0}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs02.codeplex.com/
+		SccProjectUniqueName0 = ..\\VSXtra\\VSXtra.csproj
+		SccProjectName0 = ../VSXtra
+		SccLocalPath0 = ..\\VSXtra
+		SccLocalPath1 = .
+		SccProjectUniqueName2 = Package\\HelloVSXPackage\\HelloVSXPackage.csproj
+		SccProjectTopLevelParentUniqueName2 = VSXtra2Samples.sln
+		SccProjectName2 = Package/HelloVSXPackage
+		SccLocalPath2 = Package\\HelloVSXPackage
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7089CA10-B13C-4938-89DE-4E28046434D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7089CA10-B13C-4938-89DE-4E28046434D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7089CA10-B13C-4938-89DE-4E28046434D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7089CA10-B13C-4938-89DE-4E28046434D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{316564C4-B988-4828-96AF-086260C4BCC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{316564C4-B988-4828-96AF-086260C4BCC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{316564C4-B988-4828-96AF-086260C4BCC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{316564C4-B988-4828-96AF-086260C4BCC0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{316564C4-B988-4828-96AF-086260C4BCC0} = {43C91F17-36BF-4C88-B148-C95D6E528E8E}
+	EndGlobalSection
+EndGlobal
