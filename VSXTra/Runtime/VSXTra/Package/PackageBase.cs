@@ -1365,7 +1365,6 @@ namespace VSXtra.Package
     {
       // --- Zombied packages cannot be sited
       if (_Zombied) Marshal.ThrowExceptionForHR(NativeMethods.E_UNEXPECTED);
-      
       // --- Site the package if a service provider is used
       if (serviceProvider != null)
       {
