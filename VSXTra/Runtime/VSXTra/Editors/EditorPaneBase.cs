@@ -27,8 +27,8 @@ namespace VSXtra.Editors
   public abstract class EditorPaneBase<TPackage, TFactory, TUIControl> : 
     WindowPane<TPackage, TUIControl>,
     ICommonEditorCommand,
-    IVsPersistDocData,
-    IPersistFileFormat
+    IVsPersistDocData, // Enables persistence functionality for document data (possibly implement IVsPersistDocData2).
+    IPersistFileFormat // Enables persistence functionality for document data.
     where TPackage: PackageBase
     where TFactory: IVsEditorFactory
     where TUIControl: Control, new()
@@ -39,7 +39,7 @@ namespace VSXtra.Editors
     private const uint FileFormatIndex = 0;
 
     // --- Character separating file format lines.
-    private const char EndLineChar = (char)10;
+      protected const char EndLineChar = (char)10;
 
     #endregion
 
@@ -257,6 +257,19 @@ namespace VSXtra.Editors
 
     // --------------------------------------------------------------------------------
     /// <summary>
+    /// Is called when the document is being renamed.
+    /// </summary>
+    /// <param name="fileName">The current file name.</param>
+    /// <param name="newFileName">Pointer to the file name.</param>
+    /// <returns>S_OK if the function succeeds.</returns>
+    // --------------------------------------------------------------------------------
+    protected virtual int OnDocumentRename(string fileName, string newFileName)
+    {
+      return VSConstants.S_OK;
+    }
+
+    // --------------------------------------------------------------------------------
+    /// <summary>
     /// Determines whether an object has changed since being saved to its current file.
     /// </summary>
     /// <param name="pfIsDirty">true if the document has changed.</param>
@@ -367,6 +380,7 @@ namespace VSXtra.Editors
     // --------------------------------------------------------------------------------------------
     [CommandStatusMethod]
     [VsCommandId(VSConstants.VSStd97CmdID.Redo)]
+    [VsCommandId(VSConstants.VSStd97CmdID.MultiLevelRedo)]
     protected virtual void QueryRedoStatus(OleMenuCommand command)
     {
       command.Enabled = SupportsRedo;
@@ -380,6 +394,7 @@ namespace VSXtra.Editors
     // --------------------------------------------------------------------------------------------
     [CommandStatusMethod]
     [VsCommandId(VSConstants.VSStd97CmdID.Undo)]
+    [VsCommandId(VSConstants.VSStd97CmdID.MultiLevelUndo)]
     protected virtual void QueryUndoStatus(OleMenuCommand command)
     {
       command.Enabled = SupportsUndo;
@@ -440,6 +455,7 @@ namespace VSXtra.Editors
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
     [VsCommandId(VSConstants.VSStd97CmdID.Redo)]
+    [VsCommandId(VSConstants.VSStd97CmdID.MultiLevelRedo)]
     protected void ExecuteRedo()
     {
       DoRedo();
@@ -451,6 +467,7 @@ namespace VSXtra.Editors
     /// </summary>
     // --------------------------------------------------------------------------------------------
     [CommandExecMethod]
+    [VsCommandId(VSConstants.VSStd97CmdID.MultiLevelUndo)]
     [VsCommandId(VSConstants.VSStd97CmdID.Undo)]
     protected void ExecuteUndo()
     {
@@ -692,18 +709,17 @@ namespace VSXtra.Editors
     int IPersistFileFormat.Load(string pszFilename, uint grfMode, int fReadOnly)
     {
       // --- A valid file name is required.
-      if ((pszFilename == null) && (string.IsNullOrEmpty(_FileName)))
-        throw new ArgumentNullException("pszFilename");
+      if ((String.IsNullOrEmpty(pszFilename) && String.IsNullOrEmpty(_FileName))
+          || (!String.IsNullOrEmpty(pszFilename) && !File.Exists(pszFilename))) // pszFilename might not exist.
+      {
+        return VSConstants.E_INVALIDARG;
+      }
 
       _Loading = true;
       try
       {
         // --- If the new file name is null, then this operation is a reload
-        bool isReload = false;
-        if (pszFilename == null)
-        {
-          isReload = true;
-        }
+        bool isReload = String.IsNullOrEmpty(pszFilename);
 
         // --- Show the wait cursor while loading the file
         VsUIShell.SetWaitCursor();
@@ -1023,7 +1039,7 @@ namespace VSXtra.Editors
     /// </summary>
     /// <returns>S_OK if the function succeeds.</returns>
     /// <remarks>
-    /// Override the <see cref="OnCloseEditor"/> method to change the behaviour.
+    /// Override the <see cref="OnCloseEditor"/> method to change the behavior.
     /// </remarks>
     // --------------------------------------------------------------------------------
     int IVsPersistDocData.Close()
@@ -1068,7 +1084,11 @@ namespace VSXtra.Editors
     int IVsPersistDocData.RenameDocData(uint grfAttribs, IVsHierarchy pHierNew,
       uint itemidNew, string pszMkDocumentNew)
     {
-      return VSConstants.S_OK;
+      int result = OnDocumentRename(_FileName, pszMkDocumentNew);
+
+      _FileName = pszMkDocumentNew;
+
+      return result;
     }
 
     // --------------------------------------------------------------------------------

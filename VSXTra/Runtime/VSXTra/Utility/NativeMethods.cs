@@ -817,13 +817,11 @@ namespace VSXtra
     /// </devdoc>
     public sealed class ConnectionPointCookie : IDisposable
     {
-#if DEBUG
       private readonly string callStack = "(none)";
       private readonly Type eventInterface;
       private IConnectionPoint connectionPoint;
       private uint cookie;
       private IConnectionPointContainer cpc;
-#endif
 
       /// <include file='doc\NativeMethods.uex' path='docs/doc[@for="ConnectionPointCookie.ConnectionPointCookie"]/*' />
       /// <devdoc>
@@ -893,10 +891,8 @@ namespace VSXtra
           throw ex;
         }
 
-#if DEBUG
         callStack = Environment.StackTrace;
         this.eventInterface = eventInterface;
-#endif
       }
 
       #region IDisposable Members
@@ -960,8 +956,8 @@ namespace VSXtra
     {
 #if DEBUG
       private readonly string creatingStack;
-      private IStream comStream;
 #endif
+      private IStream comStream;
 
       public DataStreamFromComStream(IStream comStream)
       {

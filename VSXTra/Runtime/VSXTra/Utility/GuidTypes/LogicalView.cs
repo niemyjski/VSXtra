@@ -36,7 +36,7 @@ namespace VSXtra
     public sealed class TextView : ILogicalViewGuidType { }
 
     [Guid("7651a704-06e5-11d1-8ebd-00a0c90f26ea")]
-    public sealed class UserChhoseView : ILogicalViewGuidType { }
+    public sealed class UserChooseView : ILogicalViewGuidType { }
 
     [Guid("80a3471a-6b87-433e-a75a-9d461de0645f")]
     public sealed class ProjectSpecificEditor : ILogicalViewGuidType { }

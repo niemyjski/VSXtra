@@ -17,7 +17,7 @@ namespace VSXtra.Selection
   {
     #region Private fields
 
-    private static IVsMonitorSelection _Monitor;
+    private static IVsMonitorSelection _monitor;
 
     #endregion
 
@@ -32,9 +32,9 @@ namespace VSXtra.Selection
     {
       get
       {
-        if (_Monitor == null)
-          _Monitor = PackageBase.GetGlobalService<IVsMonitorSelection>();
-        return _Monitor;
+        if (_monitor == null)
+            _monitor = PackageBase.GetGlobalService<SVsShellMonitorSelection>() as IVsMonitorSelection;
+        return _monitor;
       }
     }
 

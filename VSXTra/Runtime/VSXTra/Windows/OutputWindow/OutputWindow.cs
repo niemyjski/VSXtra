@@ -13,7 +13,7 @@ namespace VSXtra.Windows
 {
   // ================================================================================================
   /// <summary>
-  /// This static class is responsible for obtaining built-in output window panen and
+  /// This static class is responsible for obtaining built-in output window panel and
   /// managing (creating, obtaining and deleting) window panes through output pane 
   /// definition types.
   /// </summary>

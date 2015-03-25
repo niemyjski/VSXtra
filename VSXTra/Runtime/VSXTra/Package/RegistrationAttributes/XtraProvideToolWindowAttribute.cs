@@ -17,7 +17,7 @@ namespace VSXtra.Package
   /// </summary>
   /// <remarks>
   /// This attribute declares that a package own a tool window.  Visual Studio uses this information 
-  /// to handle the positioning and persistance of your window. The attributes on a package do not 
+  /// to handle the positioning and persistence of your window. The attributes on a package do not 
   /// control the behavior of the package, but they can be used by registration tools to register 
   /// the proper information with Visual Studio.
   /// </remarks>

@@ -185,6 +185,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Windows\WindowPanes\WpfToolWindowPane.cs" />
+    <Compile Include="Windows\WindowPanes\WpfWindowPane.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

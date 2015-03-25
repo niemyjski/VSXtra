@@ -202,8 +202,8 @@ namespace VSXtra.Package
       DestroyServiceProvider();
 
       // --- Release references to containers
-      if (_ToolWindows != null) _ToolWindows = null;
-      if (_OptionKeys != null) _OptionKeys = null;
+      _ToolWindows = null;
+      _OptionKeys = null;
 
       // --- Disconnect user preference change events
       SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
@@ -486,6 +486,7 @@ namespace VSXtra.Package
       {
         value = _ServiceProvider.GetService(serviceType);
       }
+
       return value;
     }
 
@@ -654,7 +655,7 @@ namespace VSXtra.Package
     /// <summary>
     /// Gets the instance of the specified sited package.
     /// </summary>
-    /// <typeparam name="TPackage">Type ofpackage instance to obtain.</typeparam>
+    /// <typeparam name="TPackage">Type of package instance to obtain.</typeparam>
     /// <returns>
     /// Package instance, if the specified package has already a sited instance; otherwise, null.
     /// </returns>
@@ -681,7 +682,7 @@ namespace VSXtra.Package
     /// <summary>
     /// Gets the command handler instances registered by the specified package type.
     /// </summary>
-    /// <param name="type">Type of package to serach for registered command handlers.</param>
+    /// <param name="type">Type of package to search for registered command handlers.</param>
     /// <returns>An enumerable collection of registered command handler instances.</returns>
     // --------------------------------------------------------------------------------------------
     public static IEnumerable<MenuCommandHandler> GetCommandHandlerInstances(Type type)
@@ -693,7 +694,7 @@ namespace VSXtra.Package
     /// <summary>
     /// Gets the command handler instances registered by the specified package type.
     /// </summary>
-    /// <typeparam name="TPackage">Type of package to serach for registered command handlers.</typeparam>
+    /// <typeparam name="TPackage">Type of package to search for registered command handlers.</typeparam>
     /// <returns>An enumerable collection of registered command handler instances.</returns>
     // --------------------------------------------------------------------------------------------
     public static IEnumerable<MenuCommandHandler> GetCommandHandlerInstances<TPackage>()
@@ -1465,6 +1466,7 @@ namespace VSXtra.Package
 
       // --- Set up command handler classes
       BindCommandHandlers(GetType().Assembly);
+      //Console.SetOut(OutputWindow.General);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -1504,7 +1506,9 @@ namespace VSXtra.Package
     // --------------------------------------------------------------------------------------------
     int IVsPackage.Close()
     {
-      if (!_Zombied) Dispose(true);
+      if (!_Zombied) 
+          Dispose(true);
+
       _Zombied = true;
       return NativeMethods.S_OK;
     }
@@ -2088,35 +2092,35 @@ namespace VSXtra.Package
     #region IVsPersistSolutionOpts members
 
     // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Loads user options for a given solution.
-    /// </summary>
-    /// <remarks>
-    /// Called when a solution is opened, and allows us to inspect our options.
-    /// </remarks>
-    // --------------------------------------------------------------------------------------------
-    int IVsPersistSolutionOpts.LoadUserOptions(IVsSolutionPersistence pPersistance, uint options)
-    {
-      int hr = NativeMethods.S_OK;
-      if ((options & (uint) __VSLOADUSEROPTS.LUO_OPENEDDSW) != 0)
-        return hr;
+      /// <summary>
+      /// Loads user options for a given solution.
+      /// </summary>
+      /// <remarks>
+      /// Called when a solution is opened, and allows us to inspect our options.
+      /// </remarks>
+      // --------------------------------------------------------------------------------------------
+      int IVsPersistSolutionOpts.LoadUserOptions(IVsSolutionPersistence pPersistance, uint options) {
+          int hr = NativeMethods.S_OK;
+          if ((options & (uint)__VSLOADUSEROPTS.LUO_OPENEDDSW) != 0)
+              return hr;
 
-      if (_OptionKeys != null)
-      {
-        foreach (string key in _OptionKeys)
-        {
-          hr = pPersistance.LoadPackageUserOpts(this, key);
-          if (NativeMethods.Failed(hr))
-            break;
-        }
+          try {
+              if (_OptionKeys != null) {
+                  foreach (string key in _OptionKeys) {
+                      hr = pPersistance.LoadPackageUserOpts(this, key);
+                      if (NativeMethods.Failed(hr))
+                          break;
+                  }
+              }
+          } finally {
+              // --- Shell relies on this being released when we're done with it. If you see strange
+              // --- faults in the shell when saving the solution, suspect this!
+              Marshal.ReleaseComObject(pPersistance);
+          }
+
+          NativeMethods.ThrowOnFailure(hr);
+          return hr;
       }
-
-      // --- Shell relies on this being released when we're done with it. If you see strange
-      // --- faults in the shell when saving the solution, suspect this!
-      Marshal.ReleaseComObject(pPersistance);
-      NativeMethods.ThrowOnFailure(hr);
-      return hr;
-    }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>
@@ -2145,28 +2149,31 @@ namespace VSXtra.Package
     }
 
     // --------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Saves user options for a given solution.
-    /// </summary>
-    /// <remarks>
-    /// Called by the shell when we are to persist our service options
-    /// </remarks>
-    // --------------------------------------------------------------------------------------------
-    int IVsPersistSolutionOpts.SaveUserOptions(IVsSolutionPersistence pPersistance)
-    {
-      if (_OptionKeys != null)
-      {
-        foreach (string key in _OptionKeys)
-        {
-          NativeMethods.ThrowOnFailure(pPersistance.SavePackageUserOpts(this, key));
-        }
-      }
+      /// <summary>
+      /// Saves user options for a given solution.
+      /// </summary>
+      /// <remarks>
+      /// Called by the shell when we are to persist our service options
+      /// </remarks>
+      // --------------------------------------------------------------------------------------------
+      int IVsPersistSolutionOpts.SaveUserOptions(IVsSolutionPersistence pPersistance) {
+          int hr = NativeMethods.S_OK;
 
-      // --- Shell relies on this being released when we're done with it. If you see strange
-      // --- faults in the shell when saving the solution, suspect this!
-      Marshal.ReleaseComObject(pPersistance);
-      return NativeMethods.S_OK;
-    }
+          try {
+              if (_OptionKeys != null) {
+                  foreach (string key in _OptionKeys) {
+                      hr = pPersistance.SavePackageUserOpts(this, key);
+                  }
+              }
+          } finally {
+              // --- Shell relies on this being released when we're done with it. If you see strange
+              // --- faults in the shell when saving the solution, suspect this!
+              Marshal.ReleaseComObject(pPersistance);
+          }
+
+          NativeMethods.ThrowOnFailure(hr);
+          return hr;
+      }
 
     // --------------------------------------------------------------------------------------------
     /// <summary>

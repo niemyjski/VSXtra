@@ -36,7 +36,7 @@ namespace VSXtra.Commands
 
     // ------------------------------------------------------------------------------
     /// <summary>
-    /// Gtes the package instance that owns the command group.
+    /// Gets the package instance that owns the command group.
     /// </summary>
     /// <returns>
     /// Package instance, if package has been sited; otherwise, null.
