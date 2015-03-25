@@ -66,7 +66,7 @@ namespace VSXtra.Editors
     /// Clean up any resources being used.
     /// </summary>
     // --------------------------------------------------------------------------------
-    public void Dispose()
+    public virtual void Dispose()
     {
       Dispose(true);
     }

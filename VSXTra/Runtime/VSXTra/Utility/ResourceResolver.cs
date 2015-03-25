@@ -194,7 +194,7 @@ namespace VSXtra
     // --------------------------------------------------------------------------------
     private static Type GetResourcesClassType()
     {
-      Assembly callingAsm = typeof(TPackage).Assembly;
+      Assembly callingAsm = Assembly.GetAssembly(typeof(TPackage));
 
       // --- Check the cache for Resources type and return if found.
       Type resourceType;

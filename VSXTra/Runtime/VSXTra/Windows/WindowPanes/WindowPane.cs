@@ -10,6 +10,7 @@
 // ================================================================================================
 using System;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -68,14 +69,14 @@ namespace VSXtra.Windows
   /// This is a quick way to implement a window pane. This class implements IVsWindowPane; you
   /// must provide an implementation of an object that returns an IWin32Window, however. In addition
   /// to IVsWindowPane this object implements IOleCommandTarget, mapping it to IMenuCommandService
-  /// and IObjectWithSite, mapping the site to services that can be querried through its protected
+  /// and IObjectWithSite, mapping the site to services that can be queried through its protected
   /// GetService method.
   /// </summary>
   /// <typeparam name="TPackage">The type of the package owning this window pane.</typeparam>
-  /// <typeparam name="TUIControl">The type of the user control represnting the UI.</typeparam>
+  /// <typeparam name="TUIControl">The type of the user control representing the UI.</typeparam>
   // ================================================================================================
   [ComVisible(true)]
-  public abstract class WindowPane<TPackage, TUIControl>:
+  public abstract class WindowPane<TPackage, TUIControl> :
     IWindowPaneBehavior,
 
     // --- Defines a method to release allocated resources. Since we allocate unmanaged resources we
@@ -422,6 +423,7 @@ namespace VSXtra.Windows
     /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
     /// </returns>
     // --------------------------------------------------------------------------------------------
+    [DebuggerStepThrough]
     int IVsWindowPane.TranslateAccelerator(MSG[] msg)
     {
       var m = Message.Create(msg[0].hwnd, (int)msg[0].message, msg[0].wParam, msg[0].lParam);
@@ -500,12 +502,8 @@ namespace VSXtra.Windows
           }
         }
         _CommandService = null;
-
-        if (_ParentServiceProvider != null)
-          _ParentServiceProvider = null;
-
-        if (_HelpService != null)
-          _HelpService = null;
+        _ParentServiceProvider = null;
+        _HelpService = null;
 
         // --- Do not clear _ServiceProvider. SetSite will do it for us.
         _Zombied = true;
@@ -758,6 +756,7 @@ namespace VSXtra.Windows
     /// If the method succeeds, it returns S_OK. If it fails, it returns an error code.
     /// </returns>
     // --------------------------------------------------------------------------------
+    [DebuggerStepThrough]
     int IVsBroadcastMessageEvents.OnBroadcastMessage(uint msg, IntPtr wParam, IntPtr lParam)
     {
       int hr = NativeMethods.S_OK;
@@ -797,7 +796,8 @@ namespace VSXtra.Windows
     // --------------------------------------------------------------------------------------------
     protected virtual void OnClose()
     {
-      Dispose();
+      // This causes the window pane to be disposed of twice.
+      // Dispose();
     }
 
     // --------------------------------------------------------------------------------------------

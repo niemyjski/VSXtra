@@ -92,8 +92,7 @@ namespace VSXtra.Commands
     /// </summary>
     /// <param name="id">Command identifier.</param>
     // --------------------------------------------------------------------------------------------
-    public VsCommandIdAttribute(uint id)
-      : base(VSConstants.GUID_VSStandardCommandSet97, id)
+    public VsCommandIdAttribute(uint id) : base(VSConstants.GUID_VSStandardCommandSet97, id)
     {
     }
 
@@ -103,8 +102,27 @@ namespace VSXtra.Commands
     /// </summary>
     /// <param name="id">Command identifier.</param>
     // --------------------------------------------------------------------------------------------
-    public VsCommandIdAttribute(VSConstants.VSStd97CmdID id)
-      : base(VSConstants.GUID_VSStandardCommandSet97, (uint)id)
+    public VsCommandIdAttribute(VSConstants.VSStd97CmdID id) : base(VSConstants.GUID_VSStandardCommandSet97, (uint)id)
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new instance of the attribute with the specified initial value.
+    /// </summary>
+    /// <param name="id">Command identifier.</param>
+    // --------------------------------------------------------------------------------------------
+    public VsCommandIdAttribute(VSConstants.VSStd2KCmdID id) : base(VSConstants.VSStd2K, (uint)id)
+    {
+    }
+
+    // --------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Creates a new instance of the attribute with the specified initial value.
+    /// </summary>
+    /// <param name="id">Command identifier.</param>
+    // --------------------------------------------------------------------------------------------
+    public VsCommandIdAttribute(VSConstants.VSStd2010CmdID id) : base(VSConstants.VsStd2010, (uint)id)
     {
     }
   }

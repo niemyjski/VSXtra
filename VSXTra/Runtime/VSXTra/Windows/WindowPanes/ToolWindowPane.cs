@@ -86,7 +86,7 @@ namespace VSXtra.Windows
   /// This class implements a tool window pane by specializing a simple window pane.
   /// </summary>
   /// <typeparam name="TPackage">The type of the package owning this window pane.</typeparam>
-  /// <typeparam name="TUIControl">The type of the user control represnting the UI.</typeparam>
+  /// <typeparam name="TUIControl">The type of the user control representing the UI.</typeparam>
   // ================================================================================================
   [ComVisible(true)]
   public abstract class ToolWindowPane<TPackage, TUIControl> : 
