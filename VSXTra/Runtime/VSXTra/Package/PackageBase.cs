@@ -1465,7 +1465,6 @@ namespace VSXtra.Package
 
       // --- Set up command handler classes
       BindCommandHandlers(GetType().Assembly);
-      Console.SetOut(OutputWindow.General);
     }
 
     // --------------------------------------------------------------------------------------------
